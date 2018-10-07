@@ -12,8 +12,17 @@
 
     <string name="start_navigation">Start navigation</string>
 
-    <string name="access_token">pk.eyJ1Ijoia3p2ZGFyNDIiLCJhIjoiY2ptc2dyeHQwMGZjNTNxcDh0eDh6MXNyOCJ9.n4F86lJ4nVAesqi6OLtbUQ</string>
+    <!-- Bottom Navigation -->
+    <string name="map_label">Map</string>
+    <string name="orders_label">Orders</string>
+    <string name="settings_label">Settings</string>
 
+    <!-- Mapbox -->
+    <string name="access_token">pk.eyJ1Ijoia3p2ZGFyNDIiLCJhIjoiY2ptc2dyeHQwMGZjNTNxcDh0eDh6MXNyOCJ9.n4F86lJ4nVAesqi6OLtbUQ</string>
     <string name="user_location_permission_explanation">This app needs location permissions in orderEntity to show its functionality.</string>
     <string name="user_location_permission_not_granted">You didn\'t grant location permissions.</string>
+
+    <!-- Settings -->
+    <string name="contact_co">Contact CO</string>
+    <string name="log_out">Log out</string>
 </resources>

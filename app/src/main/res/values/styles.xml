@@ -23,6 +23,13 @@
         <item name="contentPaddingRight">16dp</item>
     </style>
 
+    <!-- Recycle view theme. -->
+    <style name="AppTheme.recycleViewItem">
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+        <item name="android:foreground">?android:attr/selectableItemBackground</item>
+    </style>
+
 
     <style name="NavigationMapRoute">
         <!-- Colors -->

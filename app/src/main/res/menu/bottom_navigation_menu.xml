@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/map_button"
+        android:icon="@drawable/ic_map_black_24dp"
+        android:title="@string/map_label" />
+    <item
+        android:id="@+id/orders_button"
+        android:icon="@drawable/ic_order_black_24dp"
+        android:title="@string/orders_label" />
+    <item
+        android:id="@+id/settings_button"
+        android:icon="@drawable/ic_settings_black_24dp"
+        android:title="@string/settings_label" />
+</menu>

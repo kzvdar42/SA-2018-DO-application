@@ -1,11 +1,13 @@
-package com.example.kzvdar42.deliveryoperatorapp.Activity
+package com.example.kzvdar42.deliveryoperatorapp.Fragment
 
 import android.annotation.SuppressLint
 import android.location.Location
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import com.example.kzvdar42.deliveryoperatorapp.R
 import com.mapbox.android.core.location.LocationEngine
 import com.mapbox.android.core.location.LocationEngineListener
@@ -30,13 +32,15 @@ import com.mapbox.services.android.navigation.ui.v5.NavigationLauncher
 import com.mapbox.services.android.navigation.ui.v5.NavigationLauncherOptions
 import com.mapbox.services.android.navigation.ui.v5.route.NavigationMapRoute
 import com.mapbox.services.android.navigation.v5.navigation.NavigationRoute
-import kotlinx.android.synthetic.main.activity_map.*
+import kotlinx.android.synthetic.main.fragment_map.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import timber.log.Timber
 
-class MapActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListener, LocationEngineListener {
+class MapFragment : Fragment(), OnMapReadyCallback, PermissionsListener, LocationEngineListener {
+
+
     private lateinit var mapView: MapView
     // variables for adding location layer
     private lateinit var mapboxMap: MapboxMap
@@ -59,23 +63,24 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListener
     private var orderFromPosition: Point? = null
     private var orderToPosition: Point? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_map)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
-        // Get data about the order
-        val intent = intent
-        orderName = intent.getStringExtra("orderNum")
-        orderDescription = intent.getStringExtra("orderDescription")
-        val coords = intent.getDoubleArrayExtra("coords")
+
+
+        val rootView = inflater.inflate(R.layout.fragment_map, container, false)
+        orderName = "Order #-1"
+        orderDescription = "Lorem ipsum"
+        val coords = doubleArrayOf(55.7476907, 48.7433593, 55.7867635, 49.1216088)
         orderFrom = LatLng(coords[0], coords[1])
         orderTo = LatLng(coords[2], coords[3])
 
         // Initiate map
-        Mapbox.getInstance(this, getString(R.string.access_token))
-        mapView = findViewById(R.id.mapView)
+        Mapbox.getInstance(context!!, getString(R.string.access_token))
+        mapView = rootView.findViewById(R.id.mapView)
         mapView.onCreate(savedInstanceState)
         mapView.getMapAsync(this)
+
+        return rootView
     }
 
     override fun onMapReady(mapboxMap: MapboxMap) {
@@ -113,13 +118,13 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListener
                         .shouldSimulateRoute(simulateRoute)
                         .build()
                 // Call this method with Context from within an Activity
-                NavigationLauncher.startNavigation(this@MapActivity, options)
+                NavigationLauncher.startNavigation(activity, options)
             }
         }
     }
 
     private fun getRoute(origin: Point, destination: Point) {
-        NavigationRoute.builder(this)
+        NavigationRoute.builder(context)
                 .accessToken(Mapbox.getAccessToken()!!)
                 .origin(origin)
                 .destination(destination)
@@ -132,7 +137,6 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListener
                             Timber.e("No routes found, make sure you set the right user and access token.")
                             return
                         } else if (response.body()?.routes()!!.size < 1) {
-                            Toast.makeText(application.baseContext, "No routes found", Toast.LENGTH_LONG).show()
                             Timber.e("No routes found")
                             return
                         }
@@ -158,7 +162,7 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListener
 
     private fun enableLocationPlugin() {
         // Check if permissions are enabled and if not request
-        if (PermissionsManager.areLocationPermissionsGranted(this)) {
+        if (PermissionsManager.areLocationPermissionsGranted(activity)) {
             initializeLocationEngine()
             // Create an instance of the plugin. Adding in LocationLayerOptions is also an optional
             // parameter
@@ -169,13 +173,13 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListener
             addObserver()
         } else {
             permissionsManager = PermissionsManager(this)
-            permissionsManager!!.requestLocationPermissions(this)
+            permissionsManager!!.requestLocationPermissions(activity)
         }
     }
 
     @SuppressLint("MissingPermission")
     private fun initializeLocationEngine() {
-        val locationEngineProvider = LocationEngineProvider(this)
+        val locationEngineProvider = LocationEngineProvider(activity)
         locationEngine = locationEngineProvider.obtainBestLocationEngineAvailable()
         locationEngine!!.priority = LocationEnginePriority.BALANCED_POWER_ACCURACY
         locationEngine!!.activate()
@@ -190,15 +194,15 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListener
 
 
     override fun onExplanationNeeded(permissionsToExplain: MutableList<String>?) {
-        Toast.makeText(this, R.string.user_location_permission_explanation, Toast.LENGTH_LONG).show()
+        Toast.makeText(context, R.string.user_location_permission_explanation, Toast.LENGTH_LONG).show()
     }
 
     override fun onPermissionResult(granted: Boolean) {
         if (granted) {
             enableLocationPlugin()
         } else {
-            Toast.makeText(this, R.string.user_location_permission_not_granted, Toast.LENGTH_LONG).show()
-            finish()
+            Toast.makeText(context, R.string.user_location_permission_not_granted, Toast.LENGTH_LONG).show()
+            activity?.finish()
         }
     }
 
