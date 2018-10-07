@@ -1,12 +1,12 @@
-package com.example.kzvdar42.deliveryoperatorapp
+package com.example.kzvdar42.deliveryoperatorapp.Activity
 
 import android.annotation.SuppressLint
 import android.location.Location
 import android.os.Bundle
 import android.view.View
-import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.kzvdar42.deliveryoperatorapp.R
 import com.mapbox.android.core.location.LocationEngine
 import com.mapbox.android.core.location.LocationEngineListener
 import com.mapbox.android.core.location.LocationEnginePriority
@@ -37,9 +37,9 @@ import retrofit2.Response
 import timber.log.Timber
 
 class MapActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListener, LocationEngineListener {
-    private var mapView: MapView? = null
+    private lateinit var mapView: MapView
     // variables for adding location layer
-    private var mapboxMap: MapboxMap? = null
+    private lateinit var mapboxMap: MapboxMap
     private var permissionsManager: PermissionsManager? = null
     private var locationLayerPlugin: LocationLayerPlugin? = null
     private var locationEngine: LocationEngine? = null
@@ -50,14 +50,14 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListener
     private var originPosition: Point? = null
     private var currentRoute: DirectionsRoute? = null
     private var navigationMapRoute: NavigationMapRoute? = null
-    private var button: Button? = null
 
-
-    private var orderName: String = ""
-    private var orderDescription: String = ""
-    private var orderCoords: LatLng? = null
-    private var orderPosition: Point? = null
-
+    // variables for order info
+    private lateinit var orderName: String
+    private lateinit var orderDescription: String
+    private lateinit var orderFrom: LatLng
+    private lateinit var orderTo: LatLng
+    private var orderFromPosition: Point? = null
+    private var orderToPosition: Point? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,40 +65,47 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListener
 
         // Get data about the order
         val intent = intent
-        orderName = intent.getStringExtra("orderName")
+        orderName = intent.getStringExtra("orderNum")
         orderDescription = intent.getStringExtra("orderDescription")
         val coords = intent.getDoubleArrayExtra("coords")
-        orderCoords = LatLng(coords[0], coords[1])
+        orderFrom = LatLng(coords[0], coords[1])
+        orderTo = LatLng(coords[2], coords[3])
 
         // Initiate map
         Mapbox.getInstance(this, getString(R.string.access_token))
         mapView = findViewById(R.id.mapView)
-        mapView?.onCreate(savedInstanceState)
-        mapView?.getMapAsync(this)
+        mapView.onCreate(savedInstanceState)
+        mapView.getMapAsync(this)
     }
 
-    override fun onMapReady(mapboxMap: MapboxMap?) {
+    override fun onMapReady(mapboxMap: MapboxMap) {
         this.mapboxMap = mapboxMap
         enableLocationPlugin()
 
         originPosition = Point.fromLngLat(originLocation!!.longitude, originLocation!!.latitude)
-        orderPosition = Point.fromLngLat(orderCoords!!.longitude, orderCoords!!.latitude)
+        orderFromPosition = Point.fromLngLat(orderFrom.longitude, orderFrom.latitude)
+        orderToPosition = Point.fromLngLat(orderTo.longitude, orderTo.latitude)
         originCoord = LatLng(originLocation!!.latitude, originLocation!!.longitude)
 
         val latLngBounds = LatLngBounds.Builder()
                 .include(originCoord!!)
-                .include(orderCoords!!)
+                .include(orderFrom)
+                .include(orderTo)
                 .build()
-        mapboxMap!!.animateCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 100))
+        mapboxMap.animateCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 100))
 
-        getRoute(originPosition!!, orderPosition!!)
+        getRoute(originPosition!!, orderFromPosition!!)
 
         mapboxMap.addMarker(MarkerOptions()
-                .position(orderCoords!!)
+                .position(orderFrom)
+                .title(orderName)
+                .snippet(orderDescription))
+        mapboxMap.addMarker(MarkerOptions()
+                .position(orderTo)
                 .title(orderName)
                 .snippet(orderDescription))
 
-        startButton.setOnClickListener { _ : View? ->
+        startButton.setOnClickListener { _: View? ->
             run {
                 val simulateRoute = true
                 val options = NavigationLauncherOptions.builder()
@@ -118,9 +125,9 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListener
                 .destination(destination)
                 .build()
                 .getRoute(object : Callback<DirectionsResponse> {
-                    override fun onResponse(call : Call<DirectionsResponse>, response : Response<DirectionsResponse>) {
+                    override fun onResponse(call: Call<DirectionsResponse>, response: Response<DirectionsResponse>) {
                         // You can get the generic HTTP info about the response
-                        Timber.d( "Response code: %s", response.code())
+                        Timber.d("Response code: %s", response.code())
                         if (response.body() == null) {
                             Timber.e("No routes found, make sure you set the right user and access token.")
                             return
@@ -131,19 +138,19 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListener
                         }
 
                         currentRoute = response.body()!!.routes()[0]
-                        button = findViewById(R.id.startButton)
+
                         // Draw the route on the map
                         if (navigationMapRoute != null) {
                             navigationMapRoute?.removeRoute()
                         } else {
                             startButton.isEnabled = true
-                            navigationMapRoute = NavigationMapRoute(null, mapView!!, mapboxMap!!, R.style.NavigationMapRoute)
+                            navigationMapRoute = NavigationMapRoute(null, mapView, mapboxMap, R.style.NavigationMapRoute)
                         }
                         navigationMapRoute?.addRoute(currentRoute)
                     }
 
 
-                    override fun onFailure(call : Call<DirectionsResponse>, throwable : Throwable) {
+                    override fun onFailure(call: Call<DirectionsResponse>, throwable: Throwable) {
                         Timber.e("Error: %s", throwable.message)
                     }
                 })
@@ -155,7 +162,7 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListener
             initializeLocationEngine()
             // Create an instance of the plugin. Adding in LocationLayerOptions is also an optional
             // parameter
-            val locationLayerPlugin = LocationLayerPlugin(mapView!!, mapboxMap!!)
+            val locationLayerPlugin = LocationLayerPlugin(mapView, mapboxMap)
 
             // Set the plugin's camera mode
             locationLayerPlugin.cameraMode = CameraMode.TRACKING
@@ -204,45 +211,45 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback, PermissionsListener
     @SuppressLint("MissingPermission")
     override fun onStart() {
         super.onStart()
-        mapView?.onStart()
+        mapView.onStart()
         locationLayerPlugin?.onStart()
     }
 
 
     override fun onResume() {
         super.onResume()
-        mapView?.onResume()
+        mapView.onResume()
     }
 
 
     override fun onPause() {
         super.onPause()
-        mapView?.onPause()
+        mapView.onPause()
     }
 
 
     override fun onStop() {
         super.onStop()
-        mapView!!.onStop()
+        mapView.onStop()
         locationLayerPlugin?.onStart()
     }
 
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        mapView?.onSaveInstanceState(outState)
+        mapView.onSaveInstanceState(outState)
     }
 
 
     override fun onDestroy() {
         super.onDestroy()
-        mapView?.onDestroy()
+        mapView.onDestroy()
     }
 
 
     override fun onLowMemory() {
         super.onLowMemory()
-        mapView?.onLowMemory()
+        mapView.onLowMemory()
     }
 }
 

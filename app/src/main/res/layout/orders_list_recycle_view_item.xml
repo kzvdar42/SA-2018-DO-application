@@ -8,8 +8,8 @@
     android:layout_marginBottom="4dp"
     android:clickable="true"
     android:focusable="true"
-    android:onClick="onClick"
     android:foreground="?android:attr/selectableItemBackground"
+    android:onClick="onClick"
     card_view:cardElevation="2dp">
 
     <com.google.android.material.circularreveal.CircularRevealRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -18,26 +18,24 @@
         android:layout_height="96dp">
 
         <TextView
-            android:id="@+id/recycleName"
+            android:id="@+id/order_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
-            android:layout_toEndOf="@+id/recycleImageView"
-            android:textSize="24sp"
-            tools:text="Name"
-            android:paddingTop="8dp"
             android:paddingLeft="16dp"
+            android:paddingTop="8dp"
             android:paddingRight="16dp"
-            android:layout_toRightOf="@+id/recycleImageView" />
+            android:textSize="24sp"
+            tools:text="Name" />
 
         <TextView
-            android:id="@+id/description"
+            android:id="@+id/order_description"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/recycleName"
-            tools:text="Description"
+            android:layout_below="@+id/order_name"
             android:paddingLeft="16dp"
-            android:paddingRight="16dp"/>
+            android:paddingRight="16dp"
+            tools:text="Description" />
 
     </com.google.android.material.circularreveal.CircularRevealRelativeLayout>
 

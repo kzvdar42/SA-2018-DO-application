@@ -8,7 +8,6 @@
     </style>
 
 
-
     <style name="AppTheme.Button">
         <item name="android:padding">12dp</item>
         <item name="cornerRadius">12dp</item>
