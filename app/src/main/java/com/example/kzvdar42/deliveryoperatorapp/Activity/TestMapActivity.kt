@@ -39,8 +39,8 @@ class TestMapActivity : AppCompatActivity(), OnNavigationReadyCallback, Navigati
         val coords = intent.getDoubleArrayExtra("coords")
         var i = 0
         while (i <= coords.size) {
-            points.add(Point.fromLngLat(coords[i], coords[i+1]))
-            i +=2
+            points.add(Point.fromLngLat(coords[i], coords[i + 1]))
+            i += 2
         }
         setContentView(R.layout.activity_navigation)
         navigationView = findViewById(R.id.navigationView)

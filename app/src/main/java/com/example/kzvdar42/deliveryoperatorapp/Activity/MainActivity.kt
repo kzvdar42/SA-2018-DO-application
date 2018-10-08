@@ -1,12 +1,12 @@
 package com.example.kzvdar42.deliveryoperatorapp.Activity
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.viewpager.widget.ViewPager
-import com.example.kzvdar42.deliveryoperatorapp.Adapter.BottomBarAdapter
+import androidx.fragment.app.Fragment
 import com.example.kzvdar42.deliveryoperatorapp.Fragment.MapFragment
 import com.example.kzvdar42.deliveryoperatorapp.Fragment.OrdersFragment
 import com.example.kzvdar42.deliveryoperatorapp.Fragment.SettingsFragment
@@ -25,39 +25,38 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        mapsFragment     = MapFragment()
-        ordersFragment   = OrdersFragment()
+        // Creating fragments
+        mapsFragment = MapFragment()
+        ordersFragment = OrdersFragment()
         settingsFragment = SettingsFragment()
 
-        setupViewPager(viewpager)
-        viewpager.currentItem = 2
-
+        // Attach the first fragment
+        val fragmentManager = supportFragmentManager
+        fragmentManager.beginTransaction().add(R.id.fragmentContainer, mapsFragment).commit()
 
         bottom_navigation_menu.setOnNavigationItemSelectedListener { item ->
+            var fragment: Fragment = MapFragment() //TODO: Manage to reuse old fragment
             when (item.itemId) {
                 R.id.map_button -> {
                     Toast.makeText(application.baseContext, "Map", Toast.LENGTH_LONG).show()
-                    viewpager.currentItem = 0
+                    fragment = MapFragment() //TODO: Manage to reuse old fragment
                 }
                 R.id.orders_button -> {
                     Toast.makeText(application.baseContext, "Orders", Toast.LENGTH_LONG).show()
-                    viewpager.currentItem = 1
+                    fragment = ordersFragment
                 }
                 R.id.settings_button -> {
                     Toast.makeText(application.baseContext, "Settings", Toast.LENGTH_LONG).show()
-                    viewpager.currentItem = 2
+                    fragment = settingsFragment
                 }
             }
+
+            // Insert the fragment by replacing any existing fragment
+            fragmentManager.beginTransaction().replace(R.id.fragmentContainer, fragment).commit()
+
+            // Return
             true
         }
-    }
-
-    private fun setupViewPager(viewPager: ViewPager) {
-        val adapter = BottomBarAdapter(supportFragmentManager)
-        adapter.addFragment(mapsFragment)
-        adapter.addFragment(ordersFragment)
-        adapter.addFragment(settingsFragment)
-        viewPager.adapter = adapter
     }
 
     fun onClick(view: View) {
@@ -70,6 +69,18 @@ class MainActivity : AppCompatActivity() {
                 i.putExtra("Username", order.Username)
                 i.putExtra("orderDescription", order.OrderDescription)
                 i.putExtra("coords", doubleArrayOf(order.FromLat, order.FromLng, order.ToLat, order.ToLng))
+                startActivity(i)
+            }
+            R.id.settings_contact_CO -> {
+                Toast.makeText(application.baseContext, "Contact CO", Toast.LENGTH_LONG).show()
+            }
+            R.id.settings_log_out -> {
+                Toast.makeText(application.baseContext, "Log out", Toast.LENGTH_LONG).show()
+                val i = Intent(this, LoginActivity::class.java)
+
+                // Get the user data
+                val sharedPref = this.getSharedPreferences("user", Context.MODE_PRIVATE)
+                sharedPref.edit().putBoolean("IsLogged", false).apply()
                 startActivity(i)
             }
         }

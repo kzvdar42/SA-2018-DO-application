@@ -47,6 +47,20 @@ abstract class AppDatabase : RoomDatabase() {
                     , 55.7867635, 49.1216088, 55.7476907, 48.7433593))
             result.add(OrderEntity(3, "Forth order", "Forth order description"
                     , 49.125392, 55.784798, 49.107202, 55.794498))
+            result.add(OrderEntity(3, "Forth order", "Forth order description"
+                    , 49.125392, 55.784798, 49.107202, 55.794498))
+            result.add(OrderEntity(3, "Forth order", "Forth order description"
+                    , 49.125392, 55.784798, 49.107202, 55.794498))
+            result.add(OrderEntity(3, "Forth order", "Forth order description"
+                    , 49.125392, 55.784798, 49.107202, 55.794498))
+            result.add(OrderEntity(3, "Forth order", "Forth order description"
+                    , 49.125392, 55.784798, 49.107202, 55.794498))
+            result.add(OrderEntity(3, "Forth order", "Forth order description"
+                    , 49.125392, 55.784798, 49.107202, 55.794498))
+            result.add(OrderEntity(3, "Forth order", "Forth order description"
+                    , 49.125392, 55.784798, 49.107202, 55.794498))
+            result.add(OrderEntity(3, "Forth order", "Forth order description"
+                    , 49.125392, 55.784798, 49.107202, 55.794498))
             return result
         }
     }

@@ -1,7 +1,7 @@
 package com.example.kzvdar42.deliveryoperatorapp.Adapter
 
-import android.view.ViewGroup
 import android.util.SparseArray
+import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter

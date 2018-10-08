@@ -3,11 +3,11 @@ package com.example.kzvdar42.deliveryoperatorapp.Adapter
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 
-class BottomBarAdapter(fragmentManager : FragmentManager) : SmartFragmentStatePagerAdapter(fragmentManager) {
+class BottomBarAdapter(fragmentManager: FragmentManager) : SmartFragmentStatePagerAdapter(fragmentManager) {
 
-    private val fragments : ArrayList<Fragment> = ArrayList()
+    private val fragments: ArrayList<Fragment> = ArrayList()
 
-    fun addFragment(fragment : Fragment) {
+    fun addFragment(fragment: Fragment) {
         fragments.add(fragment)
     }
 

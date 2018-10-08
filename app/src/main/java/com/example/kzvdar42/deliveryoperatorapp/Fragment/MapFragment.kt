@@ -41,15 +41,18 @@ import timber.log.Timber
 class MapFragment : Fragment(), OnMapReadyCallback, PermissionsListener, LocationEngineListener {
 
 
-    private lateinit var mapView: MapView
+    private var mapView: MapView? = null
+
     // variables for adding location layer
     private lateinit var mapboxMap: MapboxMap
     private var permissionsManager: PermissionsManager? = null
     private var locationLayerPlugin: LocationLayerPlugin? = null
     private var locationEngine: LocationEngine? = null
     private var originLocation: Location? = null
+
     // variables for adding a marker
     private var originCoord: LatLng? = null
+
     // variables for calculating and drawing a route
     private var originPosition: Point? = null
     private var currentRoute: DirectionsRoute? = null
@@ -64,22 +67,20 @@ class MapFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Locatio
     private var orderToPosition: Point? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-
-
-
         val rootView = inflater.inflate(R.layout.fragment_map, container, false)
+
+        // Get order info
         orderName = "Order #-1"
         orderDescription = "Lorem ipsum"
         val coords = doubleArrayOf(55.7476907, 48.7433593, 55.7867635, 49.1216088)
         orderFrom = LatLng(coords[0], coords[1])
         orderTo = LatLng(coords[2], coords[3])
 
-        // Initiate map
         Mapbox.getInstance(context!!, getString(R.string.access_token))
+        // Initiate map
         mapView = rootView.findViewById(R.id.mapView)
-        mapView.onCreate(savedInstanceState)
-        mapView.getMapAsync(this)
-
+        mapView?.onCreate(savedInstanceState)
+        mapView?.getMapAsync(this)
         return rootView
     }
 
@@ -148,7 +149,7 @@ class MapFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Locatio
                             navigationMapRoute?.removeRoute()
                         } else {
                             startButton.isEnabled = true
-                            navigationMapRoute = NavigationMapRoute(null, mapView, mapboxMap, R.style.NavigationMapRoute)
+                            navigationMapRoute = NavigationMapRoute(null, mapView!!, mapboxMap, R.style.NavigationMapRoute)
                         }
                         navigationMapRoute?.addRoute(currentRoute)
                     }
@@ -166,7 +167,7 @@ class MapFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Locatio
             initializeLocationEngine()
             // Create an instance of the plugin. Adding in LocationLayerOptions is also an optional
             // parameter
-            val locationLayerPlugin = LocationLayerPlugin(mapView, mapboxMap)
+            val locationLayerPlugin = LocationLayerPlugin(mapView!!, mapboxMap)
 
             // Set the plugin's camera mode
             locationLayerPlugin.cameraMode = CameraMode.TRACKING
@@ -215,45 +216,45 @@ class MapFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Locatio
     @SuppressLint("MissingPermission")
     override fun onStart() {
         super.onStart()
-        mapView.onStart()
+        mapView?.onStart()
         locationLayerPlugin?.onStart()
     }
 
 
     override fun onResume() {
         super.onResume()
-        mapView.onResume()
+        mapView?.onResume()
     }
 
 
     override fun onPause() {
         super.onPause()
-        mapView.onPause()
+        mapView?.onPause()
     }
 
 
     override fun onStop() {
         super.onStop()
-        mapView.onStop()
-        locationLayerPlugin?.onStart()
+        mapView?.onStop()
+        locationLayerPlugin?.onStop()
     }
 
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        mapView.onSaveInstanceState(outState)
+        mapView?.onSaveInstanceState(outState)
     }
 
 
-    override fun onDestroy() {
-        super.onDestroy()
-        mapView.onDestroy()
+    override fun onDestroyView() {
+        super.onDestroyView()
+        mapView?.onDestroy()
     }
 
 
     override fun onLowMemory() {
         super.onLowMemory()
-        mapView.onLowMemory()
+        mapView?.onLowMemory()
     }
 }
 

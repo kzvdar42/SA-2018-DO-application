@@ -7,54 +7,53 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:onClick="onClick"
         android:orientation="vertical"
         android:theme="@style/AppTheme.recycleViewItem">
 
         <RelativeLayout
-            android:id="@+id/settings_change_personal_info"
+            android:id="@+id/settings_contact_CO"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="onClick"
             android:theme="@style/AppTheme.recycleViewItem">
 
             <TextView
-                android:id="@+id/settings_change_personal_info_text"
+                android:id="@+id/settings_contact_CO_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/contact_co"
                 android:padding="16dp"
+                android:text="@string/contact_co"
                 android:textSize="24sp"
                 android:theme="@style/AppTheme.recycleViewItem" />
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:layout_below="@id/settings_change_personal_info_text"
+                android:layout_below="@id/settings_contact_CO_text"
                 android:background="?android:attr/listDivider" />
 
         </RelativeLayout>
 
         <RelativeLayout
-            android:id="@+id/settings_notifications"
+            android:id="@+id/settings_log_out"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="onClick"
             android:theme="@style/AppTheme.recycleViewItem">
 
             <TextView
-                android:id="@+id/settings_notifications_text"
+                android:id="@+id/settings_log_out_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="16dp"
-                android:textSize="24sp"
                 android:text="@string/log_out"
+                android:textSize="24sp"
                 android:theme="@style/AppTheme.recycleViewItem" />
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:layout_below="@id/settings_notifications_text"
+                android:layout_below="@id/settings_log_out_text"
                 android:background="?android:attr/listDivider" />
         </RelativeLayout>
 
