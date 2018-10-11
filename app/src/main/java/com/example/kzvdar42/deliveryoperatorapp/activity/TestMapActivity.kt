@@ -1,4 +1,4 @@
-package com.example.kzvdar42.deliveryoperatorapp.Activity
+package com.example.kzvdar42.deliveryoperatorapp.activity
 
 import android.content.DialogInterface
 import android.location.Location

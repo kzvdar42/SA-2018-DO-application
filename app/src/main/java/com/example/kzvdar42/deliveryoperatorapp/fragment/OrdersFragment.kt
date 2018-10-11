@@ -1,4 +1,4 @@
-package com.example.kzvdar42.deliveryoperatorapp.Fragment
+package com.example.kzvdar42.deliveryoperatorapp.fragment
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,10 +9,10 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.kzvdar42.deliveryoperatorapp.Adapter.OrdersListAdapter
-import com.example.kzvdar42.deliveryoperatorapp.DB.OrderEntity
 import com.example.kzvdar42.deliveryoperatorapp.R
-import com.example.kzvdar42.deliveryoperatorapp.ViewModel.OrderListViewModel
+import com.example.kzvdar42.deliveryoperatorapp.adapter.OrdersListAdapter
+import com.example.kzvdar42.deliveryoperatorapp.db.OrderEntity
+import com.example.kzvdar42.deliveryoperatorapp.viewmodel.OrderListViewModel
 import java.util.*
 
 
@@ -30,17 +30,18 @@ class OrdersFragment : Fragment() {
 
         val rootView = inflater.inflate(R.layout.fragment_orders_list, container, false)
 
-
-        // setting up the recycler view
+        // Setting up the recycler view
         mRecyclerView = rootView.findViewById(R.id.order_list_recycler_view)
 
-        // use a linear layout manager
+        // Use a linear layout manager
         mLayoutManager = LinearLayoutManager(activity)
         mRecyclerView.layoutManager = mLayoutManager
-        // specify an adapter (see also next example)
+
+        // Specify an adapter
         mAdapter = OrdersListAdapter(LinkedList(), context!!)
         mRecyclerView.adapter = mAdapter
 
+        // Read data from View Model
         mViewModel = ViewModelProviders.of(activity!!).get(OrderListViewModel::class.java)
         mViewModel.getOrders()?.observe(this, Observer<List<OrderEntity>> { t -> mAdapter.updateOrderList(t!!) })
 

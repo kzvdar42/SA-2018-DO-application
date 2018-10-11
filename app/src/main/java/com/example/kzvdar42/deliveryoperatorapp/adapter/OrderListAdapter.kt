@@ -1,4 +1,4 @@
-package com.example.kzvdar42.deliveryoperatorapp.Adapter
+package com.example.kzvdar42.deliveryoperatorapp.adapter
 
 
 import android.content.Context
@@ -6,8 +6,8 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.kzvdar42.deliveryoperatorapp.DB.OrderEntity
 import com.example.kzvdar42.deliveryoperatorapp.R
+import com.example.kzvdar42.deliveryoperatorapp.db.OrderEntity
 import kotlinx.android.synthetic.main.orders_list_recycle_view_item.view.*
 
 

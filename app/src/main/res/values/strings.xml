@@ -1,15 +1,20 @@
 <resources>
     <string name="app_name">Delivery Operator App</string>
 
-
+    <!-- Login -->
     <string name="login_label">Login</string>
     <string name="username">Username</string>
     <string name="password">Password</string>
     <string name="login">Login</string>
 
+    <!-- Order list -->
     <string name="orders_list">Orders list</string>
     <string name="order_num">Order #</string>
 
+    <!-- Order info -->
+    <string name="select_order">Select order</string>
+
+    <!-- Map -->
     <string name="start_navigation">Start navigation</string>
 
     <!-- Bottom Navigation -->
@@ -23,6 +28,20 @@
     <string name="user_location_permission_not_granted">You didn\'t grant location permissions.</string>
 
     <!-- Settings -->
+    <string name="localization">Localization</string>
     <string name="contact_co">Contact CO</string>
     <string name="log_out">Log out</string>
+
+    <!-- Contact CO -->
+    <string name="not_implemented_yet">Not implemented yet.</string>
+
+    <!-- Others -->
+    <string name="empty_description">Lorem ipsum dolor sit amet,
+        consectetur adipiscing elit, sed do eiusmod tempor incididunt
+        ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis
+        nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+        consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+        cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat
+        non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. </string>
+
 </resources>

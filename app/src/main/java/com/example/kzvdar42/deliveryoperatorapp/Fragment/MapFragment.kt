@@ -1,6 +1,7 @@
-package com.example.kzvdar42.deliveryoperatorapp.Fragment
+package com.example.kzvdar42.deliveryoperatorapp.fragment
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.location.Location
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,6 +10,8 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.kzvdar42.deliveryoperatorapp.R
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.mapbox.android.core.location.LocationEngine
 import com.mapbox.android.core.location.LocationEngineListener
 import com.mapbox.android.core.location.LocationEnginePriority
@@ -59,25 +62,32 @@ class MapFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Locatio
     private var navigationMapRoute: NavigationMapRoute? = null
 
     // variables for order info
-    private lateinit var orderName: String
-    private lateinit var orderDescription: String
-    private lateinit var orderFrom: LatLng
-    private lateinit var orderTo: LatLng
+    private var orderName: String? = null
+    private var orderDescription: String? = null
+    private var orderFrom: LatLng? = null
+    private var orderTo: LatLng? = null
     private var orderFromPosition: Point? = null
     private var orderToPosition: Point? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val rootView = inflater.inflate(R.layout.fragment_map, container, false)
 
-        // Get order info
-        orderName = "Order #-1"
-        orderDescription = "Lorem ipsum"
-        val coords = doubleArrayOf(55.7476907, 48.7433593, 55.7867635, 49.1216088)
+        // Get order info.
+        val sharedPref = context?.getSharedPreferences("currentOrder", Context.MODE_PRIVATE)
+        orderName = sharedPref?.getString("orderName", "Order #-1")
+        orderDescription = sharedPref?.getString("orderDescription", "Lorem ipsum")
+        val gsonCoords = sharedPref?.getString("coords", "")
+        var coords: DoubleArray = doubleArrayOf(38.9098, -77.0295, 38.9098, -77.0295)
+        // Convert Gson to double array.
+        if (!gsonCoords.equals("")) {
+            val turnsType = object : TypeToken<DoubleArray>() {}.type
+            coords = Gson().fromJson<DoubleArray>(gsonCoords, turnsType)
+        }
         orderFrom = LatLng(coords[0], coords[1])
         orderTo = LatLng(coords[2], coords[3])
 
         Mapbox.getInstance(context!!, getString(R.string.access_token))
-        // Initiate map
+        // Initiate map.
         mapView = rootView.findViewById(R.id.mapView)
         mapView?.onCreate(savedInstanceState)
         mapView?.getMapAsync(this)
@@ -85,33 +95,41 @@ class MapFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Locatio
     }
 
     override fun onMapReady(mapboxMap: MapboxMap) {
+        // Initializing the map and location plugin.
         this.mapboxMap = mapboxMap
         enableLocationPlugin()
 
+        // Cast the data to needed structures.
         originPosition = Point.fromLngLat(originLocation!!.longitude, originLocation!!.latitude)
-        orderFromPosition = Point.fromLngLat(orderFrom.longitude, orderFrom.latitude)
-        orderToPosition = Point.fromLngLat(orderTo.longitude, orderTo.latitude)
+        orderFromPosition = Point.fromLngLat(orderFrom!!.longitude, orderFrom!!.latitude)
+        orderToPosition = Point.fromLngLat(orderTo!!.longitude, orderTo!!.latitude)
         originCoord = LatLng(originLocation!!.latitude, originLocation!!.longitude)
+        if (orderFrom != null) {
+            val latLngBounds = LatLngBounds.Builder()
+                    .include(originCoord!!)
+                    .include(orderFrom!!)
+                    .include(orderTo!!)
+                    .build()
+            mapboxMap.animateCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 100))
+        }
 
-        val latLngBounds = LatLngBounds.Builder()
-                .include(originCoord!!)
-                .include(orderFrom)
-                .include(orderTo)
-                .build()
-        mapboxMap.animateCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 100))
-
+        // Get the route.
+//        getRoute(orderFromPosition!!, orderToPosition!!)  //TODO: Navigation to all dots
         getRoute(originPosition!!, orderFromPosition!!)
 
+        // Add markers to the map.
         mapboxMap.addMarker(MarkerOptions()
                 .position(orderFrom)
-                .title(orderName)
-                .snippet(orderDescription))
-        mapboxMap.addMarker(MarkerOptions()
-                .position(orderTo)
-                .title(orderName)
+                .title("$orderName [From]")
                 .snippet(orderDescription))
 
-        startButton.setOnClickListener { _: View? ->
+        mapboxMap.addMarker(MarkerOptions()
+                .position(orderTo)
+                .title("$orderName [To]")
+                .snippet(orderDescription))
+
+        // Set the On Click Listener for the button.
+        startButton.setOnClickListener {
             run {
                 val simulateRoute = true
                 val options = NavigationLauncherOptions.builder()
@@ -146,9 +164,9 @@ class MapFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Locatio
 
                         // Draw the route on the map
                         if (navigationMapRoute != null) {
-                            navigationMapRoute?.removeRoute()
+//                            navigationMapRoute?.removeRoute()
                         } else {
-                            startButton.isEnabled = true
+                            startButton?.isEnabled = true
                             navigationMapRoute = NavigationMapRoute(null, mapView!!, mapboxMap, R.style.NavigationMapRoute)
                         }
                         navigationMapRoute?.addRoute(currentRoute)

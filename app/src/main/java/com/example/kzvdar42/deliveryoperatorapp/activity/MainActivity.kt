@@ -1,16 +1,15 @@
-package com.example.kzvdar42.deliveryoperatorapp.Activity
+package com.example.kzvdar42.deliveryoperatorapp.activity
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
-import com.example.kzvdar42.deliveryoperatorapp.Fragment.MapFragment
-import com.example.kzvdar42.deliveryoperatorapp.Fragment.OrdersFragment
-import com.example.kzvdar42.deliveryoperatorapp.Fragment.SettingsFragment
 import com.example.kzvdar42.deliveryoperatorapp.R
+import com.example.kzvdar42.deliveryoperatorapp.fragment.MapFragment
+import com.example.kzvdar42.deliveryoperatorapp.fragment.OrdersFragment
+import com.example.kzvdar42.deliveryoperatorapp.fragment.SettingsFragment
 import kotlinx.android.synthetic.main.activity_main.*
 
 
@@ -25,6 +24,11 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        // Add toolbar
+        val toolbar = findViewById<Toolbar>(R.id.toolbar)
+        toolbar.title = resources.getString(R.string.map_label)
+        setSupportActionBar(toolbar)
+
         // Creating fragments
         mapsFragment = MapFragment()
         ordersFragment = OrdersFragment()
@@ -38,16 +42,16 @@ class MainActivity : AppCompatActivity() {
             var fragment: Fragment = MapFragment() //TODO: Manage to reuse old fragment
             when (item.itemId) {
                 R.id.map_button -> {
-                    Toast.makeText(application.baseContext, "Map", Toast.LENGTH_LONG).show()
                     fragment = MapFragment() //TODO: Manage to reuse old fragment
+                    toolbar.title = resources.getString(R.string.map_label)
                 }
                 R.id.orders_button -> {
-                    Toast.makeText(application.baseContext, "Orders", Toast.LENGTH_LONG).show()
                     fragment = ordersFragment
+                    toolbar.title = resources.getString(R.string.orders_label)
                 }
                 R.id.settings_button -> {
-                    Toast.makeText(application.baseContext, "Settings", Toast.LENGTH_LONG).show()
                     fragment = settingsFragment
+                    toolbar.title = resources.getString(R.string.settings_label)
                 }
             }
 
@@ -69,18 +73,6 @@ class MainActivity : AppCompatActivity() {
                 i.putExtra("Username", order.Username)
                 i.putExtra("orderDescription", order.OrderDescription)
                 i.putExtra("coords", doubleArrayOf(order.FromLat, order.FromLng, order.ToLat, order.ToLng))
-                startActivity(i)
-            }
-            R.id.settings_contact_CO -> {
-                Toast.makeText(application.baseContext, "Contact CO", Toast.LENGTH_LONG).show()
-            }
-            R.id.settings_log_out -> {
-                Toast.makeText(application.baseContext, "Log out", Toast.LENGTH_LONG).show()
-                val i = Intent(this, LoginActivity::class.java)
-
-                // Get the user data
-                val sharedPref = this.getSharedPreferences("user", Context.MODE_PRIVATE)
-                sharedPref.edit().putBoolean("IsLogged", false).apply()
                 startActivity(i)
             }
         }

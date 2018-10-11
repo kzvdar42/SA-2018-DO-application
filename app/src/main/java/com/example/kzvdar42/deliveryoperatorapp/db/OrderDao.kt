@@ -1,4 +1,4 @@
-package com.example.kzvdar42.deliveryoperatorapp.DB
+package com.example.kzvdar42.deliveryoperatorapp.db
 
 import androidx.lifecycle.LiveData
 import androidx.room.Dao

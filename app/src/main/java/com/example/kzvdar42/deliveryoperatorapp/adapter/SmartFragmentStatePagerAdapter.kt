@@ -1,4 +1,4 @@
-package com.example.kzvdar42.deliveryoperatorapp.Adapter
+package com.example.kzvdar42.deliveryoperatorapp.adapter
 
 import android.util.SparseArray
 import android.view.ViewGroup

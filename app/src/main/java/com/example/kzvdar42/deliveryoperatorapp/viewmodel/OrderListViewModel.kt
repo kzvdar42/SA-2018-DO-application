@@ -1,10 +1,10 @@
-package com.example.kzvdar42.deliveryoperatorapp.ViewModel
+package com.example.kzvdar42.deliveryoperatorapp.viewmodel
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
-import com.example.kzvdar42.deliveryoperatorapp.DB.OrderEntity
-import com.example.kzvdar42.deliveryoperatorapp.DB.Repository
+import com.example.kzvdar42.deliveryoperatorapp.db.OrderEntity
+import com.example.kzvdar42.deliveryoperatorapp.db.Repository
 
 class OrderListViewModel(application: Application) : AndroidViewModel(application) {
 

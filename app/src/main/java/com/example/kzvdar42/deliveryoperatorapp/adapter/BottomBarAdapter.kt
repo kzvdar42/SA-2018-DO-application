@@ -1,4 +1,4 @@
-package com.example.kzvdar42.deliveryoperatorapp.Adapter
+package com.example.kzvdar42.deliveryoperatorapp.adapter
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager

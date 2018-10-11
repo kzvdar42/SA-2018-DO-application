@@ -3,19 +3,17 @@
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/order_list_item"
+    style="@style/AppTheme.recycleViewItem"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="4dp"
-    android:clickable="true"
-    android:focusable="true"
-    android:foreground="?android:attr/selectableItemBackground"
     android:onClick="onClick"
     card_view:cardElevation="2dp">
 
     <com.google.android.material.circularreveal.CircularRevealRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="96dp">
+        android:layout_height="128dp">
 
         <TextView
             android:id="@+id/order_name"
@@ -34,7 +32,9 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/order_name"
             android:paddingLeft="16dp"
+            android:paddingTop="4dp"
             android:paddingRight="16dp"
+            android:paddingBottom="4dp"
             tools:text="Description" />
 
     </com.google.android.material.circularreveal.CircularRevealRelativeLayout>

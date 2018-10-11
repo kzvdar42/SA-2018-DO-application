@@ -1,10 +1,13 @@
-package com.example.kzvdar42.deliveryoperatorapp.Activity
+package com.example.kzvdar42.deliveryoperatorapp.activity
 
+import android.content.Context
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import com.example.kzvdar42.deliveryoperatorapp.R
+import com.google.gson.Gson
 import com.mapbox.api.directions.v5.models.DirectionsResponse
 import com.mapbox.geojson.Point
 import com.mapbox.mapboxsdk.Mapbox
@@ -32,6 +35,7 @@ class OrderInfoActivity : AppCompatActivity(), OnMapReadyCallback {
     // OrderEntity info
     private lateinit var orderName: String
     private lateinit var orderDescription: String
+    private lateinit var coords: DoubleArray
     private lateinit var orderFrom: LatLng
     private lateinit var orderTo: LatLng
 
@@ -43,7 +47,7 @@ class OrderInfoActivity : AppCompatActivity(), OnMapReadyCallback {
         val intent = intent
         orderName = intent.getStringExtra("orderNum")
         orderDescription = intent.getStringExtra("orderDescription")
-        val coords = intent.getDoubleArrayExtra("coords")
+        coords = intent.getDoubleArrayExtra("coords")
         orderFrom = LatLng(coords[0], coords[1])
         orderTo = LatLng(coords[2], coords[3])
 
@@ -51,6 +55,9 @@ class OrderInfoActivity : AppCompatActivity(), OnMapReadyCallback {
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         toolbar.title = orderName
         setSupportActionBar(toolbar)
+        // Set back button on toolbar
+        toolbar.setNavigationOnClickListener { finish() }
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         // Add info
         customer_name_text.text = intent.getStringExtra("Username")
@@ -73,17 +80,17 @@ class OrderInfoActivity : AppCompatActivity(), OnMapReadyCallback {
                 .include(orderFrom)
                 .include(orderTo)
                 .build()
-        mapboxMap.animateCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 100))
+        mapboxMap.animateCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 200))
 
         getRoute(orderFromPosition!!, orderToPosition!!)
 
         mapboxMap.addMarker(MarkerOptions()
                 .position(orderFrom)
-                .title(orderName)
+                .title("$orderName [From]")
                 .snippet(orderDescription))
         mapboxMap.addMarker(MarkerOptions()
                 .position(orderTo)
-                .title(orderName)
+                .title("$orderName [To]")
                 .snippet(orderDescription))
     }
 
@@ -117,6 +124,23 @@ class OrderInfoActivity : AppCompatActivity(), OnMapReadyCallback {
                         Timber.e("Error: %s", throwable.message)
                     }
                 })
+    }
+
+    fun onClick(view: View) {
+        when (view.id) {
+            R.id.select_order -> {
+                val sharedPref = getSharedPreferences("currentOrder", Context.MODE_PRIVATE)
+                        ?: return
+                val gsonCoords = Gson().toJson(coords)
+                with(sharedPref.edit()) {
+                    putString("orderName", orderName)
+                    putString("orderDescription", orderDescription)
+                    putString("coords", gsonCoords)
+                    apply()
+                    onBackPressed()
+                }
+            }
+        }
     }
 
 

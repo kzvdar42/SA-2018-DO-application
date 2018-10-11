@@ -58,4 +58,5 @@ dependencies {
     annotationProcessor "android.arch.persistence.room:compiler:1.1.1"
     //Anko to async load data from room
     implementation 'org.jetbrains.anko:anko-common:0.9'
+    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
 }
