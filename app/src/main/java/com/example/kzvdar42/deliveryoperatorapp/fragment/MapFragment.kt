@@ -77,7 +77,7 @@ class MapFragment : Fragment(), OnMapReadyCallback, PermissionsListener, Locatio
         orderName = sharedPref?.getString("orderName", "Order #-1")
         orderDescription = sharedPref?.getString("orderDescription", "Lorem ipsum")
         val gsonCoords = sharedPref?.getString("coords", "")
-        var coords: DoubleArray = doubleArrayOf(38.9098, -77.0295, 38.9098, -77.0295)
+        var coords: DoubleArray = doubleArrayOf(38.9098, -77.0295, 38.9098, -77.0295) //TODO: Change to latest known location.
         // Convert Gson to double array.
         if (!gsonCoords.equals("")) {
             val turnsType = object : TypeToken<DoubleArray>() {}.type

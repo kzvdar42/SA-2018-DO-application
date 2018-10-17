@@ -13,6 +13,7 @@
 
     <!-- Order info -->
     <string name="select_order">Select order</string>
+    <string name="empty_order_name">Order #-1</string>
 
     <!-- Map -->
     <string name="start_navigation">Start navigation</string>
@@ -22,9 +23,9 @@
     <string name="orders_label">Orders</string>
     <string name="settings_label">Settings</string>
 
-    <!-- Mapbox -->
-    <string name="access_token">pk.eyJ1Ijoia3p2ZGFyNDIiLCJhIjoiY2ptc2dyeHQwMGZjNTNxcDh0eDh6MXNyOCJ9.n4F86lJ4nVAesqi6OLtbUQ</string>
-    <string name="user_location_permission_explanation">This app needs location permissions in orderEntity to show its functionality.</string>
+    <!-- Mapbox  FIXME: Move the access token to the more secure place -->
+    <string name="access_token" translatable="false">pk.eyJ1Ijoia3p2ZGFyNDIiLCJhIjoiY2ptc2dyeHQwMGZjNTNxcDh0eDh6MXNyOCJ9.n4F86lJ4nVAesqi6OLtbUQ</string>
+    <string name="user_location_permission_explanation">This app needs location permissions for navigation.</string>
     <string name="user_location_permission_not_granted">You didn\'t grant location permissions.</string>
 
     <!-- Settings -->
@@ -32,11 +33,15 @@
     <string name="contact_co">Contact CO</string>
     <string name="log_out">Log out</string>
 
+    <!-- Languages -->
+    <string name="english" translatable="false">English</string>
+    <string name="russian" translatable="false">Русский</string>
+
     <!-- Contact CO -->
     <string name="not_implemented_yet">Not implemented yet.</string>
 
     <!-- Others -->
-    <string name="empty_description">Lorem ipsum dolor sit amet,
+    <string name="empty_description" translatable="false">Lorem ipsum dolor sit amet,
         consectetur adipiscing elit, sed do eiusmod tempor incididunt
         ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis
         nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo

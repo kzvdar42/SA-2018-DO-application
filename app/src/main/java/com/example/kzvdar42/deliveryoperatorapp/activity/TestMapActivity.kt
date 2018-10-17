@@ -1,5 +1,6 @@
 package com.example.kzvdar42.deliveryoperatorapp.activity
 
+import android.content.Context
 import android.content.DialogInterface
 import android.location.Location
 import android.os.Bundle
@@ -7,6 +8,8 @@ import androidx.annotation.Nullable
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.example.kzvdar42.deliveryoperatorapp.R
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.mapbox.api.directions.v5.models.DirectionsResponse
 import com.mapbox.api.directions.v5.models.DirectionsRoute
 import com.mapbox.geojson.Point
@@ -32,11 +35,23 @@ class TestMapActivity : AppCompatActivity(), OnNavigationReadyCallback, Navigati
 
     private val points = ArrayList<Point>()
 
+    private var orderName = resources.getString(R.string.empty_order_name)
+    private var orderDescription = resources.getString(R.string.empty_description)
+
     override fun onCreate(@Nullable savedInstanceState: Bundle?) {
         setTheme(R.style.Theme_AppCompat_NoActionBar)
         super.onCreate(savedInstanceState)
 
-        val coords = intent.getDoubleArrayExtra("coords")
+        val sharedPref = this.getSharedPreferences("currentOrder", Context.MODE_PRIVATE)
+        orderName = sharedPref?.getString("orderName", "Order #-1")
+        orderDescription = sharedPref?.getString("orderDescription", "Lorem ipsum")
+        val gsonCoords = sharedPref?.getString("coords", "")
+        var coords: DoubleArray = doubleArrayOf(38.9098, -77.0295, 38.9098, -77.0295) //TODO: Change to latest known location.
+        // Convert Gson to double array.
+        if (!gsonCoords.equals("")) {
+            val turnsType = object : TypeToken<DoubleArray>() {}.type
+            coords = Gson().fromJson<DoubleArray>(gsonCoords, turnsType)
+        }
         var i = 0
         while (i <= coords.size) {
             points.add(Point.fromLngLat(coords[i], coords[i + 1]))

@@ -35,7 +35,7 @@ class OrdersListAdapter(private var orderEntityList: List<OrderEntity>, val cont
 
     class MyViewHolder(itemView: CardView) : RecyclerView.ViewHolder(itemView) {
         fun bindItems(orderEntity: OrderEntity, context: Context) {
-            itemView.order_name.text = context.getResources().getString(R.string.order_num) + "${orderEntity.OrderNum}"
+            itemView.order_name.text = context.resources.getString(R.string.order_num) + "${orderEntity.OrderNum}"
             itemView.order_description.text = orderEntity.Username + '\n' + orderEntity.OrderDescription
         }
     }

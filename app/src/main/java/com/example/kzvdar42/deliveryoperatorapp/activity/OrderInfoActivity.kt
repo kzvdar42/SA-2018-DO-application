@@ -55,6 +55,7 @@ class OrderInfoActivity : AppCompatActivity(), OnMapReadyCallback {
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         toolbar.title = orderName
         setSupportActionBar(toolbar)
+
         // Set back button on toolbar
         toolbar.setNavigationOnClickListener { finish() }
         supportActionBar?.setDisplayHomeAsUpEnabled(true)

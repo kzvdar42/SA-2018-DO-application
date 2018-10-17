@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.example.kzvdar42.deliveryoperatorapp.R
 import com.example.kzvdar42.deliveryoperatorapp.activity.EmptyActivity
+import com.example.kzvdar42.deliveryoperatorapp.activity.LocalizationActivity
 import com.example.kzvdar42.deliveryoperatorapp.activity.LoginActivity
 import kotlinx.android.synthetic.main.fragment_settings.view.*
 
@@ -21,7 +22,7 @@ class SettingsFragment : Fragment() {
 
         // Setting ocClick listeners to the buttons.
         rootView.settings_localization_text.setOnClickListener {
-            startActivity(Intent(context, EmptyActivity::class.java))
+            startActivity(Intent(context, LocalizationActivity::class.java))
         }
 
         rootView.settings_contact_CO_text.setOnClickListener {

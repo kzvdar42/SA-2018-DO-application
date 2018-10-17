@@ -45,7 +45,7 @@ class LoginActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
-    fun login() {
+    private fun login() {
         // TODO: Implement the Login process
         sharedPref.edit().putBoolean("isLogged", true).apply()
         goToMainPage()
