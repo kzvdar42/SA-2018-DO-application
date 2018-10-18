@@ -12,8 +12,16 @@ class Repository(application: Application) {
         mMenuDao = db.orderDao()
     }
 
-    fun getAllOrders(): LiveData<List<OrderEntity>> {
-        return mMenuDao.getAllOrders()
+    fun getOrder(orderNumber : Int) :  LiveData<OrderEntity> {
+        return mMenuDao.getOrder(orderNumber)
+    }
+
+    fun getNewOrders(): LiveData<List<OrderEntity>> {
+        return mMenuDao.getNewOrders()
+    }
+
+    fun getAcceptedOrders(): LiveData<List<OrderEntity>> {
+        return mMenuDao.getAcceptedOrders()
     }
 
 }

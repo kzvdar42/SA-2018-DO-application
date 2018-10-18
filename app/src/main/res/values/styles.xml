@@ -7,12 +7,14 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <!-- Theme for the splash screen. -->
+    <style name="AppTheme.Launcher">
+        <item name="android:windowBackground">@drawable/launch_screen</item>
+        <item name="colorPrimaryDark">@color/colorAccent</item>
+    </style>
 
-    <style name="AppTheme.Button">
-        <item name="android:padding">12dp</item>
-        <item name="cornerRadius">12dp</item>
-        <item name="android:textSize">15sp</item>
-        <item name="android:textAllCaps">false</item>
+    <style name="AppTheme.Toolbar">
+        <item name="android:windowBackground">@color/colorPrimary</item>
     </style>
 
     <!-- Cards theme. -->
@@ -30,14 +32,22 @@
         <item name="android:foreground">?android:attr/selectableItemBackground</item>
     </style>
 
+    <!-- Button theme. -->
+    <style name="AppTheme.Button">
+        <item name="android:padding">12dp</item>
+        <item name="cornerRadius">12dp</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
 
+    <!-- Navigation. -->
     <style name="NavigationMapRoute">
-        <!-- Colors -->
+        <!-- Colors. -->
         <item name="routeColor">@color/mapboxBlue</item>
         <item name="routeModerateCongestionColor">@color/mapboxYellow</item>
         <item name="routeSevereCongestionColor">@color/mapboxPink</item>
         <item name="routeShieldColor">@color/mapboxWhite</item>
-        <!-- Scales -->
+        <!-- Scales. -->
         <item name="routeScale">1.0</item>
     </style>
 

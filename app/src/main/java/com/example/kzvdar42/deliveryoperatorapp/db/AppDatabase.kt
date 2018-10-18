@@ -10,7 +10,7 @@ import java.util.*
 import java.util.concurrent.Executors
 
 
-@Database(entities = [OrderEntity::class], version = 1, exportSchema = false)
+@Database(entities = [OrderEntity::class], version = 2, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun orderDao(): OrderDao
@@ -39,28 +39,33 @@ abstract class AppDatabase : RoomDatabase() {
 
         private fun populateData(): List<OrderEntity> {
             val result = LinkedList<OrderEntity>()
-            result.add(OrderEntity(1, "Vlad Kuleykin", "The parcel is near the door, you can take it anytime.\n Phone num: +79173452517"
-                    , 55.7476907, 48.7433593, 55.7867635, 49.1216088))
-            result.add(OrderEntity(2, "Turk Turklton", "Second order description.\n Impossible route"
-                    , 55.7476907, 48.7433593, 38.9098, -77.0295))
-            result.add(OrderEntity(3, "Christopher Duncan Turk", "$emptyDescription$emptyDescription$emptyDescription"
-                    , 55.7867635, 49.1216088, 55.7476907, 48.7433593))
-            result.add(OrderEntity(4, "Boris The Blade", "I'll be at the place from 5pm to 7 pm.\n Phone num: +79991561304"
-                    , 55.813524, 49.133618, 55.801285, 48.976643))
-            result.add(OrderEntity(5, "Name Surname", "Another order description"
-                    , 55.813524, 49.133618, 55.801285, 48.976643))
-            result.add(OrderEntity(6, "Name Surname", "Another order description"
-                    , 55.813524, 49.133618, 55.801285, 48.976643))
-            result.add(OrderEntity(7, "Name Surname", "Another order description"
-                    , 55.813524, 49.133618, 55.801285, 48.976643))
-            result.add(OrderEntity(8, "Name Surname", "Another order description"
-                    , 55.813524, 49.133618, 55.801285, 48.976643))
-            result.add(OrderEntity(9, "Name Surname", "Another order description"
-                    , 55.813524, 49.133618, 55.801285, 48.976643))
-            result.add(OrderEntity(10, "Name Surname", "Another order description"
-                    , 55.813524, 49.133618, 55.801285, 48.976643))
-            result.add(OrderEntity(11, "Name Surname", "Another order description"
-                    , 55.813524, 49.133618, 55.801285, 48.976643))
+            result.add(OrderEntity(1,true, "Vlad Kuleykin", "The parcel is near the door, you can take it anytime.", "+79173452517"
+                    ,1.2,0.2,0.3,0.5,"1 day", 55.7476907, 48.7433593, 55.7867635, 49.1216088))
+
+            result.add(OrderEntity(2,false, "Turk Turklton", "Second order description.\n Impossible route", "+15555550000"
+                    ,3.0,1.2,0.7,1.5,"infinite", 55.7476907, 48.7433593, 38.9098, -77.0295))
+
+            result.add(OrderEntity(3,false, "Christopher Duncan Turk", "$emptyDescription$emptyDescription$emptyDescription", "+79173452517"
+                    ,3.0,1.2,0.7,1.5,"3 day", 55.7867635, 49.1216088, 55.7476907, 48.7433593))
+
+            result.add(OrderEntity(4,false, "Boris The Blade", "I'll be at the place from 5pm to 7 pm.", "+79991561304"
+                    ,3.0,1.2,0.7,1.5,"1 day", 55.813524, 49.133618, 55.801285, 48.976643))
+
+            result.add(OrderEntity(5,false, "Name Surname", "Available during all day", "+79991561304"
+                    ,3.0,1.2,0.7,1.5,"20 minutes adventure",55.752847, 48.744952,55.747026, 48.744436))
+
+            result.add(OrderEntity(6,true, "Name Surname", "Another order description", "+79991561304"
+                    ,3.0,1.2,0.7,1.5,"1 day", 55.813524, 49.133618, 55.801285, 48.976643))
+            result.add(OrderEntity(7,true, "Name Surname", "Another order description", "+79991561304"
+                    ,3.0,1.2,0.7,1.5,"1 day", 55.813524, 49.133618, 55.801285, 48.976643))
+            result.add(OrderEntity(8,true, "Name Surname", "Another order description", "+79991561304"
+                    ,3.0,1.2,0.7,1.5,"1 day", 55.813524, 49.133618, 55.801285, 48.976643))
+            result.add(OrderEntity(9,false, "Name Surname", "Another order description", "+79991561304"
+                    ,3.0,1.2,0.7,1.5,"1 day", 55.813524, 49.133618, 55.801285, 48.976643))
+            result.add(OrderEntity(10,true, "Name Surname", "Another order description", "+79991561304"
+                    ,3.0,1.2,0.7,1.5,"1 day", 55.813524, 49.133618, 55.801285, 48.976643))
+            result.add(OrderEntity(11,false, "Name Surname", "Another order description", "+79991561304"
+                    ,3.0,1.2,0.7,1.5,"1 day", 55.813524, 49.133618, 55.801285, 48.976643))
             return result
         }
 

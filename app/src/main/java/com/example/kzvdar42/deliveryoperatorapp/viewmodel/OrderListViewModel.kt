@@ -10,13 +10,21 @@ class OrderListViewModel(application: Application) : AndroidViewModel(applicatio
 
     private var repository: Repository = Repository(application)
 
-    private var data: LiveData<List<OrderEntity>>? = null
+    private var acceptedOrders: LiveData<List<OrderEntity>>? = null
+    private var newOrders: LiveData<List<OrderEntity>>? = null
 
-    fun getOrders(): LiveData<List<OrderEntity>>? {
-        if (data == null) {
-            data = repository.getAllOrders()
+    fun getAcceptedOrders(): LiveData<List<OrderEntity>>? {
+        if (acceptedOrders == null) {
+            acceptedOrders = repository.getAcceptedOrders()
         }
-        return data
+        return acceptedOrders
+    }
+
+    fun getNewOrders(): LiveData<List<OrderEntity>>? {
+        if (newOrders == null) {
+            newOrders = repository.getAcceptedOrders()
+        }
+        return newOrders
     }
 
 }

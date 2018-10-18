@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Delivery Operator App</string>
+    <string name="application_name">Delivery Operator App</string>
 
     <!-- Login -->
     <string name="login_label">Login</string>
@@ -8,8 +8,8 @@
     <string name="login">Login</string>
 
     <!-- Order list -->
-    <string name="orders_list">Orders list</string>
-    <string name="order_num">Order #</string>
+    <string name="order_num">Order #%1$d</string>
+    <string name="new_orders_label">New orders</string>
 
     <!-- Order info -->
     <string name="select_order">Select order</string>
@@ -17,6 +17,13 @@
 
     <!-- Map -->
     <string name="start_navigation">Start navigation</string>
+
+    <!-- Navigation -->
+    <string name="map_dialog_text">
+        You have been arrived to the transit point.
+        \n Do you want to continue the navigation?</string>
+    <string name="map_dialog_positive_text">Continue</string>
+    <string name="map_dialog_negative_text">Stop</string>
 
     <!-- Bottom Navigation -->
     <string name="map_label">Map</string>

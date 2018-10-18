@@ -66,13 +66,13 @@
     <!--app:srcCompat="@drawable/ic_navigation" />-->
 
     <com.google.android.material.button.MaterialButton
-    android:id="@+id/select_order"
-    style="@style/AppTheme.Button"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_gravity="bottom|end"
-    android:layout_margin="16dp"
-    android:onClick="onClick"
-    android:text="@string/select_order" />
+        android:id="@+id/select_order"
+        style="@style/AppTheme.Button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="16dp"
+        android:onClick="onClick"
+        android:text="@string/select_order" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

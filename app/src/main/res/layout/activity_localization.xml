@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merge>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    tools:context=".activity.LocalizationActivity">
 
     <include layout="@layout/toolbar" />
 
-    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/settings_fragment"
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -16,7 +20,7 @@
 
             <RelativeLayout
                 android:id="@+id/english_layout"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:theme="@style/AppTheme.recycleViewItem">
 
@@ -24,6 +28,7 @@
                     android:id="@+id/english_layout_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:onClick="onClick"
                     android:padding="16dp"
                     android:text="@string/english"
                     android:textSize="24sp"
@@ -38,7 +43,7 @@
 
             <RelativeLayout
                 android:id="@+id/russian_layout"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:theme="@style/AppTheme.recycleViewItem">
 
@@ -46,6 +51,7 @@
                     android:id="@+id/russian_layout_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:onClick="onClick"
                     android:padding="16dp"
                     android:text="@string/russian"
                     android:textSize="24sp"
@@ -61,4 +67,4 @@
 
         </LinearLayout>
     </ScrollView>
-</merge>
+</LinearLayout>

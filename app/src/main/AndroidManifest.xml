@@ -7,11 +7,11 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="com.mapbox.mapboxsdk.telemetry.TelemetryService" />
 
+    <!-- TODO: Delete tools:ignore="GoogleAppIndexingWarning" -->
     <application
         android:allowBackup="true"
-        android:configChanges="locale"
         android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
+        android:label="@string/application_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
@@ -24,10 +24,15 @@
             </intent-filter>
         </activity>
         <activity android:name=".activity.OrderInfoActivity" />
-        <activity android:name=".activity.TestMapActivity" />
+        <activity android:name=".activity.NavigationActivity" />
         <activity android:name=".activity.MainActivity" />
+        <activity
+            android:name=".activity.SplashActivity"
+            android:theme="@style/AppTheme.Launcher">
+
+        </activity>
         <activity android:name=".activity.EmptyActivity" />
-        <activity android:name=".activity.LocalizationActivity"></activity>
+        <activity android:name=".activity.LocalizationActivity" />
     </application>
 
 </manifest>

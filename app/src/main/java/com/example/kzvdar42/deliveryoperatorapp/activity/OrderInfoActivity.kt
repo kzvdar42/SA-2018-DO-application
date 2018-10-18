@@ -6,7 +6,11 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import com.example.kzvdar42.deliveryoperatorapp.R
+import com.example.kzvdar42.deliveryoperatorapp.db.OrderEntity
+import com.example.kzvdar42.deliveryoperatorapp.viewmodel.OrderInfoViewModel
 import com.google.gson.Gson
 import com.mapbox.api.directions.v5.models.DirectionsResponse
 import com.mapbox.geojson.Point
@@ -32,12 +36,12 @@ class OrderInfoActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var mapView: MapView
     private lateinit var mapboxMap: MapboxMap
 
+    //View Model
+    private lateinit var mViewModel: OrderInfoViewModel
+
     // OrderEntity info
-    private lateinit var orderName: String
-    private lateinit var orderDescription: String
-    private lateinit var coords: DoubleArray
-    private lateinit var orderFrom: LatLng
-    private lateinit var orderTo: LatLng
+    private lateinit var title: String
+    private lateinit var order: OrderEntity
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,37 +49,46 @@ class OrderInfoActivity : AppCompatActivity(), OnMapReadyCallback {
 
         // Get data about the order
         val intent = intent
-        orderName = intent.getStringExtra("orderNum")
-        orderDescription = intent.getStringExtra("orderDescription")
-        coords = intent.getDoubleArrayExtra("coords")
-        orderFrom = LatLng(coords[0], coords[1])
-        orderTo = LatLng(coords[2], coords[3])
+        val orderNum = intent.getIntExtra("orderNum", 0)
 
-        // Add toolbar
-        val toolbar = findViewById<Toolbar>(R.id.toolbar)
-        toolbar.title = orderName
-        setSupportActionBar(toolbar)
+        // Get View Model
+        mViewModel = ViewModelProviders.of(this).get(OrderInfoViewModel::class.java)
 
-        // Set back button on toolbar
-        toolbar.setNavigationOnClickListener { finish() }
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-
-        // Add info
-        customer_name_text.text = intent.getStringExtra("Username")
-        order_info_text.text = orderDescription
-
-        // Initiate map
-        Mapbox.getInstance(this, getString(R.string.access_token))
+        // Initializing the mapView
         mapView = findViewById(R.id.mapView)
         mapView.onCreate(savedInstanceState)
-        mapView.getMapAsync(this)
+
+        // Get order information
+        mViewModel.getOrder(orderNum).observe(this, Observer<OrderEntity> { it -> //FIXME: find more elegant implementation.
+            order = it
+            title = getString(R.string.order_num) + order.orderNum
+
+            // Add toolbar
+            val toolbar = findViewById<Toolbar>(R.id.toolbar)
+            toolbar.title = title
+            setSupportActionBar(toolbar)
+
+            // Set back button on toolbar
+            toolbar.setNavigationOnClickListener { finish() }
+            supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+            // Add info
+            customer_name_text.text = intent.getStringExtra("username")
+            order_info_text.text = order.orderDescription
+
+            // Initiate map
+            Mapbox.getInstance(this, getString(R.string.access_token))
+            mapView.getMapAsync(this)
+        })
     }
 
     override fun onMapReady(mapboxMap: MapboxMap) {
         this.mapboxMap = mapboxMap
 
-        val orderFromPosition = Point.fromLngLat(orderFrom.longitude, orderFrom.latitude)
-        val orderToPosition = Point.fromLngLat(orderTo.longitude, orderTo.latitude)
+        val orderFrom = LatLng(order.fromLat, order.fromLng)
+        val orderTo = LatLng(order.toLat, order.toLng)
+        val orderFromPosition = Point.fromLngLat(order.fromLng, order.fromLat)
+        val orderToPosition = Point.fromLngLat(order.toLng, order.toLat)
 
         val latLngBounds = LatLngBounds.Builder()
                 .include(orderFrom)
@@ -87,12 +100,12 @@ class OrderInfoActivity : AppCompatActivity(), OnMapReadyCallback {
 
         mapboxMap.addMarker(MarkerOptions()
                 .position(orderFrom)
-                .title("$orderName [From]")
-                .snippet(orderDescription))
+                .title("$ [From]")
+                .snippet(order.orderDescription))
         mapboxMap.addMarker(MarkerOptions()
                 .position(orderTo)
-                .title("$orderName [To]")
-                .snippet(orderDescription))
+                .title("$title [To]")
+                .snippet(order.orderDescription))
     }
 
     private fun getRoute(origin: Point, destination: Point) {
@@ -114,12 +127,10 @@ class OrderInfoActivity : AppCompatActivity(), OnMapReadyCallback {
                             return
                         }
 
-
                         val navigationMapRoute = NavigationMapRoute(null, mapView, mapboxMap, R.style.NavigationMapRoute)
 
                         navigationMapRoute.addRoute(response.body()!!.routes()[0])
                     }
-
 
                     override fun onFailure(call: Call<DirectionsResponse>, throwable: Throwable) {
                         Timber.e("Error: %s", throwable.message)
@@ -132,10 +143,10 @@ class OrderInfoActivity : AppCompatActivity(), OnMapReadyCallback {
             R.id.select_order -> {
                 val sharedPref = getSharedPreferences("currentOrder", Context.MODE_PRIVATE)
                         ?: return
-                val gsonCoords = Gson().toJson(coords)
+                val gsonCoords = Gson().toJson(arrayOf(order.fromLat, order.fromLng, order.toLat, order.toLng))
                 with(sharedPref.edit()) {
-                    putString("orderName", orderName)
-                    putString("orderDescription", orderDescription)
+                    putString("orderName", title)
+                    putString("orderDescription", order.orderDescription)
                     putString("coords", gsonCoords)
                     apply()
                     onBackPressed()
