@@ -4,11 +4,14 @@
     <!-- Login -->
     <string name="login_label">Вход</string>
     <string name="username">Логин</string>
+    <string name="username_error">Неверный логин</string>
     <string name="password">Пароль</string>
+    <string name="password_error">Пароль должен содержать минимум 6 символов</string>
     <string name="login">Войти</string>
 
     <!-- Order list -->
     <string name="order_num">Заказ №%1$d</string>
+    <string name="accepted_orders_label">Мои заказы</string>
     <string name="new_orders_label">Новые заказы</string>
 
     <!-- Order info -->

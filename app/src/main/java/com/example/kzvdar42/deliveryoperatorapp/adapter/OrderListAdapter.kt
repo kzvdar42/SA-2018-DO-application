@@ -27,7 +27,11 @@ class OrdersListAdapter(private var orderEntityList: List<OrderEntity>, val cont
         v.setOnClickListener {
             val intent = Intent(context, OrderInfoActivity::class.java)
             val orderNum =
-                    String(StringBuilder(it.order_name.text.removePrefix(context.resources.getString(R.string.order_num).removeSuffix("%1\$d")))) // FIXME: Find a more elegant way.
+                    String(StringBuilder(
+                            it.order_name.text.removePrefix(
+                                    context.resources.getString(
+                                            R.string.order_num).removeSuffix(
+                                            "%1\$d")))) // FIXME: Find a more elegant way.
             intent.putExtra("orderNum", orderNum.toInt())
             context.startActivity(intent)
         }
@@ -44,7 +48,7 @@ class OrdersListAdapter(private var orderEntityList: List<OrderEntity>, val cont
     class MyViewHolder(itemView: CardView) : RecyclerView.ViewHolder(itemView) {
         fun bindItems(orderEntity: OrderEntity, context: Context) {
             itemView.order_name.text = context.resources.getString(R.string.order_num, orderEntity.orderNum)
-            itemView.order_description.text = orderEntity.username
+            itemView.order_description.text = "%s %s\n%s\n%s".format(orderEntity.receiverName,orderEntity.receiverSurname, orderEntity.senderNotes, orderEntity.expectedTtd)
         }
     }
 

@@ -9,6 +9,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.example.kzvdar42.deliveryoperatorapp.R
+import com.example.kzvdar42.deliveryoperatorapp.db.CoordsEntity
 import com.example.kzvdar42.deliveryoperatorapp.db.OrderEntity
 import com.example.kzvdar42.deliveryoperatorapp.viewmodel.OrderInfoViewModel
 import com.google.gson.Gson
@@ -42,6 +43,7 @@ class OrderInfoActivity : AppCompatActivity(), OnMapReadyCallback {
     // OrderEntity info
     private lateinit var title: String
     private lateinit var order: OrderEntity
+    private lateinit var  coords : ArrayList<CoordsEntity>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,7 +63,8 @@ class OrderInfoActivity : AppCompatActivity(), OnMapReadyCallback {
         // Get order information
         mViewModel.getOrder(orderNum).observe(this, Observer<OrderEntity> { it -> //FIXME: find more elegant implementation.
             order = it
-            title = getString(R.string.order_num) + order.orderNum
+            title = getString(R.string.order_num, order.orderNum)
+            coords = order.coords
 
             // Add toolbar
             val toolbar = findViewById<Toolbar>(R.id.toolbar)
@@ -73,8 +76,8 @@ class OrderInfoActivity : AppCompatActivity(), OnMapReadyCallback {
             supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
             // Add info
-            customer_name_text.text = intent.getStringExtra("username")
-            order_info_text.text = order.orderDescription
+            customer_name_text.text = order.senderName //TODO: change
+            order_info_text.text = order.senderNotes
 
             // Initiate map
             Mapbox.getInstance(this, getString(R.string.access_token))
@@ -85,10 +88,12 @@ class OrderInfoActivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onMapReady(mapboxMap: MapboxMap) {
         this.mapboxMap = mapboxMap
 
-        val orderFrom = LatLng(order.fromLat, order.fromLng)
-        val orderTo = LatLng(order.toLat, order.toLng)
-        val orderFromPosition = Point.fromLngLat(order.fromLng, order.fromLat)
-        val orderToPosition = Point.fromLngLat(order.toLng, order.toLat)
+        val coords = order.coords
+
+        val orderFrom = LatLng(coords[0].latitude, coords[0].longitude)
+        val orderTo = LatLng(coords[1].latitude, coords[1].longitude)
+        val orderFromPosition = Point.fromLngLat(coords[0].longitude, coords[0].latitude)
+        val orderToPosition = Point.fromLngLat(coords[1].longitude, coords[1].latitude)
 
         val latLngBounds = LatLngBounds.Builder()
                 .include(orderFrom)
@@ -100,12 +105,14 @@ class OrderInfoActivity : AppCompatActivity(), OnMapReadyCallback {
 
         mapboxMap.addMarker(MarkerOptions()
                 .position(orderFrom)
-                .title("$ [From]")
-                .snippet(order.orderDescription))
+                .title("$title [From]")
+                .snippet("Sender name:{}\nSenderSurname:{}\nPhone number:{}\nSender notes:{}\nExtected TTD:{}".format( //FIXME: move to strings
+                        order.senderName, order.senderSurname, order.senderPhoneNumber, order.senderNotes, order.expectedTtd)))
         mapboxMap.addMarker(MarkerOptions()
                 .position(orderTo)
                 .title("$title [To]")
-                .snippet(order.orderDescription))
+                .snippet("Receiver name:{}\nReceiverSurname:{}\nPhone number:{}\nExtected TTD:{}".format( //FIXME: move to strings
+                        order.receiverName, order.receiverSurname, order.receiverPhoneNumber, order.expectedTtd)))
     }
 
     private fun getRoute(origin: Point, destination: Point) {
@@ -143,11 +150,8 @@ class OrderInfoActivity : AppCompatActivity(), OnMapReadyCallback {
             R.id.select_order -> {
                 val sharedPref = getSharedPreferences("currentOrder", Context.MODE_PRIVATE)
                         ?: return
-                val gsonCoords = Gson().toJson(arrayOf(order.fromLat, order.fromLng, order.toLat, order.toLng))
                 with(sharedPref.edit()) {
-                    putString("orderName", title)
-                    putString("orderDescription", order.orderDescription)
-                    putString("coords", gsonCoords)
+                    putInt("orderNum", order.orderNum)
                     apply()
                     onBackPressed()
                 }

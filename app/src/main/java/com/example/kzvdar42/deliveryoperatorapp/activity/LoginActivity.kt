@@ -8,12 +8,16 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.lifecycle.ViewModelProviders
 import com.example.kzvdar42.deliveryoperatorapp.R
+import com.example.kzvdar42.deliveryoperatorapp.viewmodel.LoginViewModel
+import com.example.kzvdar42.deliveryoperatorapp.viewmodel.OrderInfoViewModel
+import kotlinx.android.synthetic.main.activity_login.*
 
 
 class LoginActivity : AppCompatActivity() {
 
-    private lateinit var sharedPref: SharedPreferences
+    private lateinit var mViewModel: LoginViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,11 +28,11 @@ class LoginActivity : AppCompatActivity() {
         toolbar.setTitle(R.string.login_label)
         setSupportActionBar(toolbar)
 
-        // Get the user data
-        sharedPref = this.getSharedPreferences("user", Context.MODE_PRIVATE)
+        // Get the view model
+        mViewModel = ViewModelProviders.of(this).get(LoginViewModel::class.java)
 
         // Go to main page if already logged in.
-        if (sharedPref.getBoolean("isLogged", false)) goToMainPage()
+        if (mViewModel.isLogged()) goToMainPage()
     }
 
     fun onClick(view: View) {
@@ -47,7 +51,33 @@ class LoginActivity : AppCompatActivity() {
 
     private fun login() {
         // TODO: Implement the Login process
-        sharedPref.edit().putBoolean("isLogged", true).apply()
-        goToMainPage()
+        val login = setUsername.text.toString()
+        val password = setPassword.text.toString()
+        if (validate() && mViewModel.login(login, password)) {
+            goToMainPage()
+        }
+    }
+
+    private fun validate(): Boolean {
+        var valid = true
+
+        val login = setUsername.text.toString()
+        val password = setPassword.text.toString()
+
+        if (login.isEmpty() || login.length < 6) {
+            setUsername.error = getString(R.string.username_error)
+            valid = false
+        } else {
+            setUsername.error = null
+        }
+
+        if (password.isEmpty() || password.length < 6) {
+            setPassword.error = getString(R.string.password_error)
+            valid = false
+        } else {
+            setPassword.error = null
+        }
+
+        return valid
     }
 }

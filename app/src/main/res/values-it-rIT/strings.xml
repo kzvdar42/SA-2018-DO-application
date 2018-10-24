@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="application_name">Delivery Operator App</string>
+    <!-- Login -->
+    <string name="login_label">Accesso</string>
+    <string name="username">Nome utente</string>
+    <string name="password">Password</string>
+    <string name="login">Accedi</string>
+
+    <!-- Order list -->
+    <string name="order_num">Ordine №%1$d</string>
+    <string name="accepted_orders_label">I miei ordini</string>
+    <string name="new_orders_label">Nuovi ordini</string>
+
+    <!-- Order info -->
+    <string name="select_order">Scedi zak</string>
+    <string name="empty_order_name">Ordine №-1</string>
+
+    <!-- Map -->
+    <string name="start_navigation">Inzia la navigazione</string>
+
+    <!-- Navigation -->
+    <string name="map_dialog_text">
+        Hai raggiunto il punto di transito.
+        \n Vuoi continuare a navigare?</string>
+    <string name="map_dialog_positive_text">Procedere</string>
+    <string name="map_dialog_negative_text">Fermarsi</string>
+
+    <!-- Bottom Navigation -->
+    <string name="map_label">Mappa</string>
+    <string name="orders_label">Ordini</string>
+    <string name="settings_label">Impostazioni</string>
+
+    <!-- Mapbox -->
+    <string name="user_location_permission_explanation">Questa applicazione ha bisogno di accedere ai dati sulla posizione per navigare</string>
+    <string name="user_location_permission_not_granted">Permesso non ottenuto</string>
+
+    <!-- Settings -->
+    <string name="localization">Lingua</string>
+    <string name="contact_co">Connessione con CA</string>
+    <string name="log_out">Uscire</string>
+
+
+    <!-- Contact CO -->
+    <string name="not_implemented_yet">Non ancora fatto</string>
+
+    <!-- Others -->
+
+</resources>

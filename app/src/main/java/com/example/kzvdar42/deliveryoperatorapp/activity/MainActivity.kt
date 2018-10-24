@@ -42,9 +42,8 @@ class MainActivity : AppCompatActivity() {
                     toolbar.title = resources.getString(R.string.map_label)
                 }
                 R.id.orders_button -> {
-                    ordersFragment = ordersFragment ?: OrdersFragment()
+                    ordersFragment = ordersFragment ?: OrdersFragment()  //FIXME: I'm bad
                     fragment = ordersFragment!!
-                    toolbar.title = resources.getString(R.string.orders_label)  //FIXME: I'm bad
                 }
                 R.id.settings_button -> {
                     settingsFragment = settingsFragment ?: SettingsFragment()   //FIXME: I'm bad
@@ -58,6 +57,11 @@ class MainActivity : AppCompatActivity() {
             // Return
             true
         }
+    }
+
+
+    override fun onBackPressed() {
+        // Left blank intentinally. TODO: Add handling of navigating between fragments.
     }
 }
 

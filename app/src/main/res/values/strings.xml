@@ -4,11 +4,14 @@
     <!-- Login -->
     <string name="login_label">Login</string>
     <string name="username">Username</string>
+    <string name="username_error">Enter a valid username</string>
     <string name="password">Password</string>
+    <string name="password_error">Between 6 and 10 alphanumeric characters</string>
     <string name="login">Login</string>
 
     <!-- Order list -->
     <string name="order_num">Order #%1$d</string>
+    <string name="accepted_orders_label">Acceppted orders</string>
     <string name="new_orders_label">New orders</string>
 
     <!-- Order info -->

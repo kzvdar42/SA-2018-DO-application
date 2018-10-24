@@ -22,7 +22,7 @@ class OrderListViewModel(application: Application) : AndroidViewModel(applicatio
 
     fun getNewOrders(): LiveData<List<OrderEntity>>? {
         if (newOrders == null) {
-            newOrders = repository.getAcceptedOrders()
+            newOrders = repository.getNewOrders()
         }
         return newOrders
     }

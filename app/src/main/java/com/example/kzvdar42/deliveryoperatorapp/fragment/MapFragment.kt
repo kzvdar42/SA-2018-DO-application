@@ -8,9 +8,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.example.kzvdar42.deliveryoperatorapp.R
 import com.example.kzvdar42.deliveryoperatorapp.activity.NavigationActivity
+import com.example.kzvdar42.deliveryoperatorapp.db.OrderEntity
 import com.example.kzvdar42.deliveryoperatorapp.viewmodel.MapViewModel
 import com.mapbox.android.core.permissions.PermissionsListener
 import com.mapbox.android.core.permissions.PermissionsManager
@@ -51,10 +53,6 @@ class MapFragment : Fragment(), OnMapReadyCallback, PermissionsListener {
     private lateinit var mViewModel: MapViewModel
 
     // variables for order info
-    private var orderName: String? = null
-    private var orderDescription: String? = null
-    private var orderFrom: LatLng? = null
-    private var orderTo: LatLng? = null
     private var orderFromPosition: Point? = null
     private var orderToPosition: Point? = null
 
@@ -66,15 +64,6 @@ class MapFragment : Fragment(), OnMapReadyCallback, PermissionsListener {
 
         // Get View Model
         mViewModel = ViewModelProviders.of(this).get(MapViewModel::class.java)
-
-        // Get order info
-        orderName = mViewModel.getCurrentOrderName()
-        orderDescription = mViewModel.getCurrentOrderDescription()
-        val coords = mViewModel.getCurrentOrderCoords()
-
-        // TODO: Handle different amount of dots.
-        orderFrom = LatLng(coords[0].latitude(), coords[0].longitude())
-        orderTo = LatLng(coords[1].latitude(), coords[1].longitude())
 
 
         // Initiate map.
@@ -89,43 +78,48 @@ class MapFragment : Fragment(), OnMapReadyCallback, PermissionsListener {
         // Initializing the map and location plugin.
         this.mapboxMap = mapboxMap
 
+
         if (PermissionsManager.areLocationPermissionsGranted(activity)) {
             // Get current position
             originLocation = mViewModel.getCurrentPosition()
-            // Cast the data to needed structures.
-            originPosition = Point.fromLngLat(originLocation!!.longitude, originLocation!!.latitude)
-            orderFromPosition = Point.fromLngLat(orderFrom!!.longitude, orderFrom!!.latitude)
-            orderToPosition = Point.fromLngLat(orderTo!!.longitude, orderTo!!.latitude)
-            originCoord = LatLng(originLocation!!.latitude, originLocation!!.longitude)
-            if (orderFrom != null) {
-                val latLngBounds = LatLngBounds.Builder()
-                        .include(originCoord!!)
-                        .include(orderFrom!!)
-                        .include(orderTo!!)
-                        .build()
-                mapboxMap.animateCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 100))
-            }
+            // Get order info
+            mViewModel.getCurrentOrder().observe(this, Observer { order ->
+                // Cast the data to needed structures.
+                // TODO: Handle different amount of dots.
+                originPosition = Point.fromLngLat(originLocation!!.longitude, originLocation!!.latitude)
+                orderFromPosition = Point.fromLngLat(order.coords[0].longitude, order.coords[0].latitude)
+                orderToPosition = Point.fromLngLat(order.coords[1].longitude, order.coords[1].latitude)
+                originCoord = LatLng(originLocation!!.latitude, originLocation!!.longitude)
+                if (order.coords.size > 1) {
+                    val latLngBounds = LatLngBounds.Builder()
+                            .include(originCoord!!)
+                            .include(LatLng(order.coords[0].latitude, order.coords[0].longitude))
+                            .include(LatLng(order.coords[1].latitude, order.coords[1].longitude))
+                            .build()
+                    mapboxMap.animateCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 100))
+                }
 
-            // Get the route.
-            getRoute(originPosition!!, orderFromPosition!!)
+                // Get the route.
+                getRoute(originPosition!!, orderFromPosition!!)
 
-            // Add markers to the map.
-            mapboxMap.addMarker(MarkerOptions()
-                    .position(orderFrom)
-                    .title("$orderName [From]")
-                    .snippet(orderDescription))
+                // Add markers to the map.
+                mapboxMap.addMarker(MarkerOptions()
+                        .position(LatLng(order.coords[0].latitude, order.coords[0].longitude))
+                        .title("${getString(R.string.order_num, order.orderNum)} [From]")
+                        .snippet("TODOME")) //TODO
 
-            mapboxMap.addMarker(MarkerOptions()
-                    .position(orderTo)
-                    .title("$orderName [To]")
-                    .snippet(orderDescription))
+                mapboxMap.addMarker(MarkerOptions()
+                        .position(LatLng(order.coords[1].latitude, order.coords[1].longitude))
+                        .title("${getString(R.string.order_num, order.orderNum)} [To]")
+                        .snippet("TODOME")) //TODO
 
-            // Set the On Click Listener for the button.
-            startButton.setOnClickListener {
-                startActivity(Intent(activity, NavigationActivity::class.java))
-            }
+                // Set the On Click Listener for the button.
+                startButton.setOnClickListener {
+                    startActivity(Intent(activity, NavigationActivity::class.java))
+                }
+            })
         } else {
-            PermissionsManager(this).requestLocationPermissions(activity)
+            PermissionsManager(this).requestLocationPermissions(activity) //TODO: reload map after getting permissions
         }
     }
 

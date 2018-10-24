@@ -7,12 +7,14 @@ import androidx.room.Insert
 import androidx.room.Query
 
 
+
+
 @Dao
 interface OrderDao {
-    @Query("Select * from orders where is_new == 1")
+    @Query("Select * from orders where order_status == \"Approved\"")
     fun getNewOrders(): LiveData<List<OrderEntity>>
 
-    @Query("Select * from orders where is_new == 0")
+    @Query("Select * from orders where order_status != \"Delivered\" and order_status != \"Approved\" ")
     fun getAcceptedOrders(): LiveData<List<OrderEntity>>
 
     @Query("Select * from orders where order_num = :num")
@@ -25,5 +27,8 @@ interface OrderDao {
     fun insertAll(orderEntities: List<OrderEntity>)
 
     @Delete
-    fun delete(superHero: OrderEntity)
+    fun delete(orderEntity: OrderEntity)
+
+    @Query("Delete from orders")
+    fun deleteAll()
 }

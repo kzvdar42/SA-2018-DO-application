@@ -33,18 +33,30 @@ repositories {
 }
 
 dependencies {
+    // Standard dependencies
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-
     implementation 'androidx.appcompat:appcompat:1.0.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.0-alpha2'
+
+    // Tests
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.1.0-beta02'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0-beta02'
 
-    implementation 'com.google.android.material:material:1.0.0' // Material button
+    // Material
+    implementation 'com.google.android.material:material:1.0.0'
 
-    // Start of MapBox dependencies
+    // Retrofit
+    implementation "com.squareup.retrofit2:retrofit:2.4.0"
+    implementation "com.squareup.retrofit2:adapter-rxjava2:2.4.0"
+    implementation "com.squareup.retrofit2:converter-gson:2.4.0"
+
+    // RxJava2
+    implementation "io.reactivex.rxjava2:rxjava:2.0.2"
+    implementation "io.reactivex.rxjava2:rxandroid:2.0.1"
+
+    // MapBox
     implementation('com.mapbox.mapboxsdk:mapbox-android-sdk:6.5.0@aar') {
         transitive = true
     }

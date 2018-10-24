@@ -6,8 +6,10 @@ import android.os.Bundle
 import androidx.annotation.Nullable
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.example.kzvdar42.deliveryoperatorapp.R
+import com.example.kzvdar42.deliveryoperatorapp.db.CoordsEntity
 import com.example.kzvdar42.deliveryoperatorapp.viewmodel.MapViewModel
 import com.mapbox.api.directions.v5.models.DirectionsResponse
 import com.mapbox.api.directions.v5.models.DirectionsRoute
@@ -33,14 +35,10 @@ class NavigationActivity : AppCompatActivity(), OnNavigationReadyCallback, Navig
     private var dropoffDialogShown: Boolean = false
     private var lastKnownLocation: Location? = null
 
-    private lateinit var points: ArrayList<Point>
+    private lateinit var points: ArrayList<CoordsEntity>
 
     //ViewModel
     private lateinit var mViewModel: MapViewModel
-
-    // Order info
-    private lateinit var orderName: String
-    private lateinit var orderDescription: String
 
     override fun onCreate(@Nullable savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,18 +47,18 @@ class NavigationActivity : AppCompatActivity(), OnNavigationReadyCallback, Navig
         // Get View Model
         mViewModel = ViewModelProviders.of(this).get(MapViewModel::class.java)
 
-        // Get order info
-        orderName = mViewModel.getCurrentOrderName()
-        orderDescription = mViewModel.getCurrentOrderDescription()
-        points = mViewModel.getCurrentOrderCoords()
+        // Get order info //TODO: Посмотри на меня
+        mViewModel.getCurrentOrder().observe(this, Observer { order ->
+            points = order.coords
 
-        // Add current position at the start
-        val currentPosition = mViewModel.getCurrentPosition()
-        points.add(0, Point.fromLngLat(currentPosition!!.longitude, currentPosition.latitude))
+            // Add current position at the start
+            val currentPosition = mViewModel.getCurrentPosition()
+            points.add(0, CoordsEntity(currentPosition!!.longitude, currentPosition.latitude))
 
-        navigationView = findViewById(R.id.navigationView)
-        navigationView?.onCreate(savedInstanceState)
-        navigationView?.initialize(this)
+            navigationView = findViewById(R.id.navigationView)
+            navigationView?.onCreate(savedInstanceState)
+            navigationView?.initialize(this)
+        })
     }
 
     override fun onArrival() {
@@ -81,12 +79,16 @@ class NavigationActivity : AppCompatActivity(), OnNavigationReadyCallback, Navig
 
     private fun showDropoffDialog() {
         val alertDialog = AlertDialog.Builder(this).create()
+        alertDialog.setView(layoutInflater.inflate(R.layout.alert_dialog, null))  //FIXME inflate the layout with buttons
         alertDialog.setMessage(getString(R.string.map_dialog_text))
         alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.map_dialog_positive_text)
-        ) { _, _ -> fetchRoute(getLastKnownLocation(), points.removeAt(0)) }
-        alertDialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.map_dialog_negative_text)
         ) { _, _ ->
-           // mViewModel.saveOrderStatus(points) TODO: Handle points removal
+            val nextPoint = points.removeAt(0)
+            fetchRoute(getLastKnownLocation(), Point.fromLngLat(nextPoint.longitude, nextPoint.latitude))
+        }
+        alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, getString(R.string.map_dialog_negative_text)
+        ) { _, _ ->
+            // mViewModel.saveOrderStatus(points) TODO: Handle points removal
         }
 
         alertDialog.show()
@@ -174,7 +176,10 @@ class NavigationActivity : AppCompatActivity(), OnNavigationReadyCallback, Navig
     }
 
     override fun onNavigationReady(isRunning: Boolean) {
-        fetchRoute(points.removeAt(0), points.removeAt(0))
+        val currentPoint = points.removeAt(0)
+        val nextPoint = points.removeAt(0)
+        fetchRoute(Point.fromLngLat(currentPoint.longitude, currentPoint.latitude),
+                Point.fromLngLat(nextPoint.longitude, nextPoint.latitude))
     }
 
     override fun onCancelNavigation() {

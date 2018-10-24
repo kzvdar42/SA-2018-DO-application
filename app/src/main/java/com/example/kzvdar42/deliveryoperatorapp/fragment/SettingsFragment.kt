@@ -31,7 +31,7 @@ class SettingsFragment : Fragment() {
             startActivity(Intent(context, EmptyActivity::class.java))
         }
 
-        rootView.settings_log_out_text.setOnClickListener {
+        rootView.settings_log_out_text.setOnClickListener {//TODO: Delete all data from the database before log out
             val i = Intent(context, LoginActivity::class.java)
             i.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             // Delete the user data

@@ -6,7 +6,11 @@ import android.content.Context
 import android.location.Location
 import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
 import com.example.kzvdar42.deliveryoperatorapp.R
+import com.example.kzvdar42.deliveryoperatorapp.db.CoordsEntity
+import com.example.kzvdar42.deliveryoperatorapp.db.OrderEntity
+import com.example.kzvdar42.deliveryoperatorapp.db.Repository
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.mapbox.android.core.location.LocationEngine
@@ -21,45 +25,19 @@ import com.mapbox.mapboxsdk.Mapbox.getApplicationContext
 
 class MapViewModel(application: Application) : AndroidViewModel(application), LocationEngineListener, PermissionsListener {
 
+    private var repository: Repository = Repository(application)
     private val sharedPref = application.getSharedPreferences("currentOrder", Context.MODE_PRIVATE)
 
     private var locationEngine: LocationEngine? = null
     private var originLocation: Location? = null
 
 
-    fun getCurrentOrderName(): String {
-        return sharedPref.getString("orderName", "Order #-1")
-                ?: getApplication<Application>().resources.getString(R.string.empty_order_name)
-    }
-
-    fun getCurrentOrderDescription(): String {
-        return sharedPref.getString("orderDescription", "Lorem ipsum")
-                ?: getApplication<Application>().resources.getString(R.string.empty_description)
-    }
-
-    fun getCurrentOrderCoords(): ArrayList<Point> {
-        val gsonCoords = sharedPref?.getString("coords", "")
-
-        var coords = DoubleArray(4)  //FIXME: default data
-
-        // Convert Gson to double array.
-        if (!gsonCoords.equals("")) {
-            val turnsType = object : TypeToken<DoubleArray>() {}.type
-            coords = Gson().fromJson<DoubleArray>(gsonCoords, turnsType)
-        }
-
-        // Convert DoubleArray to Array of Points
-        val points = ArrayList<Point>()
-        var i = 1
-        while (i <= coords.size) {
-            points.add(Point.fromLngLat(coords[i], coords[i - 1]))
-            i += 2
-        }
-        return points
+    fun getCurrentOrder(): LiveData<OrderEntity> {
+        return repository.getOrder(sharedPref.getInt("orderNum", 0))
     }
 
     fun saveOrderStatus(points: ArrayList<Point>) {
-        if (points.size > 0) {
+        if (points.size > 0) { //TODO: Rewrite to write data to the database and server
             val coords = DoubleArray(points.size * 2)
 
             var i = -1

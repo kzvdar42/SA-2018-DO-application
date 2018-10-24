@@ -2,6 +2,7 @@ package com.example.kzvdar42.deliveryoperatorapp.fragment
 
 import android.os.Bundle
 import android.view.*
+import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -43,8 +44,10 @@ class OrdersFragment : Fragment() {
         mViewModel = ViewModelProviders.of(activity!!).get(OrderListViewModel::class.java)
         mViewModel.getAcceptedOrders()?.observe(this, Observer<List<OrderEntity>> { t -> mAdapter.updateOrderList(t) })
 
-        return rootView
+        // Set the toolbar title
+        activity?.findViewById<Toolbar>(R.id.toolbar)?.title = getString(R.string.accepted_orders_label)
 
+        return rootView
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
@@ -53,11 +56,20 @@ class OrdersFragment : Fragment() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
+
         when (item.itemId) {
 
-            R.id.accepted_orders -> mViewModel.getAcceptedOrders()?.observe(this, Observer<List<OrderEntity>> { t -> mAdapter.updateOrderList(t) })
+            R.id.accepted_orders -> {
+                activity?.findViewById<Toolbar>(R.id.toolbar)?.title = getString(R.string.accepted_orders_label)
+                mViewModel.getNewOrders()?.removeObservers(this)
+                mViewModel.getAcceptedOrders()?.observe(this, Observer<List<OrderEntity>> { t -> mAdapter.updateOrderList(t) })
+            }
 
-            R.id.new_orders -> mViewModel.getNewOrders()?.observe(this, Observer<List<OrderEntity>> { t -> mAdapter.updateOrderList(t) })
+            R.id.new_orders -> {
+                activity?.findViewById<Toolbar>(R.id.toolbar)?.title = getString(R.string.new_orders_label)
+                mViewModel.getAcceptedOrders()?.removeObservers(this)
+                mViewModel.getNewOrders()?.observe(this, Observer<List<OrderEntity>> { t -> mAdapter.updateOrderList(t) })
+            }
         }
         return super.onOptionsItemSelected(item)
     }
