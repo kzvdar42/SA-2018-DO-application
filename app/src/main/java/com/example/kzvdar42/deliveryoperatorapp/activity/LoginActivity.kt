@@ -3,15 +3,17 @@ package com.example.kzvdar42.deliveryoperatorapp.activity
 
 import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.example.kzvdar42.deliveryoperatorapp.R
+import com.example.kzvdar42.deliveryoperatorapp.db.OrderEntity
+import com.example.kzvdar42.deliveryoperatorapp.serverApi.responce.LoginResponce
 import com.example.kzvdar42.deliveryoperatorapp.viewmodel.LoginViewModel
-import com.example.kzvdar42.deliveryoperatorapp.viewmodel.OrderInfoViewModel
 import kotlinx.android.synthetic.main.activity_login.*
 
 
@@ -53,8 +55,15 @@ class LoginActivity : AppCompatActivity() {
         // TODO: Implement the Login process
         val login = setUsername.text.toString()
         val password = setPassword.text.toString()
-        if (validate() && mViewModel.login(login, password)) {
-            goToMainPage()
+        if (validate()) {
+            mViewModel.login(login, password).observe(this, Observer<Pair<String, String>> { response ->
+                if (response.second != "") {
+                    getSharedPreferences("user", Context.MODE_PRIVATE).edit().putString("token", response.second).apply()
+                    goToMainPage()
+                } else {
+                    Toast.makeText(this, response.first, Toast.LENGTH_LONG).show() //TODO: Redo to snackbar
+                }
+            })
         }
     }
 

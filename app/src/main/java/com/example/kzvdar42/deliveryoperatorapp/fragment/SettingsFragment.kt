@@ -32,11 +32,11 @@ class SettingsFragment : Fragment() {
         }
 
         rootView.settings_log_out_text.setOnClickListener {//TODO: Delete all data from the database before log out
-            val i = Intent(context, LoginActivity::class.java)
+            val i = Intent(context, LoginActivity::class.java) // TODO: log out from the server
             i.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             // Delete the user data
             val sharedPref = context?.getSharedPreferences("user", Context.MODE_PRIVATE)
-            sharedPref?.edit()?.putBoolean("isLogged", false)?.apply()
+            sharedPref?.edit()?.putString("token", "")?.apply()
             startActivity(i)
         }
 
