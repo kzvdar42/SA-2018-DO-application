@@ -104,8 +104,8 @@ class MapFragment : Fragment(), OnMapReadyCallback, PermissionsListener {
                         mapboxMap.addMarker(MarkerOptions()
                                 .position(LatLng(order.coords[0].latitude, order.coords[0].longitude))
                                 .title("${getString(R.string.order_num, order.orderNum)} [${title(0, order.coords.size)}]")
-                                .snippet(getString(R.string.order_from_description_snippet,
-                                        order.senderName, order.senderSurname, order.senderPhoneNumber, order.senderNotes, order.expectedTtd)))
+                                .snippet(getString(R.string.order_to_description_snippet,
+                                        order.receiverName, order.receiverSurname, order.receiverPhoneNumber, order.senderNotes, order.expectedTtd))) // TODO: Handle null values
                     }
                     // Animate the camera to the points
                     mapboxMap.animateCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds.build(), 100))
@@ -121,8 +121,10 @@ class MapFragment : Fragment(), OnMapReadyCallback, PermissionsListener {
 
                 } else {
                     // TODO: add screen "no order selected"
-                    latLngBounds.include(originCoord!!)
-                    mapboxMap.animateCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds.build(), 2000))
+                    latLngBounds.include(LatLng(originLocation!!.latitude + 0.01, originLocation!!.longitude + 0.01))
+                    latLngBounds.include(LatLng(originLocation!!.latitude - 0.01, originLocation!!.longitude - 0.01))
+
+                    mapboxMap.animateCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds.build(), 200))
                 }
             })
         } else {
