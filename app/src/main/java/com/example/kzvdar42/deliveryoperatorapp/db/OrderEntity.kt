@@ -47,22 +47,22 @@ data class OrderEntity(
         // FIXME
         @ColumnInfo(name = "weight")
         @SerializedName("weight")
-        var weight: Double,
+        var weight: Long,
         @ColumnInfo(name = "length")
         @SerializedName("length")
-        var length: Double,
+        var length: Long,
         @ColumnInfo(name = "width")
         @SerializedName("width")
-        var width: Double,
+        var width: Long,
         @ColumnInfo(name = "height")
         @SerializedName("height")
-        var height: Double,
+        var height: Long,
         @ColumnInfo(name = "insurance")
         @SerializedName("insurance")
         var insurance: Boolean,
         @ColumnInfo(name = "price")
         @SerializedName("price")
-        var price: Double,
+        var price: Long,
         @ColumnInfo(name = "price_currency")
         @SerializedName("price_currency")
         var priceCurrency: String,

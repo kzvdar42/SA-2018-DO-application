@@ -1,6 +1,8 @@
 package com.example.kzvdar42.deliveryoperatorapp.activity
 
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
@@ -76,8 +78,25 @@ class OrderInfoActivity : AppCompatActivity(), OnMapReadyCallback {
             supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
             // Add info
-            customer_name_text.text = order.senderName //TODO: change
-            order_info_text.text = order.senderNotes
+            customer_name_text.text = "${order.receiverName} ${order.receiverSurname}"
+            time_left_text.text = getString(R.string.time_left_label, order.expectedTtd) // TODO: rewrite to actual data
+            dimensions_text.text = getString(R.string.dimensions_text, order.length, order.width, order.height)
+            weight_text.text = getString(R.string.weight_label, order.weight)
+            if (order.senderNotes != null) sender_notes_label.text = getString(R.string.sender_notes_label, order.senderNotes)
+
+            // Change the layout due to order status.
+            when {
+                order.orderStatus == "Approved" -> order_actions_bar.visibility = View.GONE
+                order.orderStatus == "Accepted" -> select_order.visibility = View.GONE
+                order.orderStatus == "Delivered" -> {
+                    order_actions_bar.visibility = View.GONE
+                    select_order.visibility = View.GONE
+                }
+            }
+
+
+            // If the driver is near the end of route add the `sign for parcel` button
+            //if (order.remainingCoords?.size ?: 3 < 2) assignment_button.visibility = View.GONE   // TODO: remove the button if the driver is far away from the receiver.
 
             // Initiate map
             Mapbox.getInstance(this, getString(R.string.access_token))
@@ -111,22 +130,22 @@ class OrderInfoActivity : AppCompatActivity(), OnMapReadyCallback {
             mapboxMap.addMarker(MarkerOptions()
                     .position(LatLng(coord.latitude, coord.longitude))
                     .title("${getString(R.string.order_num, order.orderNum)} [${title(index, order.coords.size)}]")
-                    .snippet(getString(R.string.order_from_description_snippet).format(
-                            order.senderName, order.senderSurname, order.senderPhoneNumber, order.senderNotes, order.expectedTtd)))
+                    .snippet(getString(R.string.order_to_description_snippet,
+                            order.receiverName, order.receiverSurname, order.receiverPhoneNumber, order.senderNotes, order.expectedTtd))) // TODO: Handle null values
         }
 
-        // FIXME: Add the version for the one point
         if (order.coords.size > 1) {
-
-            // Animate the camera to the points.
-            mapboxMap.animateCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds.build(), 200))
-
             // Get the route.
-            val orderFromPosition = Point.fromLngLat(order.coords[0].longitude, order.coords[0].latitude)
-            val orderToPosition = Point.fromLngLat(coords[1].longitude, coords[1].latitude)
-            getRoute(orderFromPosition, orderToPosition)
+            getRoute(Point.fromLngLat(order.coords[0].longitude, order.coords[0].latitude),
+                    Point.fromLngLat(coords[1].longitude, coords[1].latitude))
+        } else {
+            val lastPosition = mViewModel.getCurrentPosition()
+            latLngBounds.include(LatLng(lastPosition))
+            getRoute(Point.fromLngLat(lastPosition.longitude, lastPosition.latitude),
+                    Point.fromLngLat(coords[0].longitude, coords[0].latitude))
         }
-
+        // Animate the camera to the points.
+        mapboxMap.animateCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds.build(), 200))
 
     }
 
@@ -162,7 +181,7 @@ class OrderInfoActivity : AppCompatActivity(), OnMapReadyCallback {
 
     fun onClick(view: View) {
         when (view.id) {
-            R.id.select_order -> {
+            R.id.navigation_button -> {
                 val sharedPref = getSharedPreferences("currentOrder", Context.MODE_PRIVATE)
                         ?: return
                 with(sharedPref.edit()) {
@@ -170,6 +189,17 @@ class OrderInfoActivity : AppCompatActivity(), OnMapReadyCallback {
                     apply()
                     onBackPressed()
                 }
+            }
+            R.id.call_button -> { // TODO: Implement taking the number from the server
+                intent = Intent(Intent.ACTION_DIAL)
+                intent.data = Uri.parse("tel:0123456789")
+                startActivity(intent)
+            }
+            R.id.assignment_button -> {
+                startActivity(Intent(this, EmptyActivity::class.java))
+            }
+            R.id.select_order -> { // TODO: Update the status of order.
+                Toast.makeText(this, "In implementation", Toast.LENGTH_LONG).show()
             }
         }
     }

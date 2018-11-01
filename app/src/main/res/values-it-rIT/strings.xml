@@ -16,14 +16,24 @@
 
     <!-- Order info -->
     <string name="select_order">Scedi zak</string>
+    <string name="phone_image_description">Icona del telefono</string>
+    <string name="call_label">Chiamata</string>
+    <string name="assignment_image_description">Icona di assegnazione</string>
+    <string name="assignment_label">Cartello</string>
+    <string name="navigation_icon_description">Icona di navigazione</string>
+    <string name="navigation_label">Navigare</string>
+    <string name="time_left_label">Tempo rimasto: %1$s</string>
+    <string name="dimensions_text">Dimensioni: %1$d x %2$d x %3$d (cm)</string>
+    <string name="weight_label">Peso: %1$d kg</string>
+    <string name="sender_notes_label">Note del mittente: %1$s</string>
 
     <!-- Map -->
     <string name="start_navigation">Inzia la navigazione</string>
     <string name="order_title_from">A partire dal</string>
     <string name="order_title_transit">Punto di transito</string>
     <string name="order_title_end">Finale</string>
-    <string name="order_from_description_snippet">Nome del mittente:%1$s\nCognome del mittente:%2$s\nNumero di telefono:%3$s\nNote del mittente:%4$s\nTTD atteso:%5$s</string>
-    <string name="order_to_description_snippet">Nome del destinatario:%1$s\nCognome del destinatario:%2$s\nNumero di telefono:%3$s\nNote del mittente:%4$s\nTTD atteso:%5$s</string>
+    <string name="order_from_description_snippet">Nome del mittente: %1$s\nCognome del mittente: %2$s\nNumero di telefono: %3$s\nNote del mittente: %4$s\nTTD atteso: %5$s</string>
+    <string name="order_to_description_snippet">Nome del destinatario: %1$s\nCognome del destinatario: %2$s\nNumero di telefono: %3$s\nNote del mittente: %4$s\nTTD atteso: %5$s</string>
 
     <!-- Navigation -->
     <string name="map_dialog_text">

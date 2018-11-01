@@ -16,14 +16,24 @@
 
     <!-- Order info -->
     <string name="select_order">Выбрать заказ</string>
+    <string name="phone_image_description">Иконка звонка</string>
+    <string name="call_label">Позвонить</string>
+    <string name="assignment_image_description">Иконка заказа</string>
+    <string name="assignment_label">Отдать заказ</string>
+    <string name="navigation_icon_description">Иконка навигации</string>
+    <string name="navigation_label">Выбрать</string>
+    <string name="time_left_label">Осталось: %1$s</string>
+    <string name="dimensions_text">Размеры: %1$d x %2$d x %3$d (см)</string>
+    <string name="weight_label">Вес: %1$d кг</string>
+    <string name="sender_notes_label">Заметки отправителя: %1$s</string>
 
     <!-- Map -->
     <string name="start_navigation">Начать навигацию</string>
     <string name="order_title_from">Откуда</string>
     <string name="order_title_transit">Точка транзита</string>
     <string name="order_title_end">Куда</string>
-    <string name="order_from_description_snippet">Отправитель:\nИмя:%1$s\nФамилия:%2$s\nТелефон:%3$s\nЗаметки:%4$s\nВремя на доставку:%5$s</string>
-    <string name="order_to_description_snippet">Получатель:\nИмя:%1$s\nФамилия:%2$s\nТелефон:%3$s\nЗаметки:%4$s\nВремя на доставку:%5$s</string>
+    <string name="order_from_description_snippet">Отправитель:\nИмя: %1$s\nФамилия: %2$s\nТелефон: %3$s\nЗаметки: %4$s\nВремя на доставку: %5$s</string>
+    <string name="order_to_description_snippet">Получатель:\nИмя: %1$s\nФамилия: %2$s\nТелефон: %3$s\nЗаметки: %4$s\nВремя на доставку: %5$s</string>
 
     <!-- Navigation -->
     <string name="map_dialog_text">

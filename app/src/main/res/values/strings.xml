@@ -16,14 +16,24 @@
 
     <!-- Order info -->
     <string name="select_order">Select order</string>
+    <string name="phone_image_description">Phone icon</string>
+    <string name="call_label">Call</string>
+    <string name="assignment_image_description">Assignment icon</string>
+    <string name="assignment_label">Sign</string>
+    <string name="navigation_icon_description">Navigation icon</string>
+    <string name="navigation_label">Navigate</string>
+    <string name="time_left_label">Time left: %1$s</string>
+    <string name="dimensions_text">Dimensions: %1$d x %2$d x %3$d (sm)</string>
+    <string name="weight_label">Weight: %1$d kg</string>
+    <string name="sender_notes_label">Sender notes: %1$s</string>
 
     <!-- Map -->
     <string name="start_navigation">Start navigation</string>
     <string name="order_title_from">From</string>
     <string name="order_title_transit">Transit</string>
     <string name="order_title_end">End</string>
-    <string name="order_from_description_snippet">Sender name:%1$s\nSender Surname:%2$s\nPhone number:%3$s\nSender notes:%4$s\nExpected TTD:%5$s</string>
-    <string name="order_to_description_snippet">Receiver name:%1$s\nReceiver Surname:%2$s\nPhone number:%3$s\nSender notes:%4$s\nExpected TTD:%5$s</string>
+    <string name="order_from_description_snippet">Sender name: %1$s\nSender Surname: %2$s\nPhone number: %3$s\nSender notes: %4$s\nExpected TTD: %5$s</string>
+    <string name="order_to_description_snippet">Receiver name: %1$s\nReceiver Surname: %2$s\nPhone number: %3$s\nSender notes: %4$s\nExpected TTD: %5$s</string>
 
     <!-- Navigation -->
     <string name="map_dialog_text">
