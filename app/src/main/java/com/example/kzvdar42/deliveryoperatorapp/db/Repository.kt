@@ -2,6 +2,7 @@ package com.example.kzvdar42.deliveryoperatorapp.db
 
 import android.app.Application
 import android.content.Context
+import android.util.Base64
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.kzvdar42.deliveryoperatorapp.serverApi.ServerApi
@@ -17,14 +18,14 @@ class Repository(application: Application) {
     private val mOrderDao = appDatabase.orderDao()
     private val mServerApi = ServerApi.create()
 
-    private fun updateOrders() {
-        doAsync {
-            mOrderDao.deleteAll()
-            val result = mServerApi.getOrders(sharedPref.getString("token", "") ?: "").execute()
-            if (result.isSuccessful) {
-                mOrderDao.insertAll(result.body()!!)
-            }
-        } //FIXME: ad hoc solution
+    fun updateOrders() {
+        val credentials = (sharedPref.getString("token", "") ?: "") + ":"
+        val credentialsEncoded = Base64.encodeToString(credentials.toByteArray(), Base64.NO_WRAP)
+        val disposable = mServerApi.getOrders("Basic $credentialsEncoded")
+                .subscribeOn(Schedulers.io())
+                .subscribe({
+                    mOrderDao.insertAll(it)
+                }, {}) // TODO: Do something on error
     }
 
     fun getOrder(orderNumber: Int): LiveData<OrderEntity> {
@@ -44,7 +45,7 @@ class Repository(application: Application) {
 
     fun login(requestBody: LoginReqBody): LiveData<Pair<String, String>> {
         val result: MutableLiveData<Pair<String, String>> = MutableLiveData()
-        val rrr = mServerApi.login(requestBody)
+        val disposable = mServerApi.login(requestBody)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
@@ -54,6 +55,15 @@ class Repository(application: Application) {
                     result.postValue(Pair(it.message!!, ""))
                 })
         return result
+    }
+
+    fun logout() {
+        // Delete the user data
+        doAsync {
+            mOrderDao.deleteAll()
+        }
+        mServerApi.logout()
+        sharedPref?.edit()?.putString("token", "")?.apply()
     }
 
 }

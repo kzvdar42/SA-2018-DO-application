@@ -16,10 +16,14 @@
 
     <!-- Order info -->
     <string name="select_order">Select order</string>
-    <string name="empty_order_name">Order #-1</string>
 
     <!-- Map -->
     <string name="start_navigation">Start navigation</string>
+    <string name="order_title_from">From</string>
+    <string name="order_title_transit">Transit</string>
+    <string name="order_title_end">End</string>
+    <string name="order_from_description_snippet">Sender name:%1$s\nSender Surname:%2$s\nPhone number:%3$s\nSender notes:%4$s\nExpected TTD:%5$s</string>
+    <string name="order_to_description_snippet">Receiver name:%1$s\nReceiver Surname:%2$s\nPhone number:%3$s\nSender notes:%4$s\nExpected TTD:%5$s</string>
 
     <!-- Navigation -->
     <string name="map_dialog_text">

@@ -16,10 +16,14 @@
 
     <!-- Order info -->
     <string name="select_order">Выбрать заказ</string>
-    <string name="empty_order_name">Заказ №-1</string>
 
     <!-- Map -->
     <string name="start_navigation">Начать навигацию</string>
+    <string name="order_title_from">Откуда</string>
+    <string name="order_title_transit">Точка транзита</string>
+    <string name="order_title_end">Куда</string>
+    <string name="order_from_description_snippet">Отправитель:\nИмя:%1$s\nФамилия:%2$s\nТелефон:%3$s\nЗаметки:%4$s\nВремя на доставку:%5$s</string>
+    <string name="order_to_description_snippet">Получатель:\nИмя:%1$s\nФамилия:%2$s\nТелефон:%3$s\nЗаметки:%4$s\nВремя на доставку:%5$s</string>
 
     <!-- Navigation -->
     <string name="map_dialog_text">

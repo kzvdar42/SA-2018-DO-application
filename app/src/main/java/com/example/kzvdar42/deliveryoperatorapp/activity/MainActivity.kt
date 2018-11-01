@@ -1,7 +1,6 @@
 package com.example.kzvdar42.deliveryoperatorapp.activity
 
 import android.os.Bundle
-import android.view.Menu
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment

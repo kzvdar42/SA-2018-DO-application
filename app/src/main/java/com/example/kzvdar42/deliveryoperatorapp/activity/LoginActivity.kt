@@ -11,15 +11,16 @@ import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.example.kzvdar42.deliveryoperatorapp.R
-import com.example.kzvdar42.deliveryoperatorapp.db.OrderEntity
-import com.example.kzvdar42.deliveryoperatorapp.serverApi.responce.LoginResponce
 import com.example.kzvdar42.deliveryoperatorapp.viewmodel.LoginViewModel
 import kotlinx.android.synthetic.main.activity_login.*
 
 
 class LoginActivity : AppCompatActivity() {
 
-    private lateinit var mViewModel: LoginViewModel
+    private val mViewModel
+            by lazy { ViewModelProviders.of(this).get(LoginViewModel::class.java) }
+    private val sharedPref
+            by lazy { getSharedPreferences("user", Context.MODE_PRIVATE) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,11 +31,8 @@ class LoginActivity : AppCompatActivity() {
         toolbar.setTitle(R.string.login_label)
         setSupportActionBar(toolbar)
 
-        // Get the view model
-        mViewModel = ViewModelProviders.of(this).get(LoginViewModel::class.java)
-
         // Go to main page if already logged in.
-        if (mViewModel.isLogged()) goToMainPage()
+        if (sharedPref.getString("token", "") != "") goToMainPage()
     }
 
     fun onClick(view: View) {
@@ -47,21 +45,21 @@ class LoginActivity : AppCompatActivity() {
 
     private fun goToMainPage() {
         intent = Intent(this, MainActivity::class.java)
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NO_ANIMATION
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or
+                Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NO_ANIMATION
         startActivity(intent)
     }
 
     private fun login() {
-        // TODO: Implement the Login process
         val login = setUsername.text.toString()
         val password = setPassword.text.toString()
         if (validate()) {
             mViewModel.login(login, password).observe(this, Observer<Pair<String, String>> { response ->
                 if (response.second != "") {
-                    getSharedPreferences("user", Context.MODE_PRIVATE).edit().putString("token", response.second).apply()
+                    sharedPref.edit().putString("token", response.second).apply()
                     goToMainPage()
                 } else {
-                    Toast.makeText(this, response.first, Toast.LENGTH_LONG).show() //TODO: Redo to snackbar
+                    Toast.makeText(this, response.first, Toast.LENGTH_LONG).show()
                 }
             })
         }

@@ -1,6 +1,5 @@
 package com.example.kzvdar42.deliveryoperatorapp.activity
 
-import android.content.DialogInterface
 import android.location.Location
 import android.os.Bundle
 import androidx.annotation.Nullable
@@ -38,14 +37,12 @@ class NavigationActivity : AppCompatActivity(), OnNavigationReadyCallback, Navig
     private lateinit var points: ArrayList<CoordsEntity>
 
     //ViewModel
-    private lateinit var mViewModel: MapViewModel
+    private val mViewModel
+            by lazy {ViewModelProviders.of(this).get(MapViewModel::class.java)}
 
     override fun onCreate(@Nullable savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_navigation)
-
-        // Get View Model
-        mViewModel = ViewModelProviders.of(this).get(MapViewModel::class.java)
 
         // Get order info //TODO: Посмотри на меня
         mViewModel.getCurrentOrder().observe(this, Observer { order ->

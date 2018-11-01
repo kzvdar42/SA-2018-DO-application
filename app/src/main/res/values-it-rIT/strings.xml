@@ -4,7 +4,9 @@
     <!-- Login -->
     <string name="login_label">Accesso</string>
     <string name="username">Nome utente</string>
-    <string name="password">Password</string>
+    <string name="username_error">Inserisci un nome utente valido</string>
+    <string name="password">Parola d\'ordine</string>
+    <string name="password_error">Tra 6 e 10 caratteri alfanumerici</string>
     <string name="login">Accedi</string>
 
     <!-- Order list -->
@@ -14,10 +16,14 @@
 
     <!-- Order info -->
     <string name="select_order">Scedi zak</string>
-    <string name="empty_order_name">Ordine №-1</string>
 
     <!-- Map -->
     <string name="start_navigation">Inzia la navigazione</string>
+    <string name="order_title_from">A partire dal</string>
+    <string name="order_title_transit">Punto di transito</string>
+    <string name="order_title_end">Finale</string>
+    <string name="order_from_description_snippet">Nome del mittente:%1$s\nCognome del mittente:%2$s\nNumero di telefono:%3$s\nNote del mittente:%4$s\nTTD atteso:%5$s</string>
+    <string name="order_to_description_snippet">Nome del destinatario:%1$s\nCognome del destinatario:%2$s\nNumero di telefono:%3$s\nNote del mittente:%4$s\nTTD atteso:%5$s</string>
 
     <!-- Navigation -->
     <string name="map_dialog_text">

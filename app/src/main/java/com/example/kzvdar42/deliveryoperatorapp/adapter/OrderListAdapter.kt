@@ -13,7 +13,8 @@ import com.example.kzvdar42.deliveryoperatorapp.db.OrderEntity
 import kotlinx.android.synthetic.main.orders_list_recycle_view_item.view.*
 
 
-class OrdersListAdapter(private var orderEntityList: List<OrderEntity>, val context: Context) : RecyclerView.Adapter<OrdersListAdapter.MyViewHolder>() {
+class OrdersListAdapter(private var orderEntityList: List<OrderEntity>, val context: Context)
+    : RecyclerView.Adapter<OrdersListAdapter.MyViewHolder>() {
 
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
@@ -23,7 +24,9 @@ class OrdersListAdapter(private var orderEntityList: List<OrderEntity>, val cont
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
 
-        val v = LayoutInflater.from(context).inflate(R.layout.orders_list_recycle_view_item, parent, false) as CardView
+        val v = LayoutInflater.from(context)
+                .inflate(R.layout.orders_list_recycle_view_item,
+                        parent, false) as CardView
         v.setOnClickListener {
             val intent = Intent(context, OrderInfoActivity::class.java)
             val orderNum =
@@ -48,7 +51,10 @@ class OrdersListAdapter(private var orderEntityList: List<OrderEntity>, val cont
     class MyViewHolder(itemView: CardView) : RecyclerView.ViewHolder(itemView) {
         fun bindItems(orderEntity: OrderEntity, context: Context) {
             itemView.order_name.text = context.resources.getString(R.string.order_num, orderEntity.orderNum)
-            itemView.order_description.text = "%s %s\n%s\n%s".format(orderEntity.receiverName,orderEntity.receiverSurname, orderEntity.senderNotes, orderEntity.expectedTtd)
+            itemView.order_description.text =
+                    "%s %s\n%s\n%s".format(
+                            orderEntity.receiverName, orderEntity.receiverSurname,
+                            orderEntity.senderNotes, orderEntity.expectedTtd) // FIXME: Redo the orderInfo layout
         }
     }
 

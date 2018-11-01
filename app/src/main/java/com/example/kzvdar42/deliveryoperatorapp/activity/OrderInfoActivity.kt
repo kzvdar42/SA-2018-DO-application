@@ -12,7 +12,6 @@ import com.example.kzvdar42.deliveryoperatorapp.R
 import com.example.kzvdar42.deliveryoperatorapp.db.CoordsEntity
 import com.example.kzvdar42.deliveryoperatorapp.db.OrderEntity
 import com.example.kzvdar42.deliveryoperatorapp.viewmodel.OrderInfoViewModel
-import com.google.gson.Gson
 import com.mapbox.api.directions.v5.models.DirectionsResponse
 import com.mapbox.geojson.Point
 import com.mapbox.mapboxsdk.Mapbox
@@ -38,12 +37,13 @@ class OrderInfoActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var mapboxMap: MapboxMap
 
     //View Model
-    private lateinit var mViewModel: OrderInfoViewModel
+    private val mViewModel
+            by lazy { ViewModelProviders.of(this).get(OrderInfoViewModel::class.java) }
 
     // OrderEntity info
     private lateinit var title: String
     private lateinit var order: OrderEntity
-    private lateinit var  coords : ArrayList<CoordsEntity>
+    private lateinit var coords: ArrayList<CoordsEntity>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,15 +53,15 @@ class OrderInfoActivity : AppCompatActivity(), OnMapReadyCallback {
         val intent = intent
         val orderNum = intent.getIntExtra("orderNum", 0)
 
-        // Get View Model
-        mViewModel = ViewModelProviders.of(this).get(OrderInfoViewModel::class.java)
 
         // Initializing the mapView
         mapView = findViewById(R.id.mapView)
         mapView.onCreate(savedInstanceState)
 
+
         // Get order information
-        mViewModel.getOrder(orderNum).observe(this, Observer<OrderEntity> { it -> //FIXME: find more elegant implementation.
+        mViewModel.getOrder(orderNum).observe(this, Observer<OrderEntity> { it ->
+            //FIXME: find more elegant implementation.
             order = it
             title = getString(R.string.order_num, order.orderNum)
             coords = order.coords
@@ -88,31 +88,46 @@ class OrderInfoActivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onMapReady(mapboxMap: MapboxMap) {
         this.mapboxMap = mapboxMap
 
-        val coords = order.coords
+        var latLngBounds = LatLngBounds.Builder()
 
-        val orderFrom = LatLng(coords[0].latitude, coords[0].longitude)
-        val orderTo = LatLng(coords[1].latitude, coords[1].longitude)
-        val orderFromPosition = Point.fromLngLat(coords[0].longitude, coords[0].latitude)
-        val orderToPosition = Point.fromLngLat(coords[1].longitude, coords[1].latitude)
+        // Lambda for adding right title for the marker.
+        val title = { ind: Int, maxindex: Int ->
+            // FIXME: move somewhere else, or change
+            getString(
+                    if (maxindex < 2) R.string.order_title_end
+                    else when (ind) {
+                        0 -> R.string.order_title_from
+                        maxindex - 1 -> R.string.order_title_end
+                        else -> R.string.order_title_transit
+                    })
+        }
 
-        val latLngBounds = LatLngBounds.Builder()
-                .include(orderFrom)
-                .include(orderTo)
-                .build()
-        mapboxMap.animateCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 200))
+        // Add bounds & markers.
+        order.coords.forEachIndexed { index, coord ->
+            // Add bound.
+            latLngBounds = LatLngBounds.Builder().include(LatLng(coord.latitude, coord.longitude))
 
-        getRoute(orderFromPosition!!, orderToPosition!!)
+            // Add marker to the map.
+            mapboxMap.addMarker(MarkerOptions()
+                    .position(LatLng(coord.latitude, coord.longitude))
+                    .title("${getString(R.string.order_num, order.orderNum)} [${title(index, order.coords.size)}]")
+                    .snippet(getString(R.string.order_from_description_snippet).format(
+                            order.senderName, order.senderSurname, order.senderPhoneNumber, order.senderNotes, order.expectedTtd)))
+        }
 
-        mapboxMap.addMarker(MarkerOptions()
-                .position(orderFrom)
-                .title("$title [From]")
-                .snippet("Sender name:{}\nSenderSurname:{}\nPhone number:{}\nSender notes:{}\nExtected TTD:{}".format( //FIXME: move to strings
-                        order.senderName, order.senderSurname, order.senderPhoneNumber, order.senderNotes, order.expectedTtd)))
-        mapboxMap.addMarker(MarkerOptions()
-                .position(orderTo)
-                .title("$title [To]")
-                .snippet("Receiver name:{}\nReceiverSurname:{}\nPhone number:{}\nExtected TTD:{}".format( //FIXME: move to strings
-                        order.receiverName, order.receiverSurname, order.receiverPhoneNumber, order.expectedTtd)))
+        // FIXME: Add the version for the one point
+        if (order.coords.size > 1) {
+
+            // Animate the camera to the points.
+            mapboxMap.animateCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds.build(), 200))
+
+            // Get the route.
+            val orderFromPosition = Point.fromLngLat(order.coords[0].longitude, order.coords[0].latitude)
+            val orderToPosition = Point.fromLngLat(coords[1].longitude, coords[1].latitude)
+            getRoute(orderFromPosition, orderToPosition)
+        }
+
+
     }
 
     private fun getRoute(origin: Point, destination: Point) {

@@ -32,6 +32,103 @@
                     mapbox:mapbox_cameraZoom="12"
                     mapbox:mapbox_styleUrl="mapbox://styles/mapbox/streets-v10" />
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <!--<GridLayout-->
+                        <!--android:id="@+id/restaurant_info_call_button"-->
+                        <!--android:onClick="onClick"-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:layout_alignParentStart="true"-->
+                        <!--android:layout_alignParentTop="true"-->
+                        <!--android:columnCount="1"-->
+                        <!--android:rowCount="2">-->
+
+                        <!--<ImageView-->
+                            <!--android:layout_width="32dp"-->
+                            <!--android:layout_height="32dp"-->
+                            <!--android:layout_column="0"-->
+                            <!--android:layout_row="0"-->
+                            <!--android:layout_gravity="center"-->
+                            <!--android:src="@drawable/ic_phone"-->
+                            <!--android:tint="@color/colorAccent"-->
+                            <!--android:contentDescription="@string/call_icon_desc" />-->
+
+                        <!--<TextView-->
+                            <!--android:layout_width="wrap_content"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:layout_column="0"-->
+                            <!--android:layout_row="1"-->
+                            <!--android:text="@string/call_label"-->
+                            <!--android:textAllCaps="true"-->
+                            <!--android:textColor="@color/colorAccent"-->
+                            <!--android:textStyle="bold" />-->
+                    <!--</GridLayout>-->
+
+                    <!--<GridLayout-->
+                        <!--android:id="@+id/restaurant_info_location_button"-->
+                        <!--android:onClick="onClick"-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:layout_centerHorizontal="true"-->
+                        <!--android:columnCount="1"-->
+                        <!--android:rowCount="2">-->
+
+                        <!--<ImageView-->
+                            <!--android:layout_width="32dp"-->
+                            <!--android:layout_height="32dp"-->
+                            <!--android:layout_column="0"-->
+                            <!--android:layout_row="0"-->
+                            <!--android:layout_gravity="center"-->
+                            <!--android:src="@drawable/ic_location"-->
+                            <!--android:tint="@color/colorAccent"-->
+                            <!--android:contentDescription="@string/location_icon_desc" />-->
+
+                        <!--<TextView-->
+                            <!--android:layout_width="wrap_content"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:layout_column="0"-->
+                            <!--android:layout_row="1"-->
+                            <!--android:text="@string/location_label"-->
+                            <!--android:textAllCaps="true"-->
+                            <!--android:textColor="@color/colorAccent"-->
+                            <!--android:textStyle="bold" />-->
+                    <!--</GridLayout>-->
+
+                    <!--<GridLayout-->
+                        <!--android:id="@+id/restaurant_info_website_button"-->
+                        <!--android:onClick="onClick"-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:layout_alignParentEnd="true"-->
+                        <!--android:layout_alignParentTop="true"-->
+                        <!--android:columnCount="1"-->
+                        <!--android:rowCount="2">-->
+
+                        <!--<ImageView-->
+                            <!--android:layout_width="32dp"-->
+                            <!--android:layout_height="32dp"-->
+                            <!--android:layout_column="0"-->
+                            <!--android:layout_row="0"-->
+                            <!--android:layout_gravity="center"-->
+                            <!--android:src="@drawable/ic_network"-->
+                            <!--android:tint="@color/colorAccent"-->
+                            <!--android:contentDescription="@string/website_icon_desc" />-->
+
+                        <!--<TextView-->
+                            <!--android:layout_width="wrap_content"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:layout_column="0"-->
+                            <!--android:layout_row="1"-->
+                            <!--android:text="@string/navigate_label"-->
+                            <!--android:textAllCaps="true"-->
+                            <!--android:textColor="@color/colorAccent"-->
+                            <!--android:textStyle="bold" />-->
+                    <!--</GridLayout>-->
+
+
+                </LinearLayout>
 
                 <TextView
                     android:id="@+id/customer_name_text"
@@ -45,10 +142,35 @@
                     tools:text="Name Surname" />
 
                 <TextView
-                    android:id="@+id/order_info_text"
-                    android:layout_width="fill_parent"
+                    android:id="@+id/time_left_text"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="16dp"
+                    android:paddingLeft="16dp"
+                    android:paddingTop="8dp"
+                    android:paddingRight="16dp"
+                    android:singleLine="false"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    tools:text="Time left: 10 hours" />
+
+                <TextView
+                    android:id="@+id/dimentions_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="16dp"
+                    android:paddingTop="8dp"
+                    android:paddingRight="16dp"
+                    android:singleLine="false"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    tools:text="Dimentions: 20x40x60 (sm)" />
+
+                <TextView
+                    android:id="@+id/order_info_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="16dp"
+                    android:paddingTop="8dp"
+                    android:paddingRight="16dp"
+                    android:singleLine="false"
                     android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                     tools:text="@string/empty_description" />
             </LinearLayout>

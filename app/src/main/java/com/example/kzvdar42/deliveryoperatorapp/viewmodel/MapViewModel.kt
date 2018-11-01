@@ -8,11 +8,9 @@ import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import com.example.kzvdar42.deliveryoperatorapp.R
-import com.example.kzvdar42.deliveryoperatorapp.db.CoordsEntity
 import com.example.kzvdar42.deliveryoperatorapp.db.OrderEntity
 import com.example.kzvdar42.deliveryoperatorapp.db.Repository
 import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import com.mapbox.android.core.location.LocationEngine
 import com.mapbox.android.core.location.LocationEngineListener
 import com.mapbox.android.core.location.LocationEnginePriority
@@ -37,7 +35,7 @@ class MapViewModel(application: Application) : AndroidViewModel(application), Lo
     }
 
     fun saveOrderStatus(points: ArrayList<Point>) {
-        if (points.size > 0) { //TODO: Rewrite to write data to the database and server
+        if (points.size > 0) { //TODO: Rewrite to write data to the database
             val coords = DoubleArray(points.size * 2)
 
             var i = -1
@@ -60,7 +58,7 @@ class MapViewModel(application: Application) : AndroidViewModel(application), Lo
         if (PermissionsManager.areLocationPermissionsGranted(getApplicationContext())) {
             initializeLocationEngine()
         } else {
-            // TODO: Request the permission:
+            // TODO: Request the permission
         }
     }
 

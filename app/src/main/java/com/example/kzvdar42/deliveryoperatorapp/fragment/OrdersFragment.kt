@@ -19,13 +19,12 @@ class OrdersFragment : Fragment() {
 
 
     private lateinit var mRecyclerView: RecyclerView
-    private lateinit var mAdapter: OrdersListAdapter
-    private lateinit var mLayoutManager: LinearLayoutManager
-    private lateinit var mViewModel: OrderListViewModel
+    private val mAdapter
+            by lazy { OrdersListAdapter(LinkedList(), context!!) }
+    private val mViewModel
+            by lazy { ViewModelProviders.of(activity!!).get(OrderListViewModel::class.java) }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-
-
         val rootView = inflater.inflate(R.layout.fragment_orders_list, container, false)
         setHasOptionsMenu(true)
 
@@ -33,15 +32,13 @@ class OrdersFragment : Fragment() {
         mRecyclerView = rootView.findViewById(R.id.order_list_recycler_view)
 
         // Use a linear layout manager
-        mLayoutManager = LinearLayoutManager(activity)
-        mRecyclerView.layoutManager = mLayoutManager
+        mRecyclerView.layoutManager = LinearLayoutManager(activity)
 
         // Specify an adapter
-        mAdapter = OrdersListAdapter(LinkedList(), context!!)
         mRecyclerView.adapter = mAdapter
 
         // Read data from View Model
-        mViewModel = ViewModelProviders.of(activity!!).get(OrderListViewModel::class.java)
+        mViewModel.updateOrders()
         mViewModel.getAcceptedOrders()?.observe(this, Observer<List<OrderEntity>> { t -> mAdapter.updateOrderList(t) })
 
         // Set the toolbar title
@@ -68,7 +65,9 @@ class OrdersFragment : Fragment() {
             R.id.new_orders -> {
                 activity?.findViewById<Toolbar>(R.id.toolbar)?.title = getString(R.string.new_orders_label)
                 mViewModel.getAcceptedOrders()?.removeObservers(this)
-                mViewModel.getNewOrders()?.observe(this, Observer<List<OrderEntity>> { t -> mAdapter.updateOrderList(t) })
+                mViewModel.getNewOrders()?.observe(this, Observer<List<OrderEntity>> { t ->
+                    mAdapter.updateOrderList(t)
+                })
             }
         }
         return super.onOptionsItemSelected(item)

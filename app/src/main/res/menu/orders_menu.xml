@@ -4,7 +4,7 @@
     <item
         android:id="@+id/accepted_orders"
         app:showAsAction="withText"
-        android:title="@string/orders_label" />
+        android:title="@string/accepted_orders_label" />
     <item
         android:id="@+id/new_orders"
         app:showAsAction="withText"
