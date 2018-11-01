@@ -13,13 +13,14 @@ import org.jetbrains.anko.doAsync
 
 
 class Repository(application: Application) {
-    private val sharedPref = application.getSharedPreferences("user", Context.MODE_PRIVATE)
+    private val userPref = application.getSharedPreferences("user", Context.MODE_PRIVATE)
+    private val orderPref = application.getSharedPreferences("currentOrder", Context.MODE_PRIVATE)
     private val appDatabase = AppDatabase.getInstance(application)
     private val mOrderDao = appDatabase.orderDao()
     private val mServerApi = ServerApi.create()
 
     fun updateOrders() {
-        val credentials = (sharedPref.getString("token", "") ?: "") + ":"
+        val credentials = (userPref.getString("token", "") ?: "") + ":"
         val credentialsEncoded = Base64.encodeToString(credentials.toByteArray(), Base64.NO_WRAP)
         val disposable = mServerApi.getOrders("Basic $credentialsEncoded")
                 .subscribeOn(Schedulers.io())
@@ -29,7 +30,6 @@ class Repository(application: Application) {
     }
 
     fun getOrder(orderNumber: Int): LiveData<OrderEntity> {
-        updateOrders()
         return mOrderDao.getOrder(orderNumber)
     }
 
@@ -63,7 +63,8 @@ class Repository(application: Application) {
             mOrderDao.deleteAll()
         }
         mServerApi.logout()
-        sharedPref?.edit()?.putString("token", "")?.apply()
+        orderPref.edit().remove("orderNum").apply()
+        userPref.edit().remove("token").apply()
     }
 
 }
