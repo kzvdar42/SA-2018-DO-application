@@ -27,6 +27,11 @@
     <string name="weight_label">Peso: %1$d kg</string>
     <string name="sender_notes_label">Note del mittente: %1$s</string>
 
+    <!-- Receiver info -->
+    <string name="accept_label">Accettare</string>
+    <string name="decline_label">Declino</string>
+    <string name="dialog_title">Sei sicuro?</string>
+
     <!-- Map -->
     <string name="start_navigation">Inzia la navigazione</string>
     <string name="order_title_from">A partire dal</string>
@@ -56,9 +61,12 @@
     <string name="contact_co">Connessione con CA</string>
     <string name="log_out">Uscire</string>
 
-
     <!-- Contact CO -->
     <string name="not_implemented_yet">Non ancora fatto</string>
+
+    <!-- Dialog -->
+    <string name="yes">Sì</string>
+    <string name="no">No</string>
 
     <!-- Others -->
 

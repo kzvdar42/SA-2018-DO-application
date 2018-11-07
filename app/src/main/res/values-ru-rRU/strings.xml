@@ -27,6 +27,11 @@
     <string name="weight_label">Вес: %1$d кг</string>
     <string name="sender_notes_label">Заметки отправителя: %1$s</string>
 
+    <!-- Receiver info -->
+    <string name="accept_label">Подтвердить</string>
+    <string name="decline_label">Отклонить</string>
+    <string name="dialog_title">Вы уверены?</string>
+
     <!-- Map -->
     <string name="start_navigation">Начать навигацию</string>
     <string name="order_title_from">Откуда</string>
@@ -56,9 +61,12 @@
     <string name="contact_co">Связь с КО</string>
     <string name="log_out">Выйти</string>
 
-
     <!-- Contact CO -->
     <string name="not_implemented_yet">Ещё не сделано.</string>
+
+    <!-- Dialog -->
+    <string name="yes">Да</string>
+    <string name="no">Нет</string>
 
     <!-- Others -->
 

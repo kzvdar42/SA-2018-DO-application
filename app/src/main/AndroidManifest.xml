@@ -13,10 +13,10 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/application_name"
-        android:usesCleartextTraffic="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
+        android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning">
         <activity android:name=".activity.LoginActivity">
             <intent-filter>
@@ -29,11 +29,10 @@
         <activity android:name=".activity.MainActivity" />
         <activity
             android:name=".activity.SplashActivity"
-            android:theme="@style/AppTheme.Launcher">
-
-        </activity>
+            android:theme="@style/AppTheme.Launcher" />
         <activity android:name=".activity.EmptyActivity" />
         <activity android:name=".activity.LocalizationActivity" />
+        <activity android:name=".activity.ReceiverInfoActivity" />
     </application>
 
 </manifest>

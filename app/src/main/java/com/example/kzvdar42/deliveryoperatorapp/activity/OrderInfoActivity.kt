@@ -43,7 +43,6 @@ class OrderInfoActivity : AppCompatActivity(), OnMapReadyCallback {
             by lazy { ViewModelProviders.of(this).get(OrderInfoViewModel::class.java) }
 
     // OrderEntity info
-    private lateinit var title: String
     private lateinit var order: OrderEntity
     private lateinit var coords: ArrayList<CoordsEntity>
 
@@ -65,12 +64,11 @@ class OrderInfoActivity : AppCompatActivity(), OnMapReadyCallback {
         mViewModel.getOrder(orderNum).observe(this, Observer<OrderEntity> { it ->
             //FIXME: find more elegant implementation.
             order = it
-            title = getString(R.string.order_num, order.orderNum)
             coords = order.coords
 
             // Add toolbar
             val toolbar = findViewById<Toolbar>(R.id.toolbar)
-            toolbar.title = title
+            toolbar.title = getString(R.string.order_num, order.orderNum)
             setSupportActionBar(toolbar)
 
             // Set back button on toolbar
@@ -196,7 +194,9 @@ class OrderInfoActivity : AppCompatActivity(), OnMapReadyCallback {
                 startActivity(intent)
             }
             R.id.assignment_button -> {
-                startActivity(Intent(this, EmptyActivity::class.java))
+                val intent = Intent(this, ReceiverInfoActivity::class.java)
+                intent.putExtra("orderNum", order.orderNum)
+                startActivity(intent)
             }
             R.id.select_order -> { // TODO: Update the status of order.
                 Toast.makeText(this, "In implementation", Toast.LENGTH_LONG).show()

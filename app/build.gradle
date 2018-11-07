@@ -9,7 +9,7 @@ android {
     compileSdkVersion 28
     defaultConfig {
         applicationId "com.example.kzvdar42.deliveryoperatorapp"
-        minSdkVersion 15
+        minSdkVersion 19
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
@@ -30,13 +30,14 @@ android {
 repositories {
     mavenCentral() // MapBox
     maven { url 'https://mapbox.bintray.com/mapbox' } // MapBox
+    maven { url 'https://jitpack.io' } // Android Draw
 }
 
 dependencies {
     // Standard dependencies
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation 'androidx.appcompat:appcompat:1.0.0'
+    implementation 'androidx.appcompat:appcompat:1.0.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.0-alpha2'
 
     // Tests
@@ -44,8 +45,8 @@ dependencies {
     androidTestImplementation 'androidx.test:runner:1.1.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0'
 
-    //  Coroutines
-//    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:0.26"
+    //  Android Draw
+    implementation 'com.github.divyanshub024:AndroidDraw:v0.1'
 
     // Material
     implementation 'com.google.android.material:material:1.0.0'

@@ -27,6 +27,11 @@
     <string name="weight_label">Weight: %1$d kg</string>
     <string name="sender_notes_label">Sender notes: %1$s</string>
 
+    <!-- Receiver info -->
+    <string name="accept_label">Accept</string>
+    <string name="decline_label">Decline</string>
+    <string name="dialog_title">Are you sure?</string>
+
     <!-- Map -->
     <string name="start_navigation">Start navigation</string>
     <string name="order_title_from">From</string>
@@ -63,6 +68,10 @@
 
     <!-- Contact CO -->
     <string name="not_implemented_yet">Not implemented yet.</string>
+
+    <!-- Dialog -->
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
 
     <!-- Others -->
     <string name="empty_description" translatable="false">Lorem ipsum dolor sit amet,
