@@ -1,45 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/dialog_rl"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tool="http://schemas.android.com/tools"
+    android:id="@+id/dialog"
     style="AppTheme.CardViewStyle"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="280dp"
+    android:layout_height="wrap_content"
+    card_view:cardCornerRadius="15dp"
+    card_view:cardElevation="4dp">
 
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
         <TextView
-            android:id="@+id/dialog_titile"
-            android:layout_width="match_parent"
+            android:id="@+id/dialog_title"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="#a2abcd"
-            android:padding="5dp"
-            android:textSize="15sp" />
+            android:layout_margin="24dp"
+            android:layout_marginBottom="28dp"
+            android:textSize="15sp"
+            tool:text="Title" />
 
         <TextView
-            android:id="@+id/dialog_tv"
+            android:id="@+id/dialog_description"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/dialog_titile"
-            android:padding="15dp" />
+            android:layout_below="@id/dialog_title"
+            android:paddingLeft="24dp"
+            android:paddingRight="24dp"
+            tool:text="Description" />
 
-        <Button
+        <TextView
             android:id="@+id/dialog_positive_btn"
-            style="@style/AppTheme.Button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_below="@id/dialog_description"
             android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true" />
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:padding="8dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:paddingBottom="8dp"
+            android:textAllCaps="true"
+            android:textColor="@color/colorAccent"
+            android:text="@string/yes" />
 
-        <Button
+        <TextView
             android:id="@+id/dialog_negative_btn"
-            style="@style/AppTheme.Button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="3dp"
-            android:layout_marginRight="3dp"
+            android:layout_below="@id/dialog_description"
+            android:layout_margin="8dp"
+            android:layout_marginEnd="0dp"
             android:layout_toStartOf="@id/dialog_positive_btn"
-            android:layout_toLeftOf="@id/dialog_positive_btn" />
+            android:padding="8dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:textAllCaps="true"
+            android:textColor="@color/color_red"
+            android:text="@string/no" />
     </RelativeLayout>
 </androidx.cardview.widget.CardView>
