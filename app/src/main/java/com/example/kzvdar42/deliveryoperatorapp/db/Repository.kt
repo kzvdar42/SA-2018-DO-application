@@ -95,9 +95,18 @@ class Repository(application: Application) {
         return Pair(result, disposable)
     }
 
-    fun sendPosition(position: LatLng) {
+    fun sendPosition(position: LatLng): Pair<LiveData<String>, Disposable>  {
+        val result = MutableLiveData<String>()
         val body = UpdatePositionReqBody(position.latitude, position.longitude)
-        mServerApi.updatePosition(getCredentials(), body)
+        val disposable = mServerApi.updatePosition(getCredentials(), body)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    result.postValue(it.body()?.message)
+                }, {
+                    result.postValue(it.message)
+                })
+        return Pair(result, disposable)
     }
 
 
