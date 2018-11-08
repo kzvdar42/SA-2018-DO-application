@@ -2,7 +2,6 @@ package com.example.kzvdar42.deliveryoperatorapp.activity
 
 import android.content.Intent
 import android.content.res.Configuration
-import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
@@ -54,14 +53,8 @@ class LocalizationActivity : AppCompatActivity() {
         val resources = this.resources
         val configuration = Configuration(resources.configuration)
 
-        if (Build.VERSION.SDK_INT >= 17) {
-            configuration.setLocale(language)
-            this.createConfigurationContext(configuration)
-        } else {
-            configuration.locale = language
-            resources.updateConfiguration(configuration, resources.displayMetrics)
-        }
-
+        configuration.setLocale(language)
+        this.createConfigurationContext(configuration)
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {
