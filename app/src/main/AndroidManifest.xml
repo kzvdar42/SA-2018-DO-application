@@ -33,6 +33,17 @@
         <activity android:name=".activity.EmptyActivity" />
         <activity android:name=".activity.LocalizationActivity" />
         <activity android:name=".activity.ReceiverInfoActivity" />
+
+        <service
+            android:name=".util.SendLocation"
+            android:enabled="true"
+            android:exported="false" />
+
+        <service
+            android:name=".util.GetLocation"
+            android:enabled="true"
+            android:exported="false"
+            android:permission="android.permission.ACCESS_FINE_LOCATION" />
     </application>
 
 </manifest>
