@@ -53,7 +53,7 @@ class NavigationActivity : AppCompatActivity(), OnNavigationReadyCallback, Navig
 
             // Add current position at the start
             val currentPosition = mViewModel.getCurrentPosition()
-            points.add(0, CoordsEntity(currentPosition!!.longitude, currentPosition.latitude))
+            points.add(0, CoordsEntity(long=currentPosition!!.longitude, lat = currentPosition.latitude))
 
             navigationView = findViewById(R.id.navigationView)
             navigationView?.onCreate(savedInstanceState)
@@ -83,12 +83,13 @@ class NavigationActivity : AppCompatActivity(), OnNavigationReadyCallback, Navig
         val alertDialog = AlertDialog.Builder(this).create()
         // Inflating the view for the alert dialog.
         val dialogView = layoutInflater.inflate(R.layout.alert_dialog, null)
-        dialogView.dialog_title.visibility = View.GONE
+        dialogView.dialog_title.text = getString(R.string.order_title_transit)
         dialogView.dialog_description.text = getString(R.string.map_dialog_text)
         dialogView.dialog_positive_btn.text = getString(R.string.map_dialog_positive_text)
         dialogView.dialog_positive_btn.setOnClickListener {
+            alertDialog.dismiss()
             val nextPoint = points.removeAt(0)
-            fetchRoute(getLastKnownLocation(), Point.fromLngLat(nextPoint.longitude, nextPoint.latitude))
+            fetchRoute(getLastKnownLocation(), Point.fromLngLat(nextPoint.long, nextPoint.lat))
         }
         dialogView.dialog_negative_btn.text = getString(R.string.map_dialog_negative_text)
         dialogView.dialog_negative_btn.setOnClickListener {
@@ -185,8 +186,8 @@ class NavigationActivity : AppCompatActivity(), OnNavigationReadyCallback, Navig
     override fun onNavigationReady(isRunning: Boolean) {
         val currentPoint = points.removeAt(0)
         val nextPoint = points.removeAt(0)
-        fetchRoute(Point.fromLngLat(currentPoint.longitude, currentPoint.latitude),
-                Point.fromLngLat(nextPoint.longitude, nextPoint.latitude))
+        fetchRoute(Point.fromLngLat(currentPoint.long, currentPoint.lat),
+                Point.fromLngLat(nextPoint.long, nextPoint.lat))
     }
 
     override fun onCancelNavigation() {

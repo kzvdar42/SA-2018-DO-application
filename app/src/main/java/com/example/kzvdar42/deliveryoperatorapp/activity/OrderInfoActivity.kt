@@ -78,8 +78,8 @@ class OrderInfoActivity : AppCompatActivity(), OnMapReadyCallback {
             // Add info
             customer_name_text.text = "${order.receiverName} ${order.receiverSurname}"
             time_left_text.text = getString(R.string.time_left_label, order.expectedTtd)
-            dimensions_text.text = getString(R.string.dimensions_text, order.length, order.width, order.height)
-            weight_text.text = getString(R.string.weight_label, order.weight)
+            dimensions_text.text = getString(R.string.dimensions_text, order.length.toLong(), order.width.toLong(), order.height.toLong())
+            weight_text.text = getString(R.string.weight_label, order.weight.toLong())
             if (order.senderNotes != null) sender_notes_label.text = getString(R.string.sender_notes_label, order.senderNotes)
 
             // Change the layout due to order status.
@@ -90,6 +90,7 @@ class OrderInfoActivity : AppCompatActivity(), OnMapReadyCallback {
                     order_actions_bar.visibility = View.GONE
                     select_order_button.visibility = View.GONE
                 }
+                else -> select_order_button.visibility = View.GONE
             }
 
 
@@ -118,15 +119,15 @@ class OrderInfoActivity : AppCompatActivity(), OnMapReadyCallback {
                         else -> R.string.order_title_transit
                     })
         }
-
+        latLngBounds = LatLngBounds.Builder()
         // Add bounds & markers.
         order.coords.forEachIndexed { index, coord ->
             // Add bound.
-            latLngBounds = LatLngBounds.Builder().include(LatLng(coord.latitude, coord.longitude))
+            latLngBounds.include(LatLng(coord.lat, coord.long))
 
             // Add marker to the map.
             mapboxMap.addMarker(MarkerOptions()
-                    .position(LatLng(coord.latitude, coord.longitude))
+                    .position(LatLng(coord.lat, coord.long))
                     .title("${getString(R.string.order_num, order.orderNum)} [${title(index, order.coords.size)}]")
                     .snippet(getString(R.string.order_to_description_snippet,
                             order.receiverName, order.receiverSurname, order.receiverPhoneNumber, order.senderNotes, order.expectedTtd))) // TODO: Handle null values
@@ -134,13 +135,13 @@ class OrderInfoActivity : AppCompatActivity(), OnMapReadyCallback {
 
         if (order.coords.size > 1) {
             // Get the route.
-            getRoute(Point.fromLngLat(order.coords[0].longitude, order.coords[0].latitude),
-                    Point.fromLngLat(coords[1].longitude, coords[1].latitude))
+            getRoute(Point.fromLngLat(order.coords[0].long, order.coords[0].lat),
+                    Point.fromLngLat(coords[1].long, coords[1].lat))
         } else {
             val lastPosition = mViewModel.getCurrentPosition()
             latLngBounds.include(LatLng(lastPosition))
             getRoute(Point.fromLngLat(lastPosition.longitude, lastPosition.latitude),
-                    Point.fromLngLat(coords[0].longitude, coords[0].latitude))
+                    Point.fromLngLat(coords[0].long, coords[0].lat))
         }
         // Animate the camera to the points.
         mapboxMap.animateCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds.build(), 200))
@@ -181,12 +182,11 @@ class OrderInfoActivity : AppCompatActivity(), OnMapReadyCallback {
         when (view.id) {
             R.id.navigation_button -> {
                 val sharedPref = getSharedPreferences("currentOrder", Context.MODE_PRIVATE)
-                        ?: return
                 with(sharedPref.edit()) {
                     putInt("orderNum", order.orderNum)
                     apply()
-                    onBackPressed()
                 }
+                finish()
             }
             R.id.call_button -> { // TODO: Implement taking the number from the server
                 intent = Intent(Intent.ACTION_DIAL)

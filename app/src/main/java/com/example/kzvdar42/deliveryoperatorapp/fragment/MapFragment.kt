@@ -99,10 +99,10 @@ class MapFragment : Fragment(), OnMapReadyCallback, PermissionsListener {
                     // Add bounds & markers
                     order.coords.forEachIndexed { index, coord ->
                         // Add bound.
-                        latLngBounds.include(LatLng(coord.latitude, coord.longitude))
+                        latLngBounds.include(LatLng(coord.lat, coord.long))
                         // Add marker to the map.
                         mapboxMap.addMarker(MarkerOptions()
-                                .position(LatLng(order.coords[0].latitude, order.coords[0].longitude))
+                                .position(LatLng(order.coords[0].lat, order.coords[0].long))
                                 .title("${getString(R.string.order_num, order.orderNum)} [${title(0, order.coords.size)}]")
                                 .snippet(getString(R.string.order_to_description_snippet,
                                         order.receiverName, order.receiverSurname, order.receiverPhoneNumber, order.senderNotes, order.expectedTtd))) // TODO: Handle null values
@@ -111,7 +111,7 @@ class MapFragment : Fragment(), OnMapReadyCallback, PermissionsListener {
                     mapboxMap.animateCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds.build(), 100))
 
                     // Get the route.
-                    val orderFromPosition = Point.fromLngLat(order.coords[0].longitude, order.coords[0].latitude)
+                    val orderFromPosition = Point.fromLngLat(order.coords[0].long, order.coords[0].lat)
                     getRoute(originPosition!!, orderFromPosition!!)
 
                     // Set the On Click Listener for the `start navigation button`.
