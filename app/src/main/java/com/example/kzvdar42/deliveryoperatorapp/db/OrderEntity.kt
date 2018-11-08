@@ -68,7 +68,7 @@ data class OrderEntity(
         var priceCurrency: String,
         @ColumnInfo(name = "last_transit_point")
         @SerializedName("last_transit_point")
-        var lastTransitPoint: String?, //FIXME change
+        var lastTransitPoint: Int,
         @ColumnInfo(name = "order_status")
         @SerializedName("order_status")
         var orderStatus: String,

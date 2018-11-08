@@ -2,12 +2,17 @@ package com.example.kzvdar42.deliveryoperatorapp.db
 
 import android.app.Application
 import android.content.Context
+import android.graphics.Bitmap
 import android.util.Base64
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.kzvdar42.deliveryoperatorapp.serverApi.ServerApi
 import com.example.kzvdar42.deliveryoperatorapp.serverApi.requestBodies.LoginReqBody
+import com.example.kzvdar42.deliveryoperatorapp.serverApi.requestBodies.UpdateOrderReqBody
+import com.example.kzvdar42.deliveryoperatorapp.serverApi.requestBodies.UpdatePositionReqBody
+import com.mapbox.mapboxsdk.geometry.LatLng
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import org.jetbrains.anko.doAsync
 
@@ -19,42 +24,24 @@ class Repository(application: Application) {
     private val mOrderDao = appDatabase.orderDao()
     private val mServerApi = ServerApi.create()
 
-    fun updateOrders() {
+    private fun getCredentials(): String {
         val credentials = (userPref.getString("token", "") ?: "") + ":"
         val credentialsEncoded = Base64.encodeToString(credentials.toByteArray(), Base64.NO_WRAP)
-        val disposable = mServerApi.getOrders("Basic $credentialsEncoded")
-                .subscribeOn(Schedulers.io())
-                .subscribe({
-                    mOrderDao.insertAll(it)
-                }, {}) // TODO: Do something on error
+        return "Basic $credentialsEncoded"
     }
 
-    fun getOrder(orderNumber: Int): LiveData<OrderEntity> {
-        return mOrderDao.getOrder(orderNumber)
-    }
-
-    fun getNewOrders(): LiveData<List<OrderEntity>> {
-        updateOrders()
-        return mOrderDao.getNewOrders()
-    }
-
-    fun getAcceptedOrders(): LiveData<List<OrderEntity>> {
-        updateOrders()
-        return mOrderDao.getAcceptedOrders()
-    }
-
-    fun login(requestBody: LoginReqBody): LiveData<Pair<String, String>> {
-        val result: MutableLiveData<Pair<String, String>> = MutableLiveData()
+    fun login(requestBody: LoginReqBody): Pair<LiveData<String>, Disposable> {
+        val result = MutableLiveData<String>()
         val disposable = mServerApi.login(requestBody)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    result.postValue(Pair(it.headers().toString(), it.headers().get("Authentication")
-                            ?: ""))
-                }, {
-                    result.postValue(Pair(it.message!!, ""))
+                .subscribe({ response ->
+                    userPref.edit().putString("token", response.headers().get("Authentication") ?: "").apply()
+                    result.postValue("OK")
+                }, {responce ->
+                    result.postValue(responce.message)
                 })
-        return result
+        return Pair(result, disposable)
     }
 
     fun logout() {
@@ -66,5 +53,51 @@ class Repository(application: Application) {
         orderPref.edit().remove("orderNum").apply()
         userPref.edit().remove("token").apply()
     }
+
+
+    fun getOrders() {
+        val disposable = mServerApi.getOrders(getCredentials())
+                .subscribeOn(Schedulers.io())
+                .subscribe({
+                    mOrderDao.insertAll(it)
+                }, {}) // TODO: Do something on error
+    }
+
+    fun getOrder(orderNumber: Int): LiveData<OrderEntity> {
+        return mOrderDao.getOrder(orderNumber)
+    }
+
+    fun getNewOrders(): LiveData<List<OrderEntity>> {
+        getOrders()
+        return mOrderDao.getNewOrders()
+    }
+
+    fun getAcceptedOrders(): LiveData<List<OrderEntity>> {
+        getOrders()
+        return mOrderDao.getAcceptedOrders()
+    }
+
+    fun updateOrder(orderNum: Int, orderStatus: String,
+                    lastTransitPoint: Int, photo: Bitmap): Pair<LiveData<String>, Disposable> {
+        // Body for request
+        val body = UpdateOrderReqBody(orderNum, orderStatus, lastTransitPoint, null) // TODO: Send photo.
+        val result = MutableLiveData<String>()
+        val disposable = mServerApi.updateOrder(getCredentials(), body)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    result.postValue(it.body()?.message)
+                    mOrderDao.updateOrder(orderNum, orderStatus, lastTransitPoint)
+                }, {
+                    result.postValue(it.message)
+                })
+        return Pair(result, disposable)
+    }
+
+    fun sendPosition(position: LatLng) {
+        val body = UpdatePositionReqBody(position.latitude, position.longitude)
+        mServerApi.updatePosition(getCredentials(), body)
+    }
+
 
 }

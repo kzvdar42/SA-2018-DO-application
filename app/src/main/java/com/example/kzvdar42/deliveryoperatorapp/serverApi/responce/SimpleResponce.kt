@@ -1,3 +1,3 @@
 package com.example.kzvdar42.deliveryoperatorapp.serverApi.responce
 
-data class LoginResponce (val message : String)
+data class SimpleResponce (val message : String)

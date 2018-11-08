@@ -28,7 +28,7 @@ class OrderListViewModel(application: Application) : AndroidViewModel(applicatio
     }
 
     fun updateOrders() {
-        repository.updateOrders()
+        repository.getOrders()
     }
 
 }

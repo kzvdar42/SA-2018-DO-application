@@ -7,8 +7,6 @@ import androidx.room.Insert
 import androidx.room.Query
 
 
-
-
 @Dao
 interface OrderDao {
     @Query("Select * from orders where order_status == \"Approved\"")
@@ -18,13 +16,19 @@ interface OrderDao {
     fun getAcceptedOrders(): LiveData<List<OrderEntity>>
 
     @Query("Select * from orders where order_num = :num")
-    fun getOrder(num : Int) : LiveData<OrderEntity>
+    fun getOrder(num: Int): LiveData<OrderEntity>
 
     @Insert
     fun insert(orderEntity: OrderEntity)
 
     @Insert
     fun insertAll(orderEntities: List<OrderEntity>)
+
+    @Query("UPDATE orders " +
+            "SET order_status = :orderStatus, last_transit_point = :lastTransitPoint " +
+            "WHERE order_num = :orderNum")
+    fun updateOrder(orderNum: Int, orderStatus: String,
+                    lastTransitPoint: Int)
 
     @Delete
     fun delete(orderEntity: OrderEntity)

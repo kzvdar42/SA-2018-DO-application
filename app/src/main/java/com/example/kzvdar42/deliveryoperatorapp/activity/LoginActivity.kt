@@ -43,26 +43,26 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
+    private fun login() {
+        val login = setUsername.text.toString()
+        val password = setPassword.text.toString()
+        if (validate()) {
+            val result = mViewModel.login(login, password)
+            result.first.observe(this, Observer<String> { response ->
+                if (response == "OK") {
+                    goToMainPage()
+                } else {
+                    Toast.makeText(this, response, Toast.LENGTH_LONG).show()
+                }
+            })
+        }
+    }
+
     private fun goToMainPage() {
         intent = Intent(this, MainActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or
                 Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NO_ANIMATION
         startActivity(intent)
-    }
-
-    private fun login() {
-        val login = setUsername.text.toString()
-        val password = setPassword.text.toString()
-        if (validate()) {
-            mViewModel.login(login, password).observe(this, Observer<Pair<String, String>> { response ->
-                if (response.second != "") {
-                    sharedPref.edit().putString("token", response.second).apply()
-                    goToMainPage()
-                } else {
-                    Toast.makeText(this, response.first, Toast.LENGTH_LONG).show()
-                }
-            })
-        }
     }
 
     private fun validate(): Boolean {
