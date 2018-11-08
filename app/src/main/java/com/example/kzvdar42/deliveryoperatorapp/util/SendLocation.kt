@@ -74,7 +74,7 @@ class SendLocation : Service() {
 
     companion object {
         private const val TAG = "SendLocationService"
-        private const val TIME_INTERVAL:Long =  1000//60000
+        private const val TIME_INTERVAL:Long =  60000
     }
 
 }

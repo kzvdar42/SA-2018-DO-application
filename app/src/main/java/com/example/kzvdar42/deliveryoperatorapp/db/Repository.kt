@@ -36,9 +36,10 @@ class Repository(application: Application) {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ response ->
-                    userPref.edit().putString("token", response.headers().get("Authentication") ?: "").apply()
+                    userPref.edit().putString("token", response.headers().get("Authentication")
+                            ?: "").apply()
                     result.postValue("OK")
-                }, {responce ->
+                }, { responce ->
                     result.postValue(responce.message)
                 })
         return Pair(result, disposable)
@@ -78,7 +79,7 @@ class Repository(application: Application) {
     }
 
     fun updateOrder(orderNum: Int, orderStatus: String,
-                    lastTransitPoint: Int, photo: Bitmap): Pair<LiveData<String>, Disposable> {
+                    lastTransitPoint: Int, photo: Bitmap?): Pair<LiveData<String>, Disposable> {
         // Body for request
         val body = UpdateOrderReqBody(orderNum, orderStatus, lastTransitPoint, null) // TODO: Send photo.
         val result = MutableLiveData<String>()
@@ -87,7 +88,7 @@ class Repository(application: Application) {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
                     result.postValue(it.body()?.message)
-                    mOrderDao.updateOrder(orderNum, orderStatus, lastTransitPoint)
+                    doAsync { mOrderDao.updateOrder(orderNum, orderStatus, lastTransitPoint) }
                 }, {
                     result.postValue(it.message)
                 })

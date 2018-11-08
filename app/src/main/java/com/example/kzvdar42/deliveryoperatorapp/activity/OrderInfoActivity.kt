@@ -77,7 +77,7 @@ class OrderInfoActivity : AppCompatActivity(), OnMapReadyCallback {
 
             // Add info
             customer_name_text.text = "${order.receiverName} ${order.receiverSurname}"
-            time_left_text.text = getString(R.string.time_left_label, order.expectedTtd) // TODO: rewrite to actual data
+            time_left_text.text = getString(R.string.time_left_label, order.expectedTtd)
             dimensions_text.text = getString(R.string.dimensions_text, order.length, order.width, order.height)
             weight_text.text = getString(R.string.weight_label, order.weight)
             if (order.senderNotes != null) sender_notes_label.text = getString(R.string.sender_notes_label, order.senderNotes)
@@ -85,16 +85,16 @@ class OrderInfoActivity : AppCompatActivity(), OnMapReadyCallback {
             // Change the layout due to order status.
             when {
                 order.orderStatus == "Approved" -> order_actions_bar.visibility = View.GONE
-                order.orderStatus == "Accepted" -> select_order.visibility = View.GONE
+                order.orderStatus == "Accepted" -> select_order_button.visibility = View.GONE
                 order.orderStatus == "Delivered" -> {
                     order_actions_bar.visibility = View.GONE
-                    select_order.visibility = View.GONE
+                    select_order_button.visibility = View.GONE
                 }
             }
 
 
             // If the driver is near the end of route add the `sign for parcel` button
-            //if (order.remainingCoords?.size ?: 3 < 2) assignment_button.visibility = View.GONE   // TODO: remove the button if the driver is far away from the receiver.
+            if (order.lastTransitPoint < order.coords.size-2) assignment_button.visibility = View.GONE
 
             // Initiate map
             Mapbox.getInstance(this, getString(R.string.access_token))
@@ -198,8 +198,9 @@ class OrderInfoActivity : AppCompatActivity(), OnMapReadyCallback {
                 intent.putExtra("orderNum", order.orderNum)
                 startActivity(intent)
             }
-            R.id.select_order -> { // TODO: Update the status of order.
-                Toast.makeText(this, "In implementation", Toast.LENGTH_LONG).show()
+            R.id.select_order_button -> {
+                mViewModel.updateOrder(order.orderNum, "Accepted", order.lastTransitPoint, null)
+                finish()
             }
         }
     }

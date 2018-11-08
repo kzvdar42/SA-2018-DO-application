@@ -220,7 +220,7 @@
     <!--app:srcCompat="@drawable/ic_navigation" />-->
 
     <com.google.android.material.button.MaterialButton
-    android:id="@+id/select_order"
+    android:id="@+id/select_order_button"
     style="@style/AppTheme.Button"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
