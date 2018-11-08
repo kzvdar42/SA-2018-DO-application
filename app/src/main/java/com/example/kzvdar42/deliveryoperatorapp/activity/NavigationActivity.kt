@@ -1,7 +1,9 @@
 package com.example.kzvdar42.deliveryoperatorapp.activity
 
+import android.annotation.SuppressLint
 import android.location.Location
 import android.os.Bundle
+import android.view.View
 import androidx.annotation.Nullable
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -22,6 +24,7 @@ import com.mapbox.services.android.navigation.ui.v5.listeners.RouteListener
 import com.mapbox.services.android.navigation.v5.navigation.NavigationRoute
 import com.mapbox.services.android.navigation.v5.routeprogress.ProgressChangeListener
 import com.mapbox.services.android.navigation.v5.routeprogress.RouteProgress
+import kotlinx.android.synthetic.main.alert_dialog.view.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -74,20 +77,27 @@ class NavigationActivity : AppCompatActivity(), OnNavigationReadyCallback, Navig
         navigationView!!.startNavigation(navigationViewOptions)
     }
 
+    @SuppressLint("InflateParams")
     private fun showDropoffDialog() {
+        // Creating alert dialog.
         val alertDialog = AlertDialog.Builder(this).create()
-        alertDialog.setView(layoutInflater.inflate(R.layout.alert_dialog, null))  //FIXME inflate the layout with buttons
-        alertDialog.setMessage(getString(R.string.map_dialog_text))
-        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.map_dialog_positive_text)
-        ) { _, _ ->
+        // Inflating the view for the alert dialog.
+        val dialogView = layoutInflater.inflate(R.layout.alert_dialog, null)
+        dialogView.dialog_title.visibility = View.GONE
+        dialogView.dialog_description.text = getString(R.string.map_dialog_text)
+        dialogView.dialog_positive_btn.text = getString(R.string.map_dialog_positive_text)
+        dialogView.dialog_positive_btn.setOnClickListener {
             val nextPoint = points.removeAt(0)
             fetchRoute(getLastKnownLocation(), Point.fromLngLat(nextPoint.longitude, nextPoint.latitude))
         }
-        alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, getString(R.string.map_dialog_negative_text)
-        ) { _, _ ->
-            // mViewModel.saveOrderStatus(points) TODO: Handle points removal
+        dialogView.dialog_negative_btn.text = getString(R.string.map_dialog_negative_text)
+        dialogView.dialog_negative_btn.setOnClickListener {
+            //mViewModel.saveOrderStatus(points) // TODO: Update order status
+            alertDialog.dismiss()
         }
-
+        // Adding view to the alert dialog and show it.
+        alertDialog.setView(dialogView)
+        alertDialog.setCancelable(true)
         alertDialog.show()
     }
 

@@ -81,16 +81,6 @@
         </LinearLayout>
     </ScrollView>
 
-    <!-- Confirmation dialog -->
-    <include
-        layout="@layout/alert_dialog"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <!-- Buttons -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/decline"
