@@ -1,5 +1,6 @@
 package com.example.kzvdar42.deliveryoperatorapp.activity
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -8,20 +9,24 @@ import com.example.kzvdar42.deliveryoperatorapp.R
 import com.example.kzvdar42.deliveryoperatorapp.fragment.MapFragment
 import com.example.kzvdar42.deliveryoperatorapp.fragment.OrdersFragment
 import com.example.kzvdar42.deliveryoperatorapp.fragment.SettingsFragment
-import kotlinx.android.synthetic.main.activity_main.*
+import com.example.kzvdar42.deliveryoperatorapp.util.SendLocation
 
 
 class MainActivity : AppCompatActivity() {
 
-    private var mapsFragment: MapFragment? = null
-    private var ordersFragment: OrdersFragment? = null
-    private var settingsFragment: SettingsFragment? = null
+    private var currFragment = 0
+    private var mapsFragment = MapFragment()
+    private var ordersFragment = OrdersFragment()
+    private var settingsFragment = SettingsFragment()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.AppTheme)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        // Start sending current location.
+        startService(Intent(this, SendLocation::class.java))
 
         // Add toolbar
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
@@ -30,24 +35,24 @@ class MainActivity : AppCompatActivity() {
 
         // Attach the first fragment
         val fragmentManager = supportFragmentManager
-        fragmentManager.beginTransaction().add(R.id.fragmentContainer, MapFragment()).commit()
+        fragmentManager.beginTransaction().add(R.id.fragmentContainer, getFragment(currFragment)).commit()
 
         bottom_navigation_menu.setOnNavigationItemSelectedListener { item ->
-            var fragment: Fragment = mapsFragment ?: MapFragment()
+            var fragment: Fragment = getFragment(currFragment)
             when (item.itemId) {
                 R.id.map_button -> {
-                    // mapsFragment = mapsFragment ?: MapFragment()
                     fragment = MapFragment() //TODO: Manage to reuse old fragment
                     toolbar.title = resources.getString(R.string.map_label)
+                    currFragment = 0
                 }
                 R.id.orders_button -> {
-                    ordersFragment = ordersFragment ?: OrdersFragment()  //FIXME: I'm bad
-                    fragment = ordersFragment!!
+                    fragment = ordersFragment
+                    currFragment = 1
                 }
                 R.id.settings_button -> {
-                    settingsFragment = settingsFragment ?: SettingsFragment()   //FIXME: I'm bad
-                    fragment = settingsFragment!!
+                    fragment = settingsFragment
                     toolbar.title = resources.getString(R.string.settings_label)
+                    currFragment = 2
                 }
             }
             // Insert the fragment by replacing any existing fragment
@@ -56,6 +61,25 @@ class MainActivity : AppCompatActivity() {
             // Return
             true
         }
+    }
+
+    private fun getFragment(num: Int): Fragment {
+        return when (num){
+            0 -> MapFragment()
+            1 -> ordersFragment
+            2 -> settingsFragment
+            else -> MapFragment()
+        }
+    }
+
+    public override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putInt("currentFragment", currFragment)
+    }
+
+    public override fun onRestoreInstanceState(inState: Bundle) {
+        super.onRestoreInstanceState(inState)
+        currFragment = inState.getInt("currentFragment", 0)
     }
 
 
