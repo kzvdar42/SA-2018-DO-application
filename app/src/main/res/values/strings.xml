@@ -11,7 +11,7 @@
 
     <!-- Order list -->
     <string name="order_num">Order #%1$d</string>
-    <string name="accepted_orders_label">Acceppted orders</string>
+    <string name="accepted_orders_label">Accepted orders</string>
     <string name="new_orders_label">New orders</string>
 
     <!-- Order info -->
