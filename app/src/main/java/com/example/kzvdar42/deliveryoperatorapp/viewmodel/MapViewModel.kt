@@ -33,7 +33,7 @@ class MapViewModel(application: Application) : AndroidViewModel(application), Lo
 
 
     fun getCurrentOrder(): LiveData<OrderEntity> {
-        return repository.getOrder(sharedPref.getInt("orderNum", 0))
+        return repository.getOrder(sharedPref.getInt("orderNum", -1))
     }
 
     fun saveOrderStatus(points: ArrayList<Point>) {

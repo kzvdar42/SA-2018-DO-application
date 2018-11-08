@@ -47,27 +47,27 @@ data class OrderEntity(
         // FIXME
         @ColumnInfo(name = "weight")
         @SerializedName("weight")
-        var weight: Long,
+        var weight: Double,
         @ColumnInfo(name = "length")
         @SerializedName("length")
-        var length: Long,
+        var length: Double,
         @ColumnInfo(name = "width")
         @SerializedName("width")
-        var width: Long,
+        var width: Double,
         @ColumnInfo(name = "height")
         @SerializedName("height")
-        var height: Long,
+        var height: Double,
         @ColumnInfo(name = "insurance")
         @SerializedName("insurance")
         var insurance: Boolean,
         @ColumnInfo(name = "price")
         @SerializedName("price")
-        var price: Long,
+        var price: Double,
         @ColumnInfo(name = "price_currency")
         @SerializedName("price_currency")
         var priceCurrency: String,
         @ColumnInfo(name = "last_transit_point")
-        @SerializedName("last_transit_point")
+        @SerializedName("ltp")
         var lastTransitPoint: Int,
         @ColumnInfo(name = "order_status")
         @SerializedName("order_status")
@@ -77,7 +77,7 @@ data class OrderEntity(
         @TypeConverters(Converter::class)
         var coords: ArrayList<CoordsEntity>,
         @ColumnInfo(name = "expected_ttd")
-        @SerializedName("expected_ttd")
+        @SerializedName("expected_delivery_time")
         var expectedTtd: String,
         @ColumnInfo(name = "sender_notes")
         @SerializedName("sender_notes")
@@ -85,5 +85,5 @@ data class OrderEntity(
 
 
 data class CoordsEntity(
-        var latitude: Double,
-        var longitude: Double)
+        var lat: Double,
+        var long: Double)

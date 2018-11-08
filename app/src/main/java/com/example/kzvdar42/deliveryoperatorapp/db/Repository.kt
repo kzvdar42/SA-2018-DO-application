@@ -4,6 +4,7 @@ import android.app.Application
 import android.content.Context
 import android.graphics.Bitmap
 import android.util.Base64
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.kzvdar42.deliveryoperatorapp.serverApi.ServerApi
@@ -61,7 +62,9 @@ class Repository(application: Application) {
                 .subscribeOn(Schedulers.io())
                 .subscribe({
                     mOrderDao.insertAll(it)
-                }, {}) // TODO: Do something on error
+                }, {
+                    Log.e("Repository", it.message)
+                }) // TODO: Do something on error
     }
 
     fun getOrder(orderNumber: Int): LiveData<OrderEntity> {

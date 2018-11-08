@@ -47,8 +47,8 @@ class ReceiverInfoActivity : AppCompatActivity() {
             // Add info
             customer_name_text.text = "${order.receiverName} ${order.receiverSurname}"
             time_left_text.text = getString(R.string.time_left_label, order.expectedTtd) // TODO: rewrite to actual data
-            dimensions_text.text = getString(R.string.dimensions_text, order.length, order.width, order.height)
-            weight_text.text = getString(R.string.weight_label, order.weight)
+            dimensions_text.text = getString(R.string.dimensions_text, order.length.toLong(), order.width.toLong(), order.height.toLong())
+            weight_text.text = getString(R.string.weight_label, order.weight.toLong())
             if (order.senderNotes != null) sender_notes_label.text = getString(R.string.sender_notes_label, order.senderNotes)
         })
     }
