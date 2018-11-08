@@ -68,6 +68,7 @@ class ReceiverInfoActivity : AppCompatActivity() {
                 dialogView.dialog_title.text = getString(R.string.dialog_title)
                 dialogView.dialog_description.visibility = View.GONE
                 dialogView.dialog_positive_btn.setOnClickListener {
+                    alertDialog.dismiss()
                     val intent = Intent(this, DrawingActivity::class.java)
                     startActivityForResult(intent, REQUEST_CODE_DRAW)
                 }
@@ -97,7 +98,6 @@ class ReceiverInfoActivity : AppCompatActivity() {
     }
 
     private fun saveImage(signature: Bitmap) {
-        Toast.makeText(this, "Got the image", Toast.LENGTH_LONG).show()
         mViewModel.updateOrder(order!!.orderNum, "Delivered",
                 order!!.coords.size - 1, signature)
     }
