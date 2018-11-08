@@ -10,6 +10,7 @@ import com.example.kzvdar42.deliveryoperatorapp.fragment.MapFragment
 import com.example.kzvdar42.deliveryoperatorapp.fragment.OrdersFragment
 import com.example.kzvdar42.deliveryoperatorapp.fragment.SettingsFragment
 import com.example.kzvdar42.deliveryoperatorapp.util.SendLocation
+import kotlinx.android.synthetic.main.activity_main.*
 
 
 class MainActivity : AppCompatActivity() {
