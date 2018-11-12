@@ -1,8 +1,8 @@
 package com.example.kzvdar42.deliveryoperatorapp.fragment
 
 import android.content.Intent
-import android.location.Location
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,6 +12,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.example.kzvdar42.deliveryoperatorapp.R
 import com.example.kzvdar42.deliveryoperatorapp.activity.NavigationActivity
+import com.example.kzvdar42.deliveryoperatorapp.util.SendLocation
 import com.example.kzvdar42.deliveryoperatorapp.viewmodel.MapViewModel
 import com.mapbox.android.core.permissions.PermissionsListener
 import com.mapbox.android.core.permissions.PermissionsManager
@@ -27,6 +28,7 @@ import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback
 import com.mapbox.services.android.navigation.ui.v5.route.NavigationMapRoute
 import com.mapbox.services.android.navigation.v5.navigation.NavigationRoute
+import kotlinx.android.synthetic.main.activity_localization.view.*
 import kotlinx.android.synthetic.main.fragment_map.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -39,7 +41,6 @@ class MapFragment : Fragment(), OnMapReadyCallback, PermissionsListener {
 
     // variables for adding location layer
     private lateinit var mapboxMap: MapboxMap
-    private var originLocation: Location? = null
 
     // variables for adding a marker
     private var originCoord: LatLng? = null
@@ -72,60 +73,65 @@ class MapFragment : Fragment(), OnMapReadyCallback, PermissionsListener {
 
 
         if (PermissionsManager.areLocationPermissionsGranted(activity)) {
+            // Start sending current location.
+            Log.e("Main", "Started the service")
+            activity?.startService(Intent(activity, SendLocation::class.java))
             // Get current position
-            originLocation = mViewModel.getCurrentPosition()
-            // Get order info
-            mViewModel.getCurrentOrder().observe(this, Observer { order ->
-                // Get the current location.
-                originPosition = Point.fromLngLat(originLocation!!.longitude, originLocation!!.latitude)
-                originCoord = LatLng(originLocation!!.latitude, originLocation!!.longitude)
+            mViewModel.getCurrentPosition().observe(this, Observer { originLocation ->
+                Log.e("MapFragment", "Get position ${originLocation.longitude} ${originLocation.latitude}")
+                // Get order info
+                mViewModel.getCurrentOrder().observe(this, Observer { order ->
+                    // Get the current location.
+                    originPosition = Point.fromLngLat(originLocation.longitude, originLocation.latitude)
+                    originCoord = LatLng(originLocation.latitude, originLocation.longitude)
 
-                val latLngBounds = LatLngBounds.Builder().include(originCoord!!)
+                    val latLngBounds = LatLngBounds.Builder().include(originCoord!!)
 
-                if (order?.coords?.size ?: 0 > 0) {
+                    if (order?.coords?.size ?: 0 > 0) {
 
-                    // Lambda for adding right title for the marker.
-                    val title = { ind: Int, maxindex: Int ->
-                        // FIXME: move somewhere else, or change
-                        getString(
-                                if (maxindex < 2) R.string.order_title_end
-                                else when (ind) {
-                                    0 -> R.string.order_title_from
-                                    maxindex - 1 -> R.string.order_title_end
-                                    else -> R.string.order_title_transit
-                                })
+                        // Lambda for adding right title for the marker.
+                        val title = { ind: Int, maxindex: Int ->
+                            // FIXME: move somewhere else, or change
+                            getString(
+                                    if (maxindex < 2) R.string.order_title_end
+                                    else when (ind) {
+                                        0 -> R.string.order_title_from
+                                        maxindex - 1 -> R.string.order_title_end
+                                        else -> R.string.order_title_transit
+                                    })
+                        }
+
+                        // Add bounds & markers
+                        order.coords.forEach { coord ->
+                            // Add bound.
+                            latLngBounds.include(LatLng(coord.lat, coord.long))
+                            // Add marker to the map.
+                            mapboxMap.addMarker(MarkerOptions()
+                                    .position(LatLng(order.coords[0].lat, order.coords[0].long))
+                                    .title("${getString(R.string.order_num, order.orderNum)} [${title(0, order.coords.size)}]")
+                                    .snippet(getString(R.string.order_to_description_snippet,
+                                            order.receiverName, order.receiverSurname, order.receiverPhoneNumber, order.senderNotes, order.expectedTtd))) // TODO: Handle null values
+                        }
+                        // Animate the camera to the points
+                        mapboxMap.animateCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds.build(), 100))
+
+                        // Get the route.
+                        val orderFromPosition = Point.fromLngLat(order.coords[0].long, order.coords[0].lat)
+                        getRoute(originPosition!!, orderFromPosition!!)
+
+                        // Set the On Click Listener for the `start navigation button`.
+                        startButton.setOnClickListener {
+                            startActivity(Intent(activity, NavigationActivity::class.java))
+                        }
+
+                    } else {
+                        // TODO: add screen "no order selected"
+                        latLngBounds.include(LatLng(originLocation.latitude + 0.01, originLocation.longitude + 0.01))
+                        latLngBounds.include(LatLng(originLocation.latitude - 0.01, originLocation.longitude - 0.01))
+
+                        mapboxMap.animateCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds.build(), 200))
                     }
-
-                    // Add bounds & markers
-                    order.coords.forEachIndexed { index, coord ->
-                        // Add bound.
-                        latLngBounds.include(LatLng(coord.lat, coord.long))
-                        // Add marker to the map.
-                        mapboxMap.addMarker(MarkerOptions()
-                                .position(LatLng(order.coords[0].lat, order.coords[0].long))
-                                .title("${getString(R.string.order_num, order.orderNum)} [${title(0, order.coords.size)}]")
-                                .snippet(getString(R.string.order_to_description_snippet,
-                                        order.receiverName, order.receiverSurname, order.receiverPhoneNumber, order.senderNotes, order.expectedTtd))) // TODO: Handle null values
-                    }
-                    // Animate the camera to the points
-                    mapboxMap.animateCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds.build(), 100))
-
-                    // Get the route.
-                    val orderFromPosition = Point.fromLngLat(order.coords[0].long, order.coords[0].lat)
-                    getRoute(originPosition!!, orderFromPosition!!)
-
-                    // Set the On Click Listener for the `start navigation button`.
-                    startButton.setOnClickListener {
-                        startActivity(Intent(activity, NavigationActivity::class.java))
-                    }
-
-                } else {
-                    // TODO: add screen "no order selected"
-                    latLngBounds.include(LatLng(originLocation!!.latitude + 0.01, originLocation!!.longitude + 0.01))
-                    latLngBounds.include(LatLng(originLocation!!.latitude - 0.01, originLocation!!.longitude - 0.01))
-
-                    mapboxMap.animateCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds.build(), 200))
-                }
+                })
             })
         } else {
             PermissionsManager(this).requestLocationPermissions(activity) //TODO: reload map after getting permissions

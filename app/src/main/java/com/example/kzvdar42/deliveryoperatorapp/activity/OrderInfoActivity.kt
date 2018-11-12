@@ -105,9 +105,6 @@ class OrderInfoActivity : AppCompatActivity(), OnMapReadyCallback {
 
     override fun onMapReady(mapboxMap: MapboxMap) {
         this.mapboxMap = mapboxMap
-
-        var latLngBounds = LatLngBounds.Builder()
-
         // Lambda for adding right title for the marker.
         val title = { ind: Int, maxindex: Int ->
             // FIXME: move somewhere else, or change
@@ -119,7 +116,7 @@ class OrderInfoActivity : AppCompatActivity(), OnMapReadyCallback {
                         else -> R.string.order_title_transit
                     })
         }
-        latLngBounds = LatLngBounds.Builder()
+        val latLngBounds = LatLngBounds.Builder()
         // Add bounds & markers.
         order.coords.forEachIndexed { index, coord ->
             // Add bound.
@@ -137,14 +134,17 @@ class OrderInfoActivity : AppCompatActivity(), OnMapReadyCallback {
             // Get the route.
             getRoute(Point.fromLngLat(order.coords[0].long, order.coords[0].lat),
                     Point.fromLngLat(coords[1].long, coords[1].lat))
+            // Animate the camera to the points.
+            mapboxMap.animateCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds.build(), 200))
         } else {
-            val lastPosition = mViewModel.getCurrentPosition()
-            latLngBounds.include(LatLng(lastPosition))
-            getRoute(Point.fromLngLat(lastPosition.longitude, lastPosition.latitude),
-                    Point.fromLngLat(coords[0].long, coords[0].lat))
+            mViewModel.getCurrentPosition().observe(this, Observer { lastLocation ->
+                latLngBounds.include(LatLng(lastLocation))
+                getRoute(Point.fromLngLat(lastLocation.longitude, lastLocation.latitude),
+                        Point.fromLngLat(coords[0].long, coords[0].lat))
+                // Animate the camera to the points.
+                mapboxMap.animateCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds.build(), 200))
+            })
         }
-        // Animate the camera to the points.
-        mapboxMap.animateCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds.build(), 200))
 
     }
 

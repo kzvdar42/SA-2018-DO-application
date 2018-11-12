@@ -46,6 +46,7 @@
         \n Хотите продолжить навигацию?</string>
     <string name="map_dialog_positive_text">Продолжить</string>
     <string name="map_dialog_negative_text">Остановиться</string>
+    <string name="on_failed_reroute">Ошибка при постройке маршрута</string>
 
     <!-- Bottom Navigation -->
     <string name="map_label">Карта</string>

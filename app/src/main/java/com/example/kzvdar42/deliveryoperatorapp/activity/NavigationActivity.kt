@@ -3,7 +3,7 @@ package com.example.kzvdar42.deliveryoperatorapp.activity
 import android.annotation.SuppressLint
 import android.location.Location
 import android.os.Bundle
-import android.view.View
+import android.widget.Toast
 import androidx.annotation.Nullable
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -41,7 +41,7 @@ class NavigationActivity : AppCompatActivity(), OnNavigationReadyCallback, Navig
 
     //ViewModel
     private val mViewModel
-            by lazy {ViewModelProviders.of(this).get(MapViewModel::class.java)}
+            by lazy { ViewModelProviders.of(this).get(MapViewModel::class.java) }
 
     override fun onCreate(@Nullable savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,12 +52,13 @@ class NavigationActivity : AppCompatActivity(), OnNavigationReadyCallback, Navig
             points = order.coords
 
             // Add current position at the start
-            val currentPosition = mViewModel.getCurrentPosition()
-            points.add(0, CoordsEntity(long=currentPosition!!.longitude, lat = currentPosition.latitude))
+            mViewModel.getCurrentPosition().observe(this, Observer { currentPosition ->
+                points.add(0, CoordsEntity(long = currentPosition.longitude, lat = currentPosition.latitude))
 
-            navigationView = findViewById(R.id.navigationView)
-            navigationView?.onCreate(savedInstanceState)
-            navigationView?.initialize(this)
+                navigationView = findViewById(R.id.navigationView)
+                navigationView?.onCreate(savedInstanceState)
+                navigationView?.initialize(this)
+            })
         })
     }
 
@@ -93,7 +94,7 @@ class NavigationActivity : AppCompatActivity(), OnNavigationReadyCallback, Navig
         }
         dialogView.dialog_negative_btn.text = getString(R.string.map_dialog_negative_text)
         dialogView.dialog_negative_btn.setOnClickListener {
-            //mViewModel.saveOrderStatus(points) // TODO: Update order status
+            // mViewModel.saveOrderStatus(points) // TODO: Update order status
             alertDialog.dismiss()
         }
         // Adding view to the alert dialog and show it.
@@ -216,7 +217,7 @@ class NavigationActivity : AppCompatActivity(), OnNavigationReadyCallback, Navig
     }
 
     override fun onFailedReroute(errorMessage: String) {
-
+        Toast.makeText(this, getString(R.string.on_failed_reroute), Toast.LENGTH_LONG)
     }
 
 }

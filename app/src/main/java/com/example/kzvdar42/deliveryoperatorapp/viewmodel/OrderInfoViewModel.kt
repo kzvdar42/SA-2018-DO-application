@@ -6,27 +6,15 @@ import android.graphics.Bitmap
 import android.location.Location
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.example.kzvdar42.deliveryoperatorapp.db.OrderEntity
 import com.example.kzvdar42.deliveryoperatorapp.db.Repository
-import com.mapbox.android.core.location.LocationEngine
-import com.mapbox.android.core.location.LocationEngineListener
-import com.mapbox.android.core.location.LocationEnginePriority
-import com.mapbox.android.core.location.LocationEngineProvider
-import com.mapbox.mapboxsdk.Mapbox
 import io.reactivex.disposables.Disposable
 
-class OrderInfoViewModel(application: Application) : AndroidViewModel(application), LocationEngineListener {
+class OrderInfoViewModel(application: Application) : AndroidViewModel(application) {
 
 
     private var repository: Repository = Repository(application)
-    private val locationEngine: LocationEngine
-            by lazy {
-                val locEng = LocationEngineProvider(Mapbox.getApplicationContext()).obtainBestLocationEngineAvailable()
-                locEng.priority = LocationEnginePriority.BALANCED_POWER_ACCURACY
-                locEng.activate()
-                locEng
-            }
-    private var latestLocation: Location? = null
 
     fun getOrder(orderNumber: Int): LiveData<OrderEntity> {
         return repository.getOrder(orderNumber)
@@ -39,21 +27,8 @@ class OrderInfoViewModel(application: Application) : AndroidViewModel(applicatio
 
 
     @SuppressLint("MissingPermission")
-    fun getCurrentPosition(): Location {
-        val lastLocation = locationEngine.lastLocation
-        if (lastLocation != null) {
-            return lastLocation
-        } else {
-            locationEngine.addLocationEngineListener(this)
-        }
-        return lastLocation
-    }
-
-    override fun onLocationChanged(newLocation: Location) {
-        latestLocation = newLocation
-    }
-
-    override fun onConnected() {
+    fun getCurrentPosition(): MutableLiveData<Location> {
+        return repository.getCurrentPosition()
     }
 
 }

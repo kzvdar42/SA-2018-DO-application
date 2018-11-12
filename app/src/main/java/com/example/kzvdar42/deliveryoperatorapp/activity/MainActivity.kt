@@ -1,6 +1,5 @@
 package com.example.kzvdar42.deliveryoperatorapp.activity
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -9,7 +8,6 @@ import com.example.kzvdar42.deliveryoperatorapp.R
 import com.example.kzvdar42.deliveryoperatorapp.fragment.MapFragment
 import com.example.kzvdar42.deliveryoperatorapp.fragment.OrdersFragment
 import com.example.kzvdar42.deliveryoperatorapp.fragment.SettingsFragment
-import com.example.kzvdar42.deliveryoperatorapp.util.SendLocation
 import kotlinx.android.synthetic.main.activity_main.*
 
 
@@ -25,10 +23,6 @@ class MainActivity : AppCompatActivity() {
         setTheme(R.style.AppTheme)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        // Start sending current location.
-        startService(Intent(this, SendLocation::class.java))
-
         // Add toolbar
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         toolbar.title = resources.getString(R.string.map_label)
@@ -65,7 +59,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun getFragment(num: Int): Fragment {
-        return when (num){
+        return when (num) {
             0 -> MapFragment()
             1 -> ordersFragment
             2 -> settingsFragment

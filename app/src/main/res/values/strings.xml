@@ -46,6 +46,7 @@
         \n Do you want to continue the navigation?</string>
     <string name="map_dialog_positive_text">Continue</string>
     <string name="map_dialog_negative_text">Stop</string>
+    <string name="on_failed_reroute">Failed to reroute</string>
 
     <!-- Bottom Navigation -->
     <string name="map_label">Map</string>
