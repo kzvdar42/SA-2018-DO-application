@@ -4,7 +4,7 @@
     xmlns:tool="http://schemas.android.com/tools"
     android:id="@+id/dialog"
     style="AppTheme.CardViewStyle"
-    android:layout_width="280dp"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     card_view:cardCornerRadius="15dp"
     card_view:cardElevation="4dp">
@@ -17,9 +17,8 @@
             android:id="@+id/dialog_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="24dp"
-            android:layout_marginBottom="28dp"
-            android:textSize="15sp"
+            android:layout_margin="16dp"
+            android:textSize="24sp"
             tool:text="Title" />
 
         <TextView
@@ -45,9 +44,9 @@
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
             android:paddingBottom="8dp"
+            android:text="@string/yes"
             android:textAllCaps="true"
-            android:textColor="@color/colorAccent"
-            android:text="@string/yes" />
+            android:textColor="@color/colorAccent" />
 
         <TextView
             android:id="@+id/dialog_negative_btn"
@@ -60,8 +59,8 @@
             android:padding="8dp"
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
+            android:text="@string/no"
             android:textAllCaps="true"
-            android:textColor="@color/color_red"
-            android:text="@string/no" />
+            android:textColor="@color/color_red" />
     </RelativeLayout>
 </androidx.cardview.widget.CardView>

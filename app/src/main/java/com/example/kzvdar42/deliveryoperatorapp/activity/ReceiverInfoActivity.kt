@@ -76,6 +76,7 @@ class ReceiverInfoActivity : AppCompatActivity() {
                     alertDialog.dismiss()
                 }
                 // Adding view to the alert dialog and show it.
+                alertDialog.window?.decorView?.setBackgroundResource(android.R.color.transparent)
                 alertDialog.setView(dialogView)
                 alertDialog.setCancelable(true)
                 alertDialog.show()
