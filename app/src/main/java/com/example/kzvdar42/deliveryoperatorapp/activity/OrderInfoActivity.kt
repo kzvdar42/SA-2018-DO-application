@@ -1,5 +1,6 @@
 package com.example.kzvdar42.deliveryoperatorapp.activity
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -46,6 +47,7 @@ class OrderInfoActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var order: OrderEntity
     private lateinit var coords: ArrayList<CoordsEntity>
 
+    @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_order_info)
@@ -95,7 +97,7 @@ class OrderInfoActivity : AppCompatActivity(), OnMapReadyCallback {
 
 
             // If the driver is near the end of route add the `sign for parcel` button
-            if (order.lastTransitPoint < order.coords.size-2) assignment_button.visibility = View.GONE
+            if (order.lastTransitPoint < order.coords.size - 2) assignment_button.visibility = View.GONE
 
             // Initiate map
             Mapbox.getInstance(this, getString(R.string.access_token))
@@ -122,12 +124,20 @@ class OrderInfoActivity : AppCompatActivity(), OnMapReadyCallback {
             // Add bound.
             latLngBounds.include(LatLng(coord.lat, coord.long))
 
+            val snippet = if (index == 0) {
+                getString(R.string.order_from_description_snippet,
+                        order.senderName, order.senderSurname, order.senderPhoneNumber,
+                        order.senderNotes, order.expectedTtd)
+            } else {
+                getString(R.string.order_to_description_snippet,
+                        order.receiverName, order.receiverSurname, order.receiverPhoneNumber,
+                        order.senderNotes, order.expectedTtd)
+            }
             // Add marker to the map.
             mapboxMap.addMarker(MarkerOptions()
                     .position(LatLng(coord.lat, coord.long))
                     .title("${getString(R.string.order_num, order.orderNum)} [${title(index, order.coords.size)}]")
-                    .snippet(getString(R.string.order_to_description_snippet,
-                            order.receiverName, order.receiverSurname, order.receiverPhoneNumber, order.senderNotes, order.expectedTtd))) // TODO: Handle null values
+                    .snippet(snippet)) // TODO: Handle null values
         }
 
         if (order.coords.size > 1) {
@@ -188,9 +198,13 @@ class OrderInfoActivity : AppCompatActivity(), OnMapReadyCallback {
                 }
                 finish()
             }
-            R.id.call_button -> { // TODO: Implement taking the number from the server
+            R.id.call_button -> {
                 intent = Intent(Intent.ACTION_DIAL)
-                intent.data = Uri.parse("tel:0123456789")
+                if (order.lastTransitPoint == -1) {
+                    intent.data = Uri.parse("tel:${order.senderPhoneNumber}")
+                } else {
+                    intent.data = Uri.parse("tel:${order.receiverPhoneNumber}")
+                }
                 startActivity(intent)
             }
             R.id.assignment_button -> {

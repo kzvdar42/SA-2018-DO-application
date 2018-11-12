@@ -52,9 +52,9 @@ class OrdersListAdapter(private var orderEntityList: List<OrderEntity>, val cont
         fun bindItems(orderEntity: OrderEntity, context: Context) {
             itemView.order_name.text = context.resources.getString(R.string.order_num, orderEntity.orderNum)
             itemView.order_description.text =
-                    "%s %s\n%s\n%s".format(
+                    "%s %s\n%s".format(
                             orderEntity.receiverName, orderEntity.receiverSurname,
-                            orderEntity.senderNotes, orderEntity.expectedTtd) // FIXME: Redo the orderInfo layout
+                             orderEntity.expectedTtd)
         }
     }
 

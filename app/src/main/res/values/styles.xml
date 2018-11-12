@@ -7,12 +7,6 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <!-- Theme for the splash screen. -->
-    <style name="AppTheme.Launcher">
-        <item name="android:windowBackground">@drawable/launch_screen</item>
-        <item name="colorPrimaryDark">@color/colorAccent</item>
-    </style>
-
     <style name="AppTheme.Toolbar">
         <item name="android:windowBackground">@color/colorPrimary</item>
     </style>
@@ -42,19 +36,28 @@
 
     <!-- Navigation. -->
     <style name="NavigationMapRoute">
-        <!-- Colors. -->
+        <!-- Colors -->
         <item name="routeColor">@color/mapboxBlue</item>
         <item name="routeModerateCongestionColor">@color/mapboxYellow</item>
         <item name="routeSevereCongestionColor">@color/mapboxPink</item>
         <item name="routeShieldColor">@color/mapboxWhite</item>
-        <!-- Scales. -->
+        <!-- Scales -->
         <item name="routeScale">1.0</item>
     </style>
 
-    <style name="NavigationView" parent="Theme.MaterialComponents.NoActionBar">
+    <style name="NavigationView" parent="NavigationViewLight">
         <item name="navigationViewPrimary">@color/mapboxWhite</item>
-        <item name="navigationViewSecondary">@color/mapboxBlue</item>
-        <item name="navigationViewAccent">@color/mapboxPink</item>
+        <item name="navigationViewSecondary">@color/colorAccent</item>
+        <item name="navigationViewAccent">@color/colorAccent</item>
+        
+        <item name="navigationViewBannerBackground">@color/colorPrimary</item>
+        <item name="navigationViewBannerSecondaryText">@color/color_black</item>
+        <item name="navigationViewBannerPrimaryText">@color/color_black</item>
+        <item name="navigationViewBannerManeuverPrimary">@color/colorAccent</item>
+        <item name="navigationViewBannerManeuverSecondary">@color/colorPrimaryDark</item>
+        <item name="navigationViewDivider">@color/colorPrimaryDark</item>
+
+        <item name="navigationViewListBackground">@color/colorPrimarySoftDark</item>
     </style>
 
 </resources>

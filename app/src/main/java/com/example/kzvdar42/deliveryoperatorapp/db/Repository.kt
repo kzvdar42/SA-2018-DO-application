@@ -6,10 +6,8 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.location.Location
 import android.util.Base64
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.example.kzvdar42.deliveryoperatorapp.R
 import com.example.kzvdar42.deliveryoperatorapp.serverApi.ServerApi
 import com.example.kzvdar42.deliveryoperatorapp.serverApi.requestBodies.LoginReqBody
 import com.example.kzvdar42.deliveryoperatorapp.serverApi.requestBodies.UpdateOrderReqBody
@@ -22,6 +20,8 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import org.jetbrains.anko.doAsync
+import timber.log.Timber
+import java.io.ByteArrayOutputStream
 
 
 class Repository(application: Application) : LocationEngineListener {
@@ -32,33 +32,20 @@ class Repository(application: Application) : LocationEngineListener {
     private val mServerApi = ServerApi.create()
     private val originLocation = MutableLiveData<Location>()
     private val locationService by lazy {
-//        Mapbox.getInstance(application, application.getString(R.string.access_token))
+        //        Mapbox.getInstance(application, application.getString(R.string.access_token))
         val locEng = LocationEngineProvider(Mapbox.getApplicationContext()).obtainBestLocationEngineAvailable()
-        locEng.priority = LocationEnginePriority.HIGH_ACCURACY
+        //locEng.priority = LocationEnginePriority.BALANCED_POWER_ACCURACY
         locEng.activate()
-        Log.e(TAG, "Activated location Engine")
+        Timber.i("Activated location Engine")
         locEng
     }
 
-    @SuppressLint("MissingPermission")
-    fun getCurrentPosition(): MutableLiveData<Location> {
-        val lastLocation = locationService.lastLocation
-        if (lastLocation != null) {
-            originLocation.postValue(lastLocation)
-            Log.e(TAG, "Last location in not null ${lastLocation.longitude} ${lastLocation.latitude} ")
-        } else {
-            Log.e(TAG, "Added listener")
-            locationService.addLocationEngineListener(this)
-        }
-        return originLocation
-    }
-
     override fun onConnected() {
-        Log.e(TAG, "Connected to observe new location.")
+        Timber.i("Connected to observe new location.")
     }
 
     override fun onLocationChanged(newLocation: Location) {
-        Log.e(TAG, "Location changed \n ${newLocation.longitude} ${newLocation.latitude} ")
+        Timber.i("Location changed \n ${newLocation.longitude} ${newLocation.latitude} ")
         originLocation.postValue(newLocation)
     }
 
@@ -103,7 +90,7 @@ class Repository(application: Application) : LocationEngineListener {
                 .subscribe({
                     mOrderDao.insertAll(it)
                 }, {
-                    Log.e(TAG, it.message)
+                    Timber.e(it)
                 })
     }
 
@@ -124,7 +111,7 @@ class Repository(application: Application) : LocationEngineListener {
     fun updateOrder(orderNum: Int, orderStatus: String,
                     lastTransitPoint: Int, photo: Bitmap?): Pair<LiveData<String>, Disposable> {
         // Body for request
-        val body = UpdateOrderReqBody(orderNum, orderStatus, lastTransitPoint, null) // TODO: Send photo.
+        val body = UpdateOrderReqBody(orderNum, orderStatus, lastTransitPoint, encodeToBase64(photo)) // TODO: Send photo.
         val result = MutableLiveData<String>()
         val disposable = mServerApi.updateOrder(getCredentials(), body)
                 .subscribeOn(Schedulers.io())
@@ -138,14 +125,22 @@ class Repository(application: Application) : LocationEngineListener {
         return Pair(result, disposable)
     }
 
-    @SuppressLint("MissingPermission")
+    private fun encodeToBase64(image: Bitmap?): String? {
+        val baos = ByteArrayOutputStream()
+        image?.compress(Bitmap.CompressFormat.PNG, 100, baos)
+        val b = baos.toByteArray()
+        return Base64.encodeToString(b, Base64.DEFAULT)
+    }
+
+
+    @SuppressLint("MissingPermission", "CheckResult")
     fun sendCurrentPosition(): LiveData<String> {
         val result = MutableLiveData<String>()
         val position = locationService.lastLocation
         if (position != null) {
             val body = UpdatePositionReqBody(position.latitude, position.longitude)
-            Log.e(TAG, "Sending current position: ${position.longitude} ${position.latitude}")
-            val disposable = mServerApi.updatePosition(getCredentials(), body)
+            Timber.i("Sending current position: ${position.longitude} ${position.latitude}")
+            mServerApi.updatePosition(getCredentials(), body)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({
@@ -154,13 +149,27 @@ class Repository(application: Application) : LocationEngineListener {
                         result.postValue(it.message)
                     })
         } else {
-            Log.e(TAG, "Unable to send current position, no latest position found.")
+            Timber.e("Unable to send current position, location engine returned null.")
         }
         return result
     }
 
-    companion object Factory {
-        private const val TAG = "Repository"
+    @SuppressLint("MissingPermission")
+    fun getCurrentLocation(): MutableLiveData<Location> {
+        val lastLocation = locationService.lastLocation
+        if (lastLocation != null) {
+            originLocation.postValue(lastLocation)
+            Timber.i("Last location in not null ${lastLocation.longitude} ${lastLocation.latitude} ")
+        } else {
+            Timber.i("Added listener")
+            locationService.addLocationEngineListener(this)
+        }
+        return originLocation
+    }
+
+    @SuppressLint("MissingPermission")
+    fun getLatestLocation(): Location? {
+        return locationService.lastLocation
     }
 
 }

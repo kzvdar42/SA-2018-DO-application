@@ -16,6 +16,10 @@ import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
+import com.google.gson.GsonBuilder
+import com.google.gson.Gson
+
+
 
 
 interface ServerApi {
@@ -44,9 +48,14 @@ interface ServerApi {
 
     companion object Factory {
         fun create(): ServerApi {
+
+            val gson = GsonBuilder()
+                    .setDateFormat("yyyy-MM-dd")
+                    .create()
+
             val retrofit = retrofit2.Retrofit.Builder()
                     .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                    .addConverterFactory(GsonConverterFactory.create())
+                    .addConverterFactory(GsonConverterFactory.create(gson))
                     .baseUrl(Constants.BASE_URL)
                     .build()
 

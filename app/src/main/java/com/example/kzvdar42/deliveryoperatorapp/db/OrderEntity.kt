@@ -5,6 +5,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
 import com.google.gson.annotations.SerializedName
+import java.util.*
 
 
 @Entity(tableName = "orders")
@@ -34,17 +35,10 @@ data class OrderEntity(
         @ColumnInfo(name = "receiver_phone_number")
         @SerializedName("receiver_phone_number")
         var receiverPhoneNumber: String,
-        // FIXME
-        @ColumnInfo(name = "receiver_address")
-        @SerializedName("receiver_address")
-        var receiverAddress: String,
         @ColumnInfo(name = "send_date")
         @SerializedName("send_date")
+        @TypeConverters(Converter::class)
         var sendDate: String,
-        @ColumnInfo(name = "sender_address")
-        @SerializedName("sender_address")
-        var senderAddress: String,
-        // FIXME
         @ColumnInfo(name = "weight")
         @SerializedName("weight")
         var weight: Double,

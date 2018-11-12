@@ -28,7 +28,7 @@ class OrderInfoViewModel(application: Application) : AndroidViewModel(applicatio
 
     @SuppressLint("MissingPermission")
     fun getCurrentPosition(): MutableLiveData<Location> {
-        return repository.getCurrentPosition()
+        return repository.getCurrentLocation()
     }
 
 }

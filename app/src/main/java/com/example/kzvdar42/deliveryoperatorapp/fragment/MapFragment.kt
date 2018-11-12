@@ -2,7 +2,6 @@ package com.example.kzvdar42.deliveryoperatorapp.fragment
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -28,12 +27,16 @@ import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback
 import com.mapbox.services.android.navigation.ui.v5.route.NavigationMapRoute
 import com.mapbox.services.android.navigation.v5.navigation.NavigationRoute
-import kotlinx.android.synthetic.main.activity_localization.view.*
 import kotlinx.android.synthetic.main.fragment_map.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import timber.log.Timber
+import com.example.kzvdar42.deliveryoperatorapp.activity.MainActivity
+import com.mapbox.api.directions.v5.models.DirectionsRoute
+import com.mapbox.services.android.navigation.ui.v5.NavigationLauncher
+import com.mapbox.services.android.navigation.ui.v5.NavigationLauncherOptions
+
 
 class MapFragment : Fragment(), OnMapReadyCallback, PermissionsListener {
 
@@ -45,6 +48,8 @@ class MapFragment : Fragment(), OnMapReadyCallback, PermissionsListener {
     // variables for adding a marker
     private var originCoord: LatLng? = null
 
+    private lateinit var currRoute: DirectionsRoute
+
     // variables for calculating and drawing a route
     private var originPosition: Point? = null
     private var navigationMapRoute: NavigationMapRoute? = null
@@ -54,14 +59,14 @@ class MapFragment : Fragment(), OnMapReadyCallback, PermissionsListener {
             by lazy { ViewModelProviders.of(this).get(MapViewModel::class.java) }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        Mapbox.getInstance(context!!, getString(R.string.access_token))
         val rootView = inflater.inflate(R.layout.fragment_map, container, false)
 
         // Sets retain Instance to not recreate the fragment during rotation.
         // retainInstance = true TODO: Look at this.
 
         // Initiate map.
-        Mapbox.getInstance(context!!, getString(R.string.access_token))
-        mapView = rootView.findViewById(R.id.mapView)
+        mapView = rootView.findViewById(R.id.map_view)
         mapView?.onCreate(savedInstanceState)
         mapView?.getMapAsync(this)
         return rootView
@@ -74,11 +79,11 @@ class MapFragment : Fragment(), OnMapReadyCallback, PermissionsListener {
 
         if (PermissionsManager.areLocationPermissionsGranted(activity)) {
             // Start sending current location.
-            Log.e("Main", "Started the service")
+            Timber.i("Starting the SendLocation service.")
             activity?.startService(Intent(activity, SendLocation::class.java))
             // Get current position
-            mViewModel.getCurrentPosition().observe(this, Observer { originLocation ->
-                Log.e("MapFragment", "Get position ${originLocation.longitude} ${originLocation.latitude}")
+            mViewModel.getCurrentLocation().observe(this, Observer { originLocation ->
+                Timber.i("Got position ${originLocation.longitude} ${originLocation.latitude}")
                 // Get order info
                 mViewModel.getCurrentOrder().observe(this, Observer { order ->
                     // Get the current location.
@@ -122,6 +127,13 @@ class MapFragment : Fragment(), OnMapReadyCallback, PermissionsListener {
                         // Set the On Click Listener for the `start navigation button`.
                         startButton.setOnClickListener {
                             startActivity(Intent(activity, NavigationActivity::class.java))
+//                            val simulateRoute = true
+//                            val options = NavigationLauncherOptions.builder()
+//                                    .directionsRoute(currRoute)
+//                                    .shouldSimulateRoute(simulateRoute)
+//                                    .build()
+//                            // Call this method with Context from within an Activity
+//                            NavigationLauncher.startNavigation(activity, options)
                         }
 
                     } else {
@@ -148,22 +160,27 @@ class MapFragment : Fragment(), OnMapReadyCallback, PermissionsListener {
                     override fun onResponse(call: Call<DirectionsResponse>, response: Response<DirectionsResponse>) {
                         // You can get the generic HTTP info about the response
                         Timber.d("Response code: %s", response.code())
-                        if (response.body() == null) {
-                            Timber.e("No routes found, make sure you set the right user and access token.")
-                            return
-                        } else if (response.body()?.routes()!!.size < 1) {
-                            Timber.e("No routes found")
-                            return
+                        when {
+                            response.body() == null -> {
+                                Timber.e("No routes found, make sure you set the right user and access token.")
+                                return
+                            }
+                            response.body()?.routes()!!.size < 1 -> {
+                                Timber.e("No routes found")
+                                return
+                            }
+                            else -> {
+                                currRoute = response.body()!!.routes()[0]
+                                // Draw the route on the map
+                                if (navigationMapRoute != null) {
+                                    navigationMapRoute?.removeRoute()
+                                } else {
+                                    startButton?.isEnabled = true
+                                    navigationMapRoute = NavigationMapRoute(null, mapView!!, mapboxMap, R.style.NavigationMapRoute)
+                                }
+                                navigationMapRoute?.addRoute(response.body()!!.routes()[0])
+                            }
                         }
-
-                        // Draw the route on the map
-                        if (navigationMapRoute != null) {
-//                            navigationMapRoute?.removeRoute()
-                        } else {
-                            startButton?.isEnabled = true
-                            navigationMapRoute = NavigationMapRoute(null, mapView!!, mapboxMap, R.style.NavigationMapRoute)
-                        }
-                        navigationMapRoute?.addRoute(response.body()!!.routes()[0])
                     }
 
 

@@ -5,6 +5,8 @@ import android.app.Activity
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
@@ -28,6 +30,7 @@ class ReceiverInfoActivity : AppCompatActivity() {
 
     private var order: OrderEntity? = null
 
+    @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_receiver_info)
@@ -57,7 +60,7 @@ class ReceiverInfoActivity : AppCompatActivity() {
     fun onClick(view: View) {
         when (view.id) {
             R.id.decline -> {
-                // TODO
+                // TODO: Decline order.
                 Toast.makeText(this, "Decline", Toast.LENGTH_LONG).show()
             }
             R.id.accept -> {

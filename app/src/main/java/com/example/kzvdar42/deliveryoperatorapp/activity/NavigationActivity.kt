@@ -9,9 +9,12 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import com.example.kzvdar42.deliveryoperatorapp.BuildConfig
 import com.example.kzvdar42.deliveryoperatorapp.R
 import com.example.kzvdar42.deliveryoperatorapp.db.CoordsEntity
+import com.example.kzvdar42.deliveryoperatorapp.db.OrderEntity
 import com.example.kzvdar42.deliveryoperatorapp.viewmodel.MapViewModel
+import com.mapbox.api.directions.v5.DirectionsCriteria
 import com.mapbox.api.directions.v5.models.DirectionsResponse
 import com.mapbox.api.directions.v5.models.DirectionsRoute
 import com.mapbox.geojson.Point
@@ -37,7 +40,9 @@ class NavigationActivity : AppCompatActivity(), OnNavigationReadyCallback, Navig
     private var dropoffDialogShown: Boolean = false
     private var lastKnownLocation: Location? = null
 
+    private lateinit var order: OrderEntity
     private lateinit var points: ArrayList<CoordsEntity>
+    private var initPoint = -1
 
     //ViewModel
     private val mViewModel
@@ -47,19 +52,29 @@ class NavigationActivity : AppCompatActivity(), OnNavigationReadyCallback, Navig
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_navigation)
 
-        // Get order info //TODO: Посмотри на меня
+        // Get order info
         mViewModel.getCurrentOrder().observe(this, Observer { order ->
             points = order.coords
+            this.order = order
+            initPoint = order.orderNum
+            points.drop(order.lastTransitPoint)
 
-            // Add current position at the start
-            mViewModel.getCurrentPosition().observe(this, Observer { currentPosition ->
-                points.add(0, CoordsEntity(long = currentPosition.longitude, lat = currentPosition.latitude))
-
-                navigationView = findViewById(R.id.navigationView)
-                navigationView?.onCreate(savedInstanceState)
-                navigationView?.initialize(this)
-            })
+            // Add latest position at the start.
+            mViewModel.getLatestLocation().also {
+                if (it != null) points.add(0, CoordsEntity(long = it.longitude, lat = it.latitude))
+            }
+            // Initiate navigation view.
+            navigationView = findViewById(R.id.navigation_view)
+            navigationView?.onCreate(savedInstanceState)
+            navigationView?.initialize(this)
         })
+    }
+
+    fun updateOrder() {
+        if (order.lastTransitPoint > initPoint) {
+            mViewModel.saveOrderStatus(order.orderNum,
+                    "In transit", order.lastTransitPoint, null)
+        }
     }
 
     override fun onArrival() {
@@ -90,11 +105,12 @@ class NavigationActivity : AppCompatActivity(), OnNavigationReadyCallback, Navig
         dialogView.dialog_positive_btn.setOnClickListener {
             alertDialog.dismiss()
             val nextPoint = points.removeAt(0)
+            order.lastTransitPoint++
             fetchRoute(getLastKnownLocation(), Point.fromLngLat(nextPoint.long, nextPoint.lat))
         }
         dialogView.dialog_negative_btn.text = getString(R.string.map_dialog_negative_text)
         dialogView.dialog_negative_btn.setOnClickListener {
-            // mViewModel.saveOrderStatus(points) // TODO: Update order status
+            updateOrder()
             alertDialog.dismiss()
         }
         // Adding view to the alert dialog and show it.
@@ -109,6 +125,7 @@ class NavigationActivity : AppCompatActivity(), OnNavigationReadyCallback, Navig
                 .accessToken(Mapbox.getAccessToken()!!)
                 .origin(origin)
                 .destination(destination)
+                .voiceUnits(DirectionsCriteria.METRIC)
                 .alternatives(true)
                 .build()
                 .getRoute(object : Callback<DirectionsResponse> {
@@ -125,13 +142,13 @@ class NavigationActivity : AppCompatActivity(), OnNavigationReadyCallback, Navig
     private fun setupOptions(directionsRoute: DirectionsRoute): NavigationViewOptions {
         dropoffDialogShown = false
 
-        val options = NavigationViewOptions.builder()
-        options.directionsRoute(directionsRoute)
+        return NavigationViewOptions.builder()
+                .directionsRoute(directionsRoute)
                 .navigationListener(this)
                 .progressChangeListener(this)
                 .routeListener(this)
-                .shouldSimulateRoute(true)
-        return options.build()
+                .shouldSimulateRoute(BuildConfig.DEBUG)
+                .build()
     }
 
     private fun getLastKnownLocation(): Point {
@@ -155,6 +172,7 @@ class NavigationActivity : AppCompatActivity(), OnNavigationReadyCallback, Navig
 
     override fun onBackPressed() {
         // If the navigation view didn't need to do anything, call super
+        updateOrder()
         if (!navigationView!!.onBackPressed()) {
             super.onBackPressed()
         }
@@ -171,16 +189,19 @@ class NavigationActivity : AppCompatActivity(), OnNavigationReadyCallback, Navig
     }
 
     public override fun onPause() {
+        updateOrder()
         super.onPause()
         navigationView?.onPause()
     }
 
     public override fun onStop() {
+        updateOrder()
         super.onStop()
         navigationView?.onStop()
     }
 
     override fun onDestroy() {
+        updateOrder()
         super.onDestroy()
         navigationView?.onDestroy()
     }
@@ -218,7 +239,7 @@ class NavigationActivity : AppCompatActivity(), OnNavigationReadyCallback, Navig
     }
 
     override fun onFailedReroute(errorMessage: String) {
-        Toast.makeText(this, getString(R.string.on_failed_reroute), Toast.LENGTH_LONG)
+        Toast.makeText(this, getString(R.string.on_failed_reroute), Toast.LENGTH_LONG).show()
     }
 
 }

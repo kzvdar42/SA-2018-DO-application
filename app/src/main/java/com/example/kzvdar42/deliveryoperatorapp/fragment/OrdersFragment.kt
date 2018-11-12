@@ -39,7 +39,8 @@ class OrdersFragment : Fragment() {
 
         // Read data from View Model
         mViewModel.updateOrders()
-        mViewModel.getAcceptedOrders()?.observe(this, Observer<List<OrderEntity>> { t -> mAdapter.updateOrderList(t) })
+        mViewModel.getAcceptedOrders()?.observe(this,
+                Observer<List<OrderEntity>> { t -> mAdapter.updateOrderList(t) }) // TODO: sort orders due ttd
 
         // Set the toolbar title
         activity?.findViewById<Toolbar>(R.id.toolbar)?.title = getString(R.string.accepted_orders_label)
