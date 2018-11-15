@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="application_name">Delivery Operator App</string>
+
+    <!-- Login -->
+    <string name="login_label">Iniciar sesión</string>
+    <string name="username">Nombre de usuario</string>
+    <string name="username_error">Ingrese un nombre de usuario válido</string>
+    <string name="password">Contraseña</string>
+    <string name="password_error">Entre 6 y 10 caracteres alfanuméricos.</string>
+    <string name="login">Iniciar sesión</string>
+
+    <!-- Order list -->
+    <string name="order_num">Orden #%1$d</string>
+    <string name="accepted_orders_label">Pedidos aceptados</string>
+    <string name="new_orders_label">Nuevos pedidos</string>
+
+    <!-- Order info -->
+    <string name="select_order">Elije el orden</string>
+    <string name="phone_image_description">Icono de telefono</string>
+    <string name="call_label">Llamada</string>
+    <string name="assignment_image_description">Icono de asignación</string>
+    <string name="assignment_label">Firmar</string>
+    <string name="navigation_icon_description">Icono de navegación</string>
+    <string name="navigation_label">Navegar</string>
+    <string name="time_left_label">Tiempo restante: %1$s</string>
+    <string name="dimensions_text">Dimensiones: %1$d x %2$d x %3$d (sm)</string>
+    <string name="weight_label">Peso: %1$d kg</string>
+    <string name="sender_notes_label">Notas del remitente: %1$s</string>
+    <string name="ttl_ended">El tiempo terminó.</string>
+    <string name="ttl_minutes">%1$s minutos</string>
+    <string name="ttl_hours">%1$s horas</string>
+    <string name="ttl_days">%1$s días</string>
+
+    <!-- Receiver info -->
+    <string name="accept_label">Aceptar</string>
+    <string name="decline_label">Disminución</string>
+    <string name="dialog_title">¿Estás seguro?</string>
+
+    <!-- Map -->
+    <string name="start_navigation">Iniciar la navegación</string>
+    <string name="order_title_from">Desde</string>
+    <string name="order_title_transit">Tránsito</string>
+    <string name="order_title_end">Fin</string>
+    <string name="order_from_description_snippet">Nombre del remitente: %1$s\nApellido del remitente: %2$s\nNúmero de teléfono: %3$s\nTTD esperado: %4$s</string>
+    <string name="order_to_description_snippet">Nombre del destinatario: %1$s\nApellido del receptor: %2$s\nNúmero de teléfono: %3$s\nTTD esperado: %4$s</string>
+    <string name="no_order_selected">No se seleccionó ninguna orden, seleccione la orden para mostrarla en el mapa.</string>
+
+    <!-- Navigation -->
+    <string name="map_dialog_transit_text">
+        Usted ha llegado al punto de tránsito.
+        \n ¿Quieres continuar con la navegación?</string>
+    <string name="map_dialog_positive_text">Continuar</string>
+    <string name="map_dialog_negative_text">Detener</string>
+    <string name="on_failed_reroute">Error al redireccionar</string>
+    <string name="map_dialog_end_text">
+        Has llegado al destino.
+        \n ¿Quieres ir a la página de pedidos?</string>
+
+    <!-- Bottom Navigation -->
+    <string name="map_label">Mapa</string>
+    <string name="orders_label">Pedidos</string>
+    <string name="settings_label">Ajustes</string>
+
+    <!-- Mapbox -->
+    <string name="user_location_permission_explanation">Esta aplicación necesita permisos de ubicación para la navegación.</string>
+    <string name="user_location_permission_not_granted">Usted no concedió permisos de ubicación.</string>
+
+    <!-- Settings -->
+    <string name="localization">Localización</string>
+    <string name="contact_co">Contactar CO</string>
+    <string name="log_out">Cerrar sesión</string>
+
+    <!-- Dialog -->
+    <string name="yes">Sí</string>
+    <string name="no">No</string>
+</resources>

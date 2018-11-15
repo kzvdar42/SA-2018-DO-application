@@ -6,9 +6,10 @@ import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import com.example.kzvdar42.deliveryoperatorapp.BuildConfig
 import com.example.kzvdar42.deliveryoperatorapp.R
-import com.example.kzvdar42.deliveryoperatorapp.fragment.MapFragment
+import com.example.kzvdar42.deliveryoperatorapp.fragment.MyMapFragment
 import com.example.kzvdar42.deliveryoperatorapp.fragment.OrdersFragment
 import com.example.kzvdar42.deliveryoperatorapp.fragment.SettingsFragment
+import com.mapbox.mapboxsdk.Mapbox
 import kotlinx.android.synthetic.main.activity_main.*
 import timber.log.Timber
 
@@ -16,7 +17,7 @@ import timber.log.Timber
 class MainActivity : AppCompatActivity() {
 
     private var currFragment = 0
-  //  private var mapsFragment = MapFragment()
+    private var mapsFragment = MyMapFragment.newInstance()
     private var ordersFragment = OrdersFragment()
     private var settingsFragment = SettingsFragment()
 
@@ -26,38 +27,45 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        // This will initialise Timber
+        Mapbox.getInstance(this, getString(R.string.access_token))
+
+        // Initialize the Timber if it is a debug build.
         if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())
         }
 
-        // Add toolbar
+        // Add toolbar.
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         toolbar.title = resources.getString(R.string.map_label)
         setSupportActionBar(toolbar)
 
-        // Attach the first fragment
+        // Attach the current fragment to the view.
         val fragmentManager = supportFragmentManager
         fragmentManager.beginTransaction().add(R.id.fragmentContainer, getFragment(currFragment)).commit()
+        bottom_navigation_menu.selectedItemId = currFragment
 
         bottom_navigation_menu.setOnNavigationItemSelectedListener { item ->
-            var fragment: Fragment = getFragment(currFragment)
+            var nextFragment = 0
             when (item.itemId) {
                 R.id.map_button -> {
-                    fragment = MapFragment() //TODO: Manage to reuse old fragment
+                    nextFragment = 0
                     toolbar.title = resources.getString(R.string.map_label)
-                    currFragment = 0
                 }
                 R.id.orders_button -> {
-                    fragment = ordersFragment
-                    currFragment = 1
+                    nextFragment = 1
+                    // Title is managed by the fragment.
                 }
                 R.id.settings_button -> {
-                    fragment = settingsFragment
+                    nextFragment = 2
                     toolbar.title = resources.getString(R.string.settings_label)
-                    currFragment = 2
+
                 }
             }
+            if (currFragment == nextFragment) {
+                createNewFragment(currFragment)
+            }
+            currFragment = nextFragment
+            val fragment = getFragment(currFragment)
             // Insert the fragment by replacing any existing fragment
             fragmentManager.beginTransaction().replace(R.id.fragmentContainer, fragment).commit()
 
@@ -68,10 +76,22 @@ class MainActivity : AppCompatActivity() {
 
     private fun getFragment(num: Int): Fragment {
         return when (num) {
-            0 -> MapFragment()
+            0 -> MyMapFragment() // TODO: Manage to use the old instance.
             1 -> ordersFragment
             2 -> settingsFragment
-            else -> MapFragment()
+            else -> {
+                Timber.e("Unexpected fragment id in `getFragment`, returned mapsFragment.")
+                MyMapFragment()
+            }
+        }
+    }
+
+    private fun createNewFragment(num: Int) {
+        return when (num) {
+            0 -> mapsFragment = MyMapFragment()
+            1 -> ordersFragment = OrdersFragment()
+            2 -> settingsFragment = SettingsFragment()
+            else -> Timber.e("Unexpected fragment id in `createNewFragment`.")
         }
     }
 
@@ -84,7 +104,6 @@ class MainActivity : AppCompatActivity() {
         super.onRestoreInstanceState(inState)
         currFragment = inState.getInt("currentFragment", 0)
     }
-
 
     override fun onBackPressed() {
         // Left blank intentinally. TODO: Add handling of navigating between fragments.

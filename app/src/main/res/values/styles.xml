@@ -35,21 +35,21 @@
     </style>
 
     <!-- Navigation. -->
-    <style name="NavigationMapRoute">
+    <style name="MyNavigationMapRoute" parent="NavigationMapRoute">
         <!-- Colors -->
-        <item name="routeColor">@color/mapboxBlue</item>
-        <item name="routeModerateCongestionColor">@color/mapboxYellow</item>
-        <item name="routeSevereCongestionColor">@color/mapboxPink</item>
+        <item name="routeColor">@color/colorAccent</item>
+        <item name="routeModerateCongestionColor">@color/my_yellow</item>
+        <item name="routeSevereCongestionColor">@color/buttonRed</item>
         <item name="routeShieldColor">@color/mapboxWhite</item>
         <!-- Scales -->
         <item name="routeScale">1.0</item>
     </style>
 
-    <style name="NavigationView" parent="NavigationViewLight">
+    <style name="MyNavigationView" parent="NavigationViewLight">
         <item name="navigationViewPrimary">@color/mapboxWhite</item>
         <item name="navigationViewSecondary">@color/colorAccent</item>
         <item name="navigationViewAccent">@color/colorAccent</item>
-        
+
         <item name="navigationViewBannerBackground">@color/colorPrimary</item>
         <item name="navigationViewBannerSecondaryText">@color/color_black</item>
         <item name="navigationViewBannerPrimaryText">@color/color_black</item>

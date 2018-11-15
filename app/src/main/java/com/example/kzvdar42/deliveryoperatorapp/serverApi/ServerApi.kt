@@ -6,6 +6,7 @@ import com.example.kzvdar42.deliveryoperatorapp.serverApi.requestBodies.UpdateOr
 import com.example.kzvdar42.deliveryoperatorapp.serverApi.requestBodies.UpdatePositionReqBody
 import com.example.kzvdar42.deliveryoperatorapp.serverApi.responce.SimpleResponce
 import com.example.kzvdar42.deliveryoperatorapp.util.Constants
+import com.google.gson.GsonBuilder
 import io.reactivex.Observable
 import io.reactivex.Single
 import retrofit2.Call
@@ -16,10 +17,6 @@ import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
-import com.google.gson.GsonBuilder
-import com.google.gson.Gson
-
-
 
 
 interface ServerApi {

@@ -3,7 +3,6 @@ package com.example.kzvdar42.deliveryoperatorapp.util
 import android.app.Service
 import android.content.Intent
 import android.os.IBinder
-import com.example.kzvdar42.deliveryoperatorapp.db.Repository
 import timber.log.Timber
 import kotlin.concurrent.thread
 
@@ -16,13 +15,17 @@ class SendLocation : Service() {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         Timber.i("Service onStartCommand %s", startId)
-        thread(true) {
-            fun send() {
-                repository.sendCurrentPosition()
-                Thread.sleep(TIME_INTERVAL)
+        // Start sending current location, only if thread with this action still not created.
+        if (runningTread == null) {
+            Timber.i("Started thread")
+            runningTread = thread(true) {
+                fun send() {
+                    repository.sendCurrentPosition()
+                    Thread.sleep(TIME_INTERVAL)
+                    send()
+                }
                 send()
             }
-            send()
         }
         return Service.START_STICKY
     }
@@ -33,11 +36,14 @@ class SendLocation : Service() {
 
     override fun onDestroy() {
         Timber.i("Service onDestroy")
+        runningTread?.interrupt()
+        runningTread = null
         super.onDestroy()
     }
 
     companion object {
-        private const val TIME_INTERVAL: Long = 10000
+        private const val TIME_INTERVAL: Long = 20000
+        private var runningTread: Thread? = null
     }
 
 }

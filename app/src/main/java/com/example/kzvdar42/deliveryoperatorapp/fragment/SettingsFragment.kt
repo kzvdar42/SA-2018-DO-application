@@ -1,6 +1,7 @@
 package com.example.kzvdar42.deliveryoperatorapp.fragment
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,7 +9,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import com.example.kzvdar42.deliveryoperatorapp.R
-import com.example.kzvdar42.deliveryoperatorapp.activity.EmptyActivity
 import com.example.kzvdar42.deliveryoperatorapp.activity.LoginActivity
 import com.example.kzvdar42.deliveryoperatorapp.viewmodel.SettingsViewModel
 import kotlinx.android.synthetic.main.fragment_settings.view.*
@@ -31,7 +31,9 @@ class SettingsFragment : Fragment() {
         }
 
         rootView.settings_contact_CO_text.setOnClickListener {
-            startActivity(Intent(context, EmptyActivity::class.java))
+            val intent = Intent(Intent.ACTION_DIAL)
+            intent.data = Uri.parse("tel:+79991560413") //TODO: Make this a call to the server.
+            startActivity(intent)
         }
 
         rootView.settings_log_out_text.setOnClickListener {

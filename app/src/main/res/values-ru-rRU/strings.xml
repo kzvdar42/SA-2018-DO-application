@@ -26,6 +26,10 @@
     <string name="dimensions_text">Размеры: %1$d x %2$d x %3$d (см)</string>
     <string name="weight_label">Вес: %1$d кг</string>
     <string name="sender_notes_label">Заметки отправителя: %1$s</string>
+    <string name="ttl_ended">Время кончилось.</string>
+    <string name="ttl_minutes">%1$s Минут</string>
+    <string name="ttl_hours">%1$s Часов</string>
+    <string name="ttl_days">%1$s дней</string>
 
     <!-- Receiver info -->
     <string name="accept_label">Подтвердить</string>
@@ -37,16 +41,20 @@
     <string name="order_title_from">Откуда</string>
     <string name="order_title_transit">Точка транзита</string>
     <string name="order_title_end">Куда</string>
-    <string name="order_from_description_snippet">Отправитель:\nИмя: %1$s\nФамилия: %2$s\nТелефон: %3$s\nЗаметки: %4$s\nВремя на доставку: %5$s</string>
-    <string name="order_to_description_snippet">Получатель:\nИмя: %1$s\nФамилия: %2$s\nТелефон: %3$s\nЗаметки: %4$s\nВремя на доставку: %5$s</string>
+    <string name="order_from_description_snippet">Отправитель:\nИмя: %1$s\nФамилия: %2$s\nТелефон: %3$s\nВремя на доставку: %4$s</string>
+    <string name="order_to_description_snippet">Получатель:\nИмя: %1$s\nФамилия: %2$s\nТелефон: %3$s\nВремя на доставку: %4$s</string>
+    <string name="no_order_selected">Заказ не выполнен,пожалуйста выберите заказ, для начала работы</string>
 
     <!-- Navigation -->
-    <string name="map_dialog_text">
+    <string name="map_dialog_transit_text">
         Вы достигли точки транзита.
         \n Хотите продолжить навигацию?</string>
     <string name="map_dialog_positive_text">Продолжить</string>
     <string name="map_dialog_negative_text">Остановиться</string>
     <string name="on_failed_reroute">Ошибка при постройке маршрута</string>
+    <string name="map_dialog_end_text">
+        Вы прибыли в пункт назначения.
+        \n Хотите перейти на страницу заказа?</string>
 
     <!-- Bottom Navigation -->
     <string name="map_label">Карта</string>
@@ -61,9 +69,6 @@
     <string name="localization">Язык</string>
     <string name="contact_co">Связь с КО</string>
     <string name="log_out">Выйти</string>
-
-    <!-- Contact CO -->
-    <string name="not_implemented_yet">Ещё не сделано.</string>
 
     <!-- Dialog -->
     <string name="yes">Да</string>

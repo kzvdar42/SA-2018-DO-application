@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.kzvdar42.deliveryoperatorapp.R
 import com.example.kzvdar42.deliveryoperatorapp.activity.OrderInfoActivity
 import com.example.kzvdar42.deliveryoperatorapp.db.OrderEntity
+import com.example.kzvdar42.deliveryoperatorapp.util.Constants
 import kotlinx.android.synthetic.main.orders_list_recycle_view_item.view.*
 
 
@@ -52,11 +53,22 @@ class OrdersListAdapter(private var orderEntityList: List<OrderEntity>, val cont
         fun bindItems(orderEntity: OrderEntity, context: Context) {
             itemView.order_name.text = context.resources.getString(R.string.order_num, orderEntity.orderNum)
             itemView.order_description.text =
-                    "%s %s\n%s".format(
+                    "%s %s\n%s\n%s\n%s".format(
                             orderEntity.receiverName, orderEntity.receiverSurname,
-                             orderEntity.expectedTtd)
+                             leftTime(Constants.leftTime(orderEntity.expectedTtd), context),
+                            orderEntity.senderAddress, orderEntity.receiverAddress)
+        }
+        private fun leftTime(time: Pair<Int, String>, context: Context):String {
+            return when (time.first) {
+                0 -> context.getString(R.string.ttl_days, time.second)
+                1 -> context.getString(R.string.ttl_hours, time.second)
+                2 -> context.getString(R.string.ttl_minutes, time.second)
+                else -> context.getString(R.string.ttl_ended)
+            }
         }
     }
+
+
 
     fun updateOrderList(orderEntityList: List<OrderEntity>) {
         this.orderEntityList = orderEntityList

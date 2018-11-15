@@ -26,6 +26,10 @@
     <string name="dimensions_text">Dimensions: %1$d x %2$d x %3$d (sm)</string>
     <string name="weight_label">Weight: %1$d kg</string>
     <string name="sender_notes_label">Sender notes: %1$s</string>
+    <string name="ttl_ended">Time ended.</string>
+    <string name="ttl_minutes">%1$s minutes</string>
+    <string name="ttl_hours">%1$s hours</string>
+    <string name="ttl_days">%1$s days</string>
 
     <!-- Receiver info -->
     <string name="accept_label">Accept</string>
@@ -37,16 +41,21 @@
     <string name="order_title_from">From</string>
     <string name="order_title_transit">Transit</string>
     <string name="order_title_end">End</string>
-    <string name="order_from_description_snippet">Sender name: %1$s\nSender Surname: %2$s\nPhone number: %3$s\nSender notes: %4$s\nExpected TTD: %5$s</string>
-    <string name="order_to_description_snippet">Receiver name: %1$s\nReceiver Surname: %2$s\nPhone number: %3$s\nSender notes: %4$s\nExpected TTD: %5$s</string>
+    <string name="order_from_description_snippet">Sender name: %1$s\nSender Surname: %2$s\nPhone number: %3$s\nExpected TTD: %4$s</string>
+    <string name="order_to_description_snippet">Receiver name: %1$s\nReceiver Surname: %2$s\nPhone number: %3$s\nExpected TTD: %4$s</string>
+    <string name="no_order_selected">No order selected, please select the order to show it on the map.</string>
+
 
     <!-- Navigation -->
-    <string name="map_dialog_text">
+    <string name="map_dialog_transit_text">
         You have been arrived to the transit point.
         \n Do you want to continue the navigation?</string>
     <string name="map_dialog_positive_text">Continue</string>
     <string name="map_dialog_negative_text">Stop</string>
     <string name="on_failed_reroute">Failed to reroute</string>
+    <string name="map_dialog_end_text">
+        You have been arrived to the destination.
+        \n Do you want to go to the order page?</string>
 
     <!-- Bottom Navigation -->
     <string name="map_label">Map</string>
@@ -66,9 +75,6 @@
     <!-- Languages -->
     <string name="english" translatable="false">English</string>
     <string name="russian" translatable="false">Русский</string>
-
-    <!-- Contact CO -->
-    <string name="not_implemented_yet">Not implemented yet.</string>
 
     <!-- Dialog -->
     <string name="yes">Yes</string>

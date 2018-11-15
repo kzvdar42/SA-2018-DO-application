@@ -1,19 +1,25 @@
 package com.example.kzvdar42.deliveryoperatorapp.activity
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import com.divyanshu.draw.activity.DrawingActivity
 import com.example.kzvdar42.deliveryoperatorapp.R
 import com.example.kzvdar42.deliveryoperatorapp.db.CoordsEntity
 import com.example.kzvdar42.deliveryoperatorapp.db.OrderEntity
+import com.example.kzvdar42.deliveryoperatorapp.util.Constants
 import com.example.kzvdar42.deliveryoperatorapp.viewmodel.OrderInfoViewModel
 import com.mapbox.api.directions.v5.models.DirectionsResponse
 import com.mapbox.geojson.Point
@@ -28,10 +34,12 @@ import com.mapbox.mapboxsdk.maps.OnMapReadyCallback
 import com.mapbox.services.android.navigation.ui.v5.route.NavigationMapRoute
 import com.mapbox.services.android.navigation.v5.navigation.NavigationRoute
 import kotlinx.android.synthetic.main.activity_order_info.*
+import kotlinx.android.synthetic.main.alert_dialog.view.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import timber.log.Timber
+import java.util.*
 
 class OrderInfoActivity : AppCompatActivity(), OnMapReadyCallback {
 
@@ -64,7 +72,6 @@ class OrderInfoActivity : AppCompatActivity(), OnMapReadyCallback {
 
         // Get order information
         mViewModel.getOrder(orderNum).observe(this, Observer<OrderEntity> { it ->
-            //FIXME: find more elegant implementation.
             order = it
             coords = order.coords
 
@@ -79,15 +86,17 @@ class OrderInfoActivity : AppCompatActivity(), OnMapReadyCallback {
 
             // Add info
             customer_name_text.text = "${order.receiverName} ${order.receiverSurname}"
-            time_left_text.text = getString(R.string.time_left_label, order.expectedTtd)
+            time_left_text.text = getString(R.string.time_left_label,
+                    leftTime(Constants.leftTime(order.expectedTtd)))
             dimensions_text.text = getString(R.string.dimensions_text, order.length.toLong(), order.width.toLong(), order.height.toLong())
             weight_text.text = getString(R.string.weight_label, order.weight.toLong())
             if (order.senderNotes != null) sender_notes_label.text = getString(R.string.sender_notes_label, order.senderNotes)
 
             // Change the layout due to order status.
             when {
-                order.orderStatus == "Approved" -> order_actions_bar.visibility = View.GONE
+                order.orderStatus == "Created" -> order_actions_bar.visibility = View.GONE
                 order.orderStatus == "Accepted" -> select_order_button.visibility = View.GONE
+                order.orderStatus == "In Transit" -> select_order_button.visibility = View.GONE
                 order.orderStatus == "Delivered" -> {
                     order_actions_bar.visibility = View.GONE
                     select_order_button.visibility = View.GONE
@@ -95,29 +104,23 @@ class OrderInfoActivity : AppCompatActivity(), OnMapReadyCallback {
                 else -> select_order_button.visibility = View.GONE
             }
 
-
-            // If the driver is near the end of route add the `sign for parcel` button
-            if (order.lastTransitPoint < order.coords.size - 2) assignment_button.visibility = View.GONE
-
             // Initiate map
             Mapbox.getInstance(this, getString(R.string.access_token))
             mapView.getMapAsync(this)
         })
     }
 
+    private fun leftTime(time: Pair<Int, String>):String {
+        return when (time.first) {
+            0 -> getString(R.string.ttl_days, time.second)
+            1 -> getString(R.string.ttl_hours, time.second)
+            2 -> getString(R.string.ttl_minutes, time.second)
+            else -> getString(R.string.ttl_ended)
+        }
+    }
+
     override fun onMapReady(mapboxMap: MapboxMap) {
         this.mapboxMap = mapboxMap
-        // Lambda for adding right title for the marker.
-        val title = { ind: Int, maxindex: Int ->
-            // FIXME: move somewhere else, or change
-            getString(
-                    if (maxindex < 2) R.string.order_title_end
-                    else when (ind) {
-                        0 -> R.string.order_title_from
-                        maxindex - 1 -> R.string.order_title_end
-                        else -> R.string.order_title_transit
-                    })
-        }
         val latLngBounds = LatLngBounds.Builder()
         // Add bounds & markers.
         order.coords.forEachIndexed { index, coord ->
@@ -126,18 +129,17 @@ class OrderInfoActivity : AppCompatActivity(), OnMapReadyCallback {
 
             val snippet = if (index == 0) {
                 getString(R.string.order_from_description_snippet,
-                        order.senderName, order.senderSurname, order.senderPhoneNumber,
-                        order.senderNotes, order.expectedTtd)
+                        order.senderName, order.senderSurname, order.senderPhoneNumber, order.expectedTtd)
             } else {
                 getString(R.string.order_to_description_snippet,
-                        order.receiverName, order.receiverSurname, order.receiverPhoneNumber,
-                        order.senderNotes, order.expectedTtd)
+                        order.receiverName, order.receiverSurname, order.receiverPhoneNumber, order.expectedTtd)
             }
             // Add marker to the map.
             mapboxMap.addMarker(MarkerOptions()
                     .position(LatLng(coord.lat, coord.long))
-                    .title("${getString(R.string.order_num, order.orderNum)} [${title(index, order.coords.size)}]")
-                    .snippet(snippet)) // TODO: Handle null values
+                    .title("${getString(R.string.order_num, order.orderNum)} " +
+                            "[${getString(Constants.getTitle(index, order.coords.size))}]")
+                    .snippet(snippet))
         }
 
         if (order.coords.size > 1) {
@@ -200,20 +202,32 @@ class OrderInfoActivity : AppCompatActivity(), OnMapReadyCallback {
             }
             R.id.call_button -> {
                 intent = Intent(Intent.ACTION_DIAL)
-                if (order.lastTransitPoint == -1) {
-                    intent.data = Uri.parse("tel:${order.senderPhoneNumber}")
-                } else {
-                    intent.data = Uri.parse("tel:${order.receiverPhoneNumber}")
-                }
+                intent.data = Uri.parse("tel:${order.receiverPhoneNumber}")
                 startActivity(intent)
             }
             R.id.assignment_button -> {
-                val intent = Intent(this, ReceiverInfoActivity::class.java)
-                intent.putExtra("orderNum", order.orderNum)
-                startActivity(intent)
+                // Creating alert dialog.
+                val alertDialog = AlertDialog.Builder(this).create()
+                // Inflating the view for the alert dialog.
+                val dialogView = layoutInflater.inflate(R.layout.alert_dialog, null)
+                dialogView.dialog_title.text = getString(R.string.dialog_title)
+                dialogView.dialog_description.visibility = View.GONE
+                dialogView.dialog_positive_btn.setOnClickListener {
+                    alertDialog.dismiss()
+                    val intent = Intent(this, DrawingActivity::class.java)
+                    startActivityForResult(intent, REQUEST_CODE_DRAW)
+                }
+                dialogView.dialog_negative_btn.setOnClickListener {
+                    alertDialog.dismiss()
+                }
+                // Adding view to the alert dialog and show it.
+                alertDialog.window?.decorView?.setBackgroundResource(android.R.color.transparent)
+                alertDialog.setView(dialogView)
+                alertDialog.setCancelable(true)
+                alertDialog.show()
             }
             R.id.select_order_button -> {
-                mViewModel.updateOrder(order.orderNum, "Accepted", order.lastTransitPoint, null)
+                mViewModel.updateOrder(order.orderNum, "Accepted", null)
                 finish()
             }
         }
@@ -259,5 +273,28 @@ class OrderInfoActivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onLowMemory() {
         super.onLowMemory()
         mapView.onLowMemory()
+    }
+
+    // Get bitmap in onActivityResult
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (data != null && resultCode == Activity.RESULT_OK) {
+            when (requestCode) {
+                REQUEST_CODE_DRAW -> {
+                    val result = data.getByteArrayExtra("bitmap")
+                    val bitmap = BitmapFactory.decodeByteArray(result, 0, result.size)
+                    saveImage(bitmap)
+                    finish()
+                }
+            }
+        }
+    }
+
+    private fun saveImage(signature: Bitmap) {
+        mViewModel.updateOrder(order.orderNum, "Delivered", signature)
+    }
+
+    companion object {
+        // TODO: Check how to create code in a right way.
+        private const val REQUEST_CODE_DRAW = 42
     }
 }

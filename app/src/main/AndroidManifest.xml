@@ -25,11 +25,9 @@
             </intent-filter>
         </activity>
         <activity android:name=".activity.OrderInfoActivity" />
-        <activity android:name=".activity.NavigationActivity" />
+        <activity android:name=".activity.MyNavigationActivity" />
         <activity android:name=".activity.MainActivity" />
-        <activity android:name=".activity.EmptyActivity" />
         <activity android:name=".activity.LocalizationActivity" />
-        <activity android:name=".activity.ReceiverInfoActivity" />
 
         <service
             android:name=".util.SendLocation"

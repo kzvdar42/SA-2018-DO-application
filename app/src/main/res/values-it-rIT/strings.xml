@@ -26,6 +26,10 @@
     <string name="dimensions_text">Dimensioni: %1$d x %2$d x %3$d (cm)</string>
     <string name="weight_label">Peso: %1$d kg</string>
     <string name="sender_notes_label">Note del mittente: %1$s</string>
+    <string name="ttl_ended">Tempo finito.</string>
+    <string name="ttl_minutes">%1$s minuti</string>
+    <string name="ttl_hours">%1$s ore</string>
+    <string name="ttl_days">%1$s giorni</string>
 
     <!-- Receiver info -->
     <string name="accept_label">Accettare</string>
@@ -37,15 +41,20 @@
     <string name="order_title_from">A partire dal</string>
     <string name="order_title_transit">Punto di transito</string>
     <string name="order_title_end">Finale</string>
-    <string name="order_from_description_snippet">Nome del mittente: %1$s\nCognome del mittente: %2$s\nNumero di telefono: %3$s\nNote del mittente: %4$s\nTTD atteso: %5$s</string>
-    <string name="order_to_description_snippet">Nome del destinatario: %1$s\nCognome del destinatario: %2$s\nNumero di telefono: %3$s\nNote del mittente: %4$s\nTTD atteso: %5$s</string>
+    <string name="order_from_description_snippet">Nome del mittente: %1$s\nCognome del mittente: %2$s\nNumero di telefono: %3$s\nTTD atteso: %4$s</string>
+    <string name="order_to_description_snippet">Nome del destinatario: %1$s\nCognome del destinatario: %2$s\nNumero di telefono: %3$s\nTTD atteso: %4$s</string>
+    <string name="no_order_selected">Ordine non completato, selezionare un ordine per iniziare.</string>
 
     <!-- Navigation -->
-    <string name="map_dialog_text">
+    <string name="map_dialog_transit_text">
         Hai raggiunto il punto di transito.
         \n Vuoi continuare a navigare?</string>
     <string name="map_dialog_positive_text">Procedere</string>
     <string name="map_dialog_negative_text">Fermarsi</string>
+    <string name="on_failed_reroute">Impossibile reindirizzare</string>
+    <string name="map_dialog_end_text">
+        Sei arrivato a destinazione.
+        \n Vuoi andare alla pagina degli ordini?</string>
 
     <!-- Bottom Navigation -->
     <string name="map_label">Mappa</string>
@@ -60,9 +69,6 @@
     <string name="localization">Lingua</string>
     <string name="contact_co">Connessione con CA</string>
     <string name="log_out">Uscire</string>
-
-    <!-- Contact CO -->
-    <string name="not_implemented_yet">Non ancora fatto</string>
 
     <!-- Dialog -->
     <string name="yes">Sì</string>

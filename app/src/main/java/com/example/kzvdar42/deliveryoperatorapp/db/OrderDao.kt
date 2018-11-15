@@ -9,11 +9,14 @@ import androidx.room.Query
 
 @Dao
 interface OrderDao {
-    @Query("Select * from orders where order_status == \"Approved\"")
+    @Query("Select * from orders where status == \"Created\"")
     fun getNewOrders(): LiveData<List<OrderEntity>>
 
-    @Query("Select * from orders where order_status != \"Delivered\" and order_status != \"Approved\" ")
+    @Query("Select * from orders where status == \"Approved\" or status == \"In Transit\" ")
     fun getAcceptedOrders(): LiveData<List<OrderEntity>>
+
+    @Query("Select * from orders")
+    fun getAllOrders(): LiveData<List<OrderEntity>>
 
     @Query("Select * from orders where order_num = :num")
     fun getOrder(num: Int): LiveData<OrderEntity>
@@ -25,10 +28,8 @@ interface OrderDao {
     fun insertAll(orderEntities: List<OrderEntity>)
 
     @Query("UPDATE orders " +
-            "SET order_status = :orderStatus, last_transit_point = :lastTransitPoint " +
-            "WHERE order_num = :orderNum")
-    fun updateOrder(orderNum: Int, orderStatus: String,
-                    lastTransitPoint: Int)
+            "SET status = :orderStatus WHERE order_num = :orderNum")
+    fun updateOrder(orderNum: Int, orderStatus: String)
 
     @Delete
     fun delete(orderEntity: OrderEntity)

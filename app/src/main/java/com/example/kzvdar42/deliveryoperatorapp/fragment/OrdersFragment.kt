@@ -8,9 +8,11 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.kzvdar42.deliveryoperatorapp.BuildConfig
 import com.example.kzvdar42.deliveryoperatorapp.R
 import com.example.kzvdar42.deliveryoperatorapp.adapter.OrdersListAdapter
 import com.example.kzvdar42.deliveryoperatorapp.db.OrderEntity
+import com.example.kzvdar42.deliveryoperatorapp.util.Constants
 import com.example.kzvdar42.deliveryoperatorapp.viewmodel.OrderListViewModel
 import java.util.*
 
@@ -40,7 +42,8 @@ class OrdersFragment : Fragment() {
         // Read data from View Model
         mViewModel.updateOrders()
         mViewModel.getAcceptedOrders()?.observe(this,
-                Observer<List<OrderEntity>> { t -> mAdapter.updateOrderList(t) }) // TODO: sort orders due ttd
+                Observer<List<OrderEntity>> { t ->
+                    mAdapter.updateOrderList(Constants.sortOrders(t)) })
 
         // Set the toolbar title
         activity?.findViewById<Toolbar>(R.id.toolbar)?.title = getString(R.string.accepted_orders_label)
@@ -50,6 +53,8 @@ class OrdersFragment : Fragment() {
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
         inflater!!.inflate(R.menu.orders_menu, menu)
+        // Enabling the debug options if in debug build.
+        menu?.findItem(R.id.all_orders)?.isVisible = BuildConfig.DEBUG
         super.onCreateOptionsMenu(menu, inflater)
     }
 
@@ -60,13 +65,22 @@ class OrdersFragment : Fragment() {
             R.id.accepted_orders -> {
                 activity?.findViewById<Toolbar>(R.id.toolbar)?.title = getString(R.string.accepted_orders_label)
                 mViewModel.getNewOrders()?.removeObservers(this)
-                mViewModel.getAcceptedOrders()?.observe(this, Observer<List<OrderEntity>> { t -> mAdapter.updateOrderList(t) })
+                mViewModel.getAcceptedOrders()?.observe(
+                        this, Observer<List<OrderEntity>> { t ->
+                    mAdapter.updateOrderList(Constants.sortOrders(t)) })
             }
 
             R.id.new_orders -> {
                 activity?.findViewById<Toolbar>(R.id.toolbar)?.title = getString(R.string.new_orders_label)
                 mViewModel.getAcceptedOrders()?.removeObservers(this)
                 mViewModel.getNewOrders()?.observe(this, Observer<List<OrderEntity>> { t ->
+                    mAdapter.updateOrderList(Constants.sortOrders(t))
+                })
+            }
+            R.id.all_orders -> {
+                activity?.findViewById<Toolbar>(R.id.toolbar)?.title = getString(R.string.orders_label)
+                mViewModel.getAcceptedOrders()?.removeObservers(this)
+                mViewModel.getAllOrders()?.observe(this, Observer<List<OrderEntity>> { t ->
                     mAdapter.updateOrderList(t)
                 })
             }

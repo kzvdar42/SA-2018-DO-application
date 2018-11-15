@@ -1,6 +1,7 @@
 package com.example.kzvdar42.deliveryoperatorapp.activity
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.location.Location
 import android.os.Bundle
 import android.widget.Toast
@@ -19,6 +20,8 @@ import com.mapbox.api.directions.v5.models.DirectionsResponse
 import com.mapbox.api.directions.v5.models.DirectionsRoute
 import com.mapbox.geojson.Point
 import com.mapbox.mapboxsdk.Mapbox
+import com.mapbox.mapboxsdk.camera.CameraPosition
+import com.mapbox.mapboxsdk.geometry.LatLng
 import com.mapbox.services.android.navigation.ui.v5.NavigationView
 import com.mapbox.services.android.navigation.ui.v5.NavigationViewOptions
 import com.mapbox.services.android.navigation.ui.v5.OnNavigationReadyCallback
@@ -34,7 +37,11 @@ import retrofit2.Response
 import timber.log.Timber
 
 
-class NavigationActivity : AppCompatActivity(), OnNavigationReadyCallback, NavigationListener, RouteListener, ProgressChangeListener {
+class MyNavigationActivity : AppCompatActivity(), OnNavigationReadyCallback, NavigationListener, RouteListener, ProgressChangeListener {
+
+    companion object {
+        private const val INITIAL_ZOOM = 20.0
+    }
 
     private var navigationView: NavigationView? = null
     private var dropoffDialogShown: Boolean = false
@@ -42,38 +49,42 @@ class NavigationActivity : AppCompatActivity(), OnNavigationReadyCallback, Navig
 
     private lateinit var order: OrderEntity
     private lateinit var points: ArrayList<CoordsEntity>
-    private var initPoint = -1
+    private var currPoint = -1
 
     //ViewModel
     private val mViewModel
             by lazy { ViewModelProviders.of(this).get(MapViewModel::class.java) }
 
     override fun onCreate(@Nullable savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_navigation)
 
+        setTheme(com.mapbox.services.android.navigation.ui.v5.R.style.Theme_AppCompat_NoActionBar)
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.my_activity_navigation)
         // Get order info
+        // Initiate navigation view.
+        navigationView = findViewById(R.id.navigationView)
+        navigationView?.onCreate(savedInstanceState)
+        navigationView?.initialize(this)
         mViewModel.getCurrentOrder().observe(this, Observer { order ->
             points = order.coords
             this.order = order
-            initPoint = order.orderNum
-            points.drop(order.lastTransitPoint)
+            currPoint = 0
+
+            val initialPosition = CameraPosition.Builder().zoom(INITIAL_ZOOM)
 
             // Add latest position at the start.
             mViewModel.getLatestLocation().also {
-                if (it != null) points.add(0, CoordsEntity(long = it.longitude, lat = it.latitude))
+                if (it != null) {
+                    points.add(0, CoordsEntity(long = it.longitude, lat = it.latitude))
+                    initialPosition.target(LatLng(it.latitude, it.longitude))
+                }
             }
-            // Initiate navigation view.
-            navigationView = findViewById(R.id.navigation_view)
-            navigationView?.onCreate(savedInstanceState)
-            navigationView?.initialize(this)
         })
     }
 
-    fun updateOrder() {
-        if (order.lastTransitPoint > initPoint) {
-            mViewModel.saveOrderStatus(order.orderNum,
-                    "In transit", order.lastTransitPoint, null)
+    private fun updateOrder() {
+        if (currPoint > 0 && currPoint != order.coords.size) {
+            mViewModel.saveOrderStatus(order.orderNum, "In Transit", null)
         }
     }
 
@@ -81,6 +92,8 @@ class NavigationActivity : AppCompatActivity(), OnNavigationReadyCallback, Navig
         if (!dropoffDialogShown && !points.isEmpty()) {
             showDropoffDialog()
             dropoffDialogShown = true // Accounts for multiple arrival events
+        } else if (!dropoffDialogShown && points.isEmpty()) {
+            showEndDialog()
         }
     }
 
@@ -100,18 +113,45 @@ class NavigationActivity : AppCompatActivity(), OnNavigationReadyCallback, Navig
         // Inflating the view for the alert dialog.
         val dialogView = layoutInflater.inflate(R.layout.alert_dialog, null)
         dialogView.dialog_title.text = getString(R.string.order_title_transit)
-        dialogView.dialog_description.text = getString(R.string.map_dialog_text)
+        dialogView.dialog_description.text = getString(R.string.map_dialog_transit_text)
         dialogView.dialog_positive_btn.text = getString(R.string.map_dialog_positive_text)
         dialogView.dialog_positive_btn.setOnClickListener {
             alertDialog.dismiss()
+            currPoint++
             val nextPoint = points.removeAt(0)
-            order.lastTransitPoint++
             fetchRoute(getLastKnownLocation(), Point.fromLngLat(nextPoint.long, nextPoint.lat))
         }
         dialogView.dialog_negative_btn.text = getString(R.string.map_dialog_negative_text)
         dialogView.dialog_negative_btn.setOnClickListener {
             updateOrder()
             alertDialog.dismiss()
+        }
+        // Adding view to the alert dialog and show it.
+        alertDialog.window?.decorView?.setBackgroundResource(android.R.color.transparent)
+        alertDialog.setView(dialogView)
+        alertDialog.setCancelable(true)
+        alertDialog.show()
+    }
+
+    @SuppressLint("InflateParams")
+    private fun showEndDialog() {
+        // Creating alert dialog.
+        val alertDialog = AlertDialog.Builder(this).create()
+        // Inflating the view for the alert dialog.
+        val dialogView = layoutInflater.inflate(R.layout.alert_dialog, null)
+        dialogView.dialog_title.text = getString(R.string.order_title_end)
+        dialogView.dialog_description.text = getString(R.string.map_dialog_end_text)
+        dialogView.dialog_positive_btn.text = getString(R.string.yes)
+        dialogView.dialog_positive_btn.setOnClickListener {
+            val intent = Intent(this, OrderInfoActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or
+                    Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NO_ANIMATION
+            startActivity(intent)
+        }
+        dialogView.dialog_negative_btn.text = getString(R.string.no)
+        dialogView.dialog_negative_btn.setOnClickListener {
+            alertDialog.dismiss()
+            finish()
         }
         // Adding view to the alert dialog and show it.
         alertDialog.window?.decorView?.setBackgroundResource(android.R.color.transparent)
@@ -203,6 +243,8 @@ class NavigationActivity : AppCompatActivity(), OnNavigationReadyCallback, Navig
     override fun onDestroy() {
         updateOrder()
         super.onDestroy()
+        // End the navigation session
+        navigationView?.stopNavigation()
         navigationView?.onDestroy()
     }
 

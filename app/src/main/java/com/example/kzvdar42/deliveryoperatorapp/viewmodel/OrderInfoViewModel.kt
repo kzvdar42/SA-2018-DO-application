@@ -8,7 +8,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.kzvdar42.deliveryoperatorapp.db.OrderEntity
-import com.example.kzvdar42.deliveryoperatorapp.db.Repository
+import com.example.kzvdar42.deliveryoperatorapp.util.Repository
 import io.reactivex.disposables.Disposable
 
 class OrderInfoViewModel(application: Application) : AndroidViewModel(application) {
@@ -20,9 +20,8 @@ class OrderInfoViewModel(application: Application) : AndroidViewModel(applicatio
         return repository.getOrder(orderNumber)
     }
 
-    fun updateOrder(orderNum: Int, orderStatus: String,
-                    lastTransitPoint: Int, photo: Bitmap?): Pair<LiveData<String>, Disposable> {
-        return repository.updateOrder(orderNum, orderStatus, lastTransitPoint, photo)
+    fun updateOrder(orderNum: Int, orderStatus: String, photo: Bitmap?): Pair<LiveData<String>, Disposable> {
+        return repository.updateOrder(orderNum, orderStatus, photo)
     }
 
 

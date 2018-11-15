@@ -10,19 +10,26 @@ import java.util.*
 
 @Entity(tableName = "orders")
 data class OrderEntity(
+        @ColumnInfo(name = "coords")
+        @SerializedName("coords")
+        @TypeConverters(Converter::class)
+        var coords: ArrayList<CoordsEntity>,
+        @ColumnInfo(name = "expected_delivery_time")
+        @SerializedName("expected_delivery_time")
+        var expectedTtd: String,
+        @ColumnInfo(name = "height")
+        @SerializedName("height")
+        var height: Double,
+        @ColumnInfo(name = "length")
+        @SerializedName("length")
+        var length: Double,
         @ColumnInfo(name = "order_num")
         @SerializedName("order_num")
         @PrimaryKey(autoGenerate = false)
         var orderNum: Int,
-        @ColumnInfo(name = "sender_name")
-        @SerializedName("sender_name")
-        var senderName: String?,
-        @ColumnInfo(name = "sender_surname")
-        @SerializedName("sender_surname")
-        var senderSurname: String?,
-        @ColumnInfo(name = "sender_phone_number")
-        @SerializedName("sender_phone_number")
-        var senderPhoneNumber: String?,
+        @ColumnInfo(name = "receiver_address")
+        @SerializedName("receiver_address")
+        var receiverAddress: String?,
         @ColumnInfo(name = "receiver_name")
         @SerializedName("receiver_name")
         var receiverName: String,
@@ -37,42 +44,28 @@ data class OrderEntity(
         var receiverPhoneNumber: String,
         @ColumnInfo(name = "send_date")
         @SerializedName("send_date")
-        @TypeConverters(Converter::class)
         var sendDate: String,
+        @ColumnInfo(name = "sender_address")
+        @SerializedName("sender_address")
+        var senderAddress: String?,
+        @ColumnInfo(name = "sender_name")
+        @SerializedName("sender_name")
+        var senderName: String?,
+        @ColumnInfo(name = "sender_surname")
+        @SerializedName("sender_surname")
+        var senderSurname: String?,
+        @ColumnInfo(name = "sender_phone_number")
+        @SerializedName("sender_phone_number")
+        var senderPhoneNumber: String?,
         @ColumnInfo(name = "weight")
         @SerializedName("weight")
         var weight: Double,
-        @ColumnInfo(name = "length")
-        @SerializedName("length")
-        var length: Double,
         @ColumnInfo(name = "width")
         @SerializedName("width")
         var width: Double,
-        @ColumnInfo(name = "height")
-        @SerializedName("height")
-        var height: Double,
-        @ColumnInfo(name = "insurance")
-        @SerializedName("insurance")
-        var insurance: Boolean,
-        @ColumnInfo(name = "price")
-        @SerializedName("price")
-        var price: Double,
-        @ColumnInfo(name = "price_currency")
-        @SerializedName("price_currency")
-        var priceCurrency: String,
-        @ColumnInfo(name = "last_transit_point")
-        @SerializedName("ltp")
-        var lastTransitPoint: Int,
-        @ColumnInfo(name = "order_status")
-        @SerializedName("order_status")
+        @ColumnInfo(name = "status")
+        @SerializedName("status")
         var orderStatus: String,
-        @ColumnInfo(name = "coords")
-        @SerializedName("coords")
-        @TypeConverters(Converter::class)
-        var coords: ArrayList<CoordsEntity>,
-        @ColumnInfo(name = "expected_ttd")
-        @SerializedName("expected_delivery_time")
-        var expectedTtd: String,
         @ColumnInfo(name = "sender_notes")
         @SerializedName("sender_notes")
         var senderNotes: String?)

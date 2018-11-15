@@ -6,11 +6,11 @@
     android:layout_height="match_parent">
 
     <com.mapbox.services.android.navigation.ui.v5.NavigationView
-        android:id="@+id/navigation_view"
+        android:id="@+id/navigationView"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:navigationLightTheme="@style/NavigationView"
-        app:navigationDarkTheme="@style/NavigationViewDark"
+        app:navigationLightTheme="@style/MyNavigationView"
+        app:navigationDarkTheme="@style/MyNavigationView"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

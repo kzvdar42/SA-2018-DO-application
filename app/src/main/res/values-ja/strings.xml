@@ -1,0 +1,71 @@
+<resources>
+    <string name="application_name">配信オペレータアプリケーション</string>
+
+    <string name="login_label">ログイン</string>
+    <string name="username">ユーザー名</string>
+    <string name="username_error">有効なユーザー名を入力してください</string>
+    <string name="password">パスワード</string>
+    <string name="password_error">6〜10文字の英数字</string>
+    <string name="login">ログイン</string>
+
+    <string name="order_num">注文 #%1$d</string>
+    <string name="accepted_orders_label">受け入れられた注文</string>
+    <string name="new_orders_label">新規注文</string>
+
+    <string name="select_order">注文を選択</string>
+    <string name="phone_image_description">電話アイコン</string>
+    <string name="call_label">コール</string>
+    <string name="assignment_image_description">課題アイコン</string>
+    <string name="assignment_label">符号</string>
+    <string name="navigation_icon_description">ナビゲーションアイコン</string>
+    <string name="navigation_label">ナビゲートする</string>
+    <string name="time_left_label">残り時間：%1$s</string>
+    <string name="dimensions_text">寸法：%1$d × %2$d × %3$d（sm）</string>
+    <string name="weight_label">重量：%1$d kg</string>
+    <string name="sender_notes_label">送信者のメモ：%1$s</string>
+    <string name="ttl_ended">時間が終了しました。</string>
+    <string name="ttl_minutes">%1$s 分</string>
+    <string name="ttl_hours">%1$s 時間</string>
+    <string name="ttl_days">%1$s 日</string>
+
+
+    <string name="accept_label">同意する</string>
+    <string name="decline_label">低下</string>
+    <string name="dialog_title">本気ですか？</string>
+
+
+    <string name="start_navigation">ナビゲーションを開始</string>
+    <string name="order_title_from">から</string>
+    <string name="order_title_transit">トランジット</string>
+    <string name="order_title_end">終わり</string>
+    <string name="order_from_description_snippet">送信者の名前：%1$s\n送信者の姓：%2$s\n電話番号：%3$s\n予想されるTTD：%4$s</string>
+    <string name="order_to_description_snippet">受信者名：%1$s\n受信者の姓：%2$s\n電話番号：%3$s\n予想されるTTD：%4$s</string>
+    <string name="no_order_selected">注文は選択されていません。地図上に表示する順序を選択してください。</string>
+    <string name="map_dialog_end_text">
+        あなたは目的地に到着しました。
+        \n 注文ページに行きたいですか？</string>
+
+
+    <string name="map_dialog_transit_text">あなたは乗り継ぎ地点に到着しました。\nナビゲーションを続けますか？</string>
+    <string name="map_dialog_positive_text">持続する</string>
+    <string name="map_dialog_negative_text">やめる</string>
+    <string name="on_failed_reroute">再ルーティングに失敗しました</string>
+
+
+    <string name="map_label">地図</string>
+    <string name="orders_label">注文</string>
+    <string name="settings_label">設定</string>
+
+    <string name="user_location_permission_explanation">このアプリには、ナビゲーション用の位置情報権限が必要です。</string>
+    <string name="user_location_permission_not_granted">あなたは場所の許可を与えませんでした。</string>
+
+
+    <string name="localization">ローカリゼーション</string>
+    <string name="contact_co">お問い合わせ先</string>
+    <string name="log_out">ログアウト</string>
+
+
+    <string name="yes">はい</string>
+    <string name="no">いいえ</string>
+
+</resources>

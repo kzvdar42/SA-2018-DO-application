@@ -1,0 +1,76 @@
+<?xml version="1.0"?>
+<resources>
+    <string name="application_name">배달 운영자 앱</string>
+
+    <string name="login_label">로그인</string>
+    <string name="username">사용자 이름</string>
+    <string name="username_error">올바른 사용자 이름을 입력하십시오.</string>
+    <string name="password">암호</string>
+    <string name="password_error">6 ~ 10 자의 영숫자</string>
+    <string name="login">로그인</string>
+
+    <string name="order_num">주문 #%1$d</string>
+    <string name="accepted_orders_label">수락 된 주문</string>
+    <string name="new_orders_label">신규 주문</string>
+    <string name="select_order">주문 선택</string>
+    <string name="phone_image_description">전화 아이콘</string>
+    <string name="call_label">요구</string>
+    <string name="assignment_image_description">과제 아이콘</string>
+    <string name="assignment_label">기호</string>
+    <string name="navigation_icon_description">탐색 아이콘</string>
+    <string name="navigation_label">네비게이션</string>
+    <string name="time_left_label">남은 시간 : %1$s</string>
+    <string name="dimensions_text">크기 : %1$d x %2$d x %3$d (sm)</string>
+    <string name="weight_label">무게 : %1$d kg</string>
+    <string name="sender_notes_label">발신자 메모 : %1$s</string>
+    <string name="ttl_ended">시간이 끝났어.</string>
+    <string name="ttl_minutes">%1$s 분</string>
+    <string name="ttl_hours">%1$s 시간</string>
+    <string name="ttl_days">%1$s 요일</string>
+
+    <string name="accept_label">동의</string>
+    <string name="decline_label">쇠퇴</string>
+    <string name="dialog_title">확실해?</string>
+    <string name="start_navigation">탐색 시작</string>
+    <string name="order_title_from">에서</string>
+    <string name="order_title_transit">운송</string>
+    <string name="order_title_end">종료</string>
+    <string name="order_from_description_snippet">발신자 이름: %1$s\n발신자 성: %2$s\n전화 번호: %3$s\n예상 TTD: %4$s</string>
+
+    <string name="order_to_description_snippet">수신자 이름: %1$s\n수신자 성: %2$s\n전화 번호: %3$s\n예상 TTD: %4$s</string>
+
+    <string name="no_order_selected">주문을 선택하지 않았습니다. 주문을 선택하여지도에 표시하십시오.</string>
+
+    <string name="map_dialog_transit_text">환승 지점에 도착했습니다.\n탐색을 계속 하시겠습니까?</string>
+
+    <string name="map_dialog_positive_text">잇다</string>
+
+    <string name="map_dialog_negative_text">중지</string>
+
+    <string name="on_failed_reroute">경로를 변경하지 못했습니다.</string>
+    <string name="map_dialog_end_text">
+        당신은 목적지에 도착했습니다.
+        \n 주문 페이지로 이동 하시겠습니까?</string>
+
+
+    <string name="map_label">지도</string>
+
+    <string name="orders_label">명령</string>
+
+    <string name="settings_label">설정</string>
+
+    <string name="user_location_permission_explanation">이 앱은 탐색을위한 위치 권한이 있어야합니다.</string>
+
+    <string name="user_location_permission_not_granted">위치 권한을 부여하지 않았습니다.</string>
+
+    <string name="localization">현지화</string>
+
+    <string name="contact_co">CO 연락처</string>
+
+    <string name="log_out">로그 아웃</string>
+
+    <string name="yes">예</string>
+
+    <string name="no">아니</string>
+
+</resources>

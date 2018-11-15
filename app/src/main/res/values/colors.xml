@@ -19,5 +19,6 @@
     <color name="buttonUnactive">#bbdefb</color>
 
     <color name="buttonRed">#c62828</color>
+    <color name="my_yellow">#ffc107</color>
 
 </resources>

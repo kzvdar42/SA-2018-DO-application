@@ -1,4 +1,4 @@
-package com.example.kzvdar42.deliveryoperatorapp.db
+package com.example.kzvdar42.deliveryoperatorapp.util
 
 import android.annotation.SuppressLint
 import android.app.Application
@@ -8,12 +8,13 @@ import android.location.Location
 import android.util.Base64
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.example.kzvdar42.deliveryoperatorapp.db.AppDatabase
+import com.example.kzvdar42.deliveryoperatorapp.db.OrderEntity
 import com.example.kzvdar42.deliveryoperatorapp.serverApi.ServerApi
 import com.example.kzvdar42.deliveryoperatorapp.serverApi.requestBodies.LoginReqBody
 import com.example.kzvdar42.deliveryoperatorapp.serverApi.requestBodies.UpdateOrderReqBody
 import com.example.kzvdar42.deliveryoperatorapp.serverApi.requestBodies.UpdatePositionReqBody
 import com.mapbox.android.core.location.LocationEngineListener
-import com.mapbox.android.core.location.LocationEnginePriority
 import com.mapbox.android.core.location.LocationEngineProvider
 import com.mapbox.mapboxsdk.Mapbox
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -22,6 +23,7 @@ import io.reactivex.schedulers.Schedulers
 import org.jetbrains.anko.doAsync
 import timber.log.Timber
 import java.io.ByteArrayOutputStream
+import kotlin.concurrent.thread
 
 
 class Repository(application: Application) : LocationEngineListener {
@@ -84,44 +86,55 @@ class Repository(application: Application) : LocationEngineListener {
      * Updates the orders database with the info from server.
      * @return: Disposable of request.
      */
-    fun getOrders(): Disposable {
+    @SuppressLint("TimberExceptionLogging")
+    fun getOrdersFromServer(): Disposable {
         return mServerApi.getOrders(getCredentials())
                 .subscribeOn(Schedulers.io())
                 .subscribe({
-                    mOrderDao.insertAll(it)
+                    thread(true) {
+                        mOrderDao.deleteAll()
+                        mOrderDao.insertAll(it)
+                    }
                 }, {
-                    Timber.e(it)
+                    Timber.e(it.message)
                 })
     }
 
+    fun getOrders(): LiveData<List<OrderEntity>> {
+        getOrdersFromServer()
+        return mOrderDao.getAllOrders()
+    }
+
     fun getOrder(orderNumber: Int): LiveData<OrderEntity> {
+//        getOrdersFromServer()
         return mOrderDao.getOrder(orderNumber)
     }
 
     fun getNewOrders(): LiveData<List<OrderEntity>> {
-        getOrders()
+        getOrdersFromServer()
         return mOrderDao.getNewOrders()
     }
 
     fun getAcceptedOrders(): LiveData<List<OrderEntity>> {
-        getOrders()
+        getOrdersFromServer()
         return mOrderDao.getAcceptedOrders()
     }
 
-    fun updateOrder(orderNum: Int, orderStatus: String,
-                    lastTransitPoint: Int, photo: Bitmap?): Pair<LiveData<String>, Disposable> {
+    fun updateOrder(orderNum: Int, orderStatus: String, photo: Bitmap?): Pair<LiveData<String>, Disposable> {
         // Body for request
-        val body = UpdateOrderReqBody(orderNum, orderStatus, lastTransitPoint, encodeToBase64(photo)) // TODO: Send photo.
+        val body = UpdateOrderReqBody(orderNum, encodeToBase64(photo))
         val result = MutableLiveData<String>()
         val disposable = mServerApi.updateOrder(getCredentials(), body)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
                     result.postValue(it.body()?.message)
-                    doAsync { mOrderDao.updateOrder(orderNum, orderStatus, lastTransitPoint) }
+                    doAsync { mOrderDao.updateOrder(orderNum, orderStatus) }
                 }, {
+                    Timber.e(it)
                     result.postValue(it.message)
                 })
+        if (orderStatus == "Delivered") orderPref.edit().remove("orderNum").apply()
         return Pair(result, disposable)
     }
 

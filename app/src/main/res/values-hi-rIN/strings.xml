@@ -1,0 +1,77 @@
+<resources>
+    <string name="application_name">Delivery Operator App</string>
+
+    <!-- Login -->
+    <string name="login_label">लॉग इन करें</string>
+    <string name="username">उपयोगकर्ता नाम</string>
+    <string name="username_error">एक वैध उपयोगकर्ता नाम दर्ज करें</string>
+    <string name="password">पारण शब्द</string>
+    <string name="password_error">6 और 10 अल्फान्यूमेरिक वर्णों के बीच</string>
+    <string name="login">लॉग इन करें</string>
+
+    <!-- Order list -->
+    <string name="order_num">क्रम #%1$d</string>
+    <string name="accepted_orders_label">स्वीकृत आदेश</string>
+    <string name="new_orders_label">नए आदेश</string>
+
+    <!-- Order info -->
+    <string name="select_order">क्रम चुनें</string>
+    <string name="phone_image_description">फोन आइकन</string>
+    <string name="call_label">कॉल</string>
+    <string name="assignment_image_description">असाइनमेंट आइकन</string>
+    <string name="assignment_label">संकेत</string>
+    <string name="navigation_icon_description">नेविगेशन आइकन</string>
+    <string name="navigation_label">नेविगेट</string>
+    <string name="time_left_label">शेष समय: %1$s</string>
+    <string name="dimensions_text">आयाम: %1$d x %2$d x %3$d (एस.एम.)</string>
+        <string name="weight_label">वजन: %1$d किलोग्राम</string>
+    <string name="sender_notes_label">प्रेषक नोट्स: %1$s</string>
+    <string name="ttl_ended">समय समाप्त हो गया</string>
+    <string name="ttl_minutes">%1$s मिनट</string>
+    <string name="ttl_hours">%1$s घंटे</string>
+    <string name="ttl_days">%1$s दिन</string>
+
+    <!-- Receiver info -->
+    <string name="accept_label">स्वीकार करना</string>
+    <string name="decline_label">पतन</string>
+    <string name="dialog_title">क्या आपको यकीन है?</string>
+
+    <!-- Map -->
+    <string name="start_navigation">नेविगेशन शुरू करें</string>
+    <string name="order_title_from">से</string>
+    <string name="order_title_transit">पारवहन</string>
+    <string name="order_title_end">समाप्त</string>
+    <string name="order_from_description_snippet">भेजने वाले का नाम: %1$s\nप्रेषक उपनाम: %2$s\nफ़ोन नंबर: %3$s\nअपेक्षित टीटीडी: %4$s</string>
+    <string name="order_to_description_snippet">प्राप्तकर्ता का नाम: %1$s\nरिसीवर उपनाम: %2$s\nफ़ोन नंबर: %3$s\nअपेक्षित टीटीडी: %4$s</string>
+    <string name="no_order_selected">कोई ऑर्डर नहीं चुना गया है, कृपया इसे मानचित्र पर दिखाने के लिए ऑर्डर का चयन करें।</string>
+
+    <!-- Navigation -->
+    <string name="map_dialog_transit_text">
+        आप पारगमन बिंदु पर पहुंचे हैं।
+        \n क्या आप नेविगेशन जारी रखना चाहते हैं?</string>
+    <string name="map_dialog_positive_text">जारी रहना</string>
+    <string name="map_dialog_negative_text">रुकें</string>
+    <string name="on_failed_reroute">फिर से शुरू करने में विफल</string>
+    <string name="map_dialog_end_text">
+        आप गंतव्य पर पहुंचे हैं।.
+        \n क्या आप ऑर्डर पेज पर जाना चाहते हैं?</string>
+
+    <!-- Bottom Navigation -->
+    <string name="map_label">नक्शा</string>
+    <string name="orders_label">आदेश</string>
+    <string name="settings_label">सेटिंग्स</string>
+
+    <!-- Mapbox -->
+    <string name="user_location_permission_explanation">इस ऐप को नेविगेशन के लिए स्थान अनुमतियों की आवश्यकता है।</string>
+    <string name="user_location_permission_not_granted">आपने स्थान अनुमतियां नहीं दी हैं।</string>
+
+    <!-- Settings -->
+    <string name="localization">स्थानीयकरण</string>
+    <string name="contact_co">संपर्क करें CO</string>
+    <string name="log_out">लोग आउट</string>
+
+    <!-- Dialog -->
+    <string name="yes">हाँ</string>
+    <string name="no">नहीं</string>
+
+</resources>

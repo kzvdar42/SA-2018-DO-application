@@ -1,0 +1,75 @@
+<resources>
+    <string name="application_name">App opérateur de livraison</string>
+
+
+    <string name="login_label">S\'identifier</string>
+    <string name="username">Nom d\'utilisateur</string>
+    <string name="username_error">Entrez un nom d\'utilisateur valide</string>
+    <string name="password">Mot de passe</string>
+    <string name="password_error">Entre 6 et 10 caractères alphanumériques</string>
+    <string name="login">S\'identifier</string>
+
+
+    <string name="order_num">Ordre #%1$d</string>
+    <string name="accepted_orders_label">Commandes acceptées</string>
+    <string name="new_orders_label">Nouvelles commandes</string>
+
+
+    <string name="select_order">Sélectionner la commande</string>
+    <string name="phone_image_description">Icône de téléphone</string>
+    <string name="call_label">Appel</string>
+    <string name="assignment_image_description">Icône d\'affectation</string>
+    <string name="assignment_label">Signe</string>
+    <string name="navigation_icon_description">Icône de navigation</string>
+    <string name="navigation_label">Naviguer</string>
+    <string name="time_left_label">Temps restant: %1$s</string>
+    <string name="dimensions_text">Dimensions: %1$d x %2$d x %3$d (sm)</string>
+    <string name="weight_label">Poids: %1$d kg</string>
+    <string name="sender_notes_label">Notes de l\'expéditeur: %1$s</string>
+    <string name="ttl_ended">Le temps s\'est terminé.</string>
+    <string name="ttl_minutes">%1$s minutes</string>
+    <string name="ttl_hours">%1$s heures</string>
+    <string name="ttl_days">%1$s jours</string>
+
+
+    <string name="accept_label">Acceptez</string>
+    <string name="decline_label">Déclin</string>
+    <string name="dialog_title">Êtes-vous sûr?</string>
+
+
+    <string name="start_navigation">Lancer la navigation</string>
+    <string name="order_title_from">De</string>
+    <string name="order_title_transit">Transit</string>
+    <string name="order_title_end">Fin</string>
+    <string name="order_from_description_snippet">Nom de l\'expéditeur: %1$s\nNom de l\'expéditeur: %2$s\nNuméro du téléphone: %3$s\nDe prévu: %4$s</string>
+    <string name="order_to_description_snippet">Nom du destinataire: %1$s\nNom de famille du destinataire: %2$s\nNuméro de téléphone: %3$s\nTTD attendu: %4$s</string>
+    <string name="no_order_selected">Aucune commande sélectionnée, veuillez sélectionner la commande à afficher sur la carte.</string>
+    <string name="map_dialog_end_text">
+        Vous êtes arrivé à la destination.
+        \n Voulez-vous aller à la page de commande?</string>
+
+
+    <string name="map_dialog_transit_text">Vous êtes arrivé au point de transit.\nVoulez-vous continuer la navigation?</string>
+    <string name="map_dialog_positive_text">Continuer</string>
+    <string name="map_dialog_negative_text">Arrêtez</string>
+    <string name="on_failed_reroute">Échec de la redirection</string>
+
+
+    <string name="map_label">Carte</string>
+    <string name="orders_label">Ordres</string>
+    <string name="settings_label">Réglages</string>
+
+
+    <string name="user_location_permission_explanation">Cette application nécessite des autorisations d\'emplacement pour la navigation.</string>
+    <string name="user_location_permission_not_granted">Vous n\'avez pas accordé d\'autorisations d\'emplacement.</string>
+
+
+    <string name="localization">Localisation</string>
+    <string name="contact_co">Contact CO</string>
+    <string name="log_out">Connectez-Out</string>
+
+
+    <string name="yes">Oui</string>
+    <string name="no">Non</string>
+
+</resources>
